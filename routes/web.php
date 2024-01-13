@@ -13,6 +13,15 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::redirect('/','/admin')->name('login');
+
+Route::get('install', function (){
+    \Illuminate\Support\Facades\Artisan::call('migrate:fresh');
+    \App\Models\User::create([
+        'name' => 'Admin',
+        'email' => 'admin@admin.com',
+        'password' => \Illuminate\Support\Facades\Hash::make('Admin2525')
+    ]);
 });
+
+
