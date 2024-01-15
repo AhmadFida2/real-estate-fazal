@@ -5,7 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\PropertyResource\Pages;
 use App\Filament\Resources\PropertyResource\RelationManagers;
 use App\Models\Inspection;
-use Faker\Provider\Text;
+use Filament\Actions\Action;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -24,11 +24,39 @@ class InspectionResource extends Resource
     public static function form(Form $form): Form
     {
         return $form
+            ->columns(1)
             ->schema([
                 Forms\Components\Wizard::make([
                     Forms\Components\Wizard\Step::make('Choose Report Tabs')
                         ->schema([
-                            Forms\Components\CheckboxList::make('form_steps')->live()->gridDirection('row')->label('Select Report Tabs')
+                            Forms\Components\Actions::make([
+                                Forms\Components\Actions\Action::make('fill_old_data')->label('Get Old Data')
+                                    ->form([
+                                        Forms\Components\Select::make('inspection_old_id')->label('Select Old Inspection')
+                                            ->options(fn() => Inspection::all()->pluck('name', 'id'))->columns(3)
+                                    ])
+                                    ->action(function ($livewire, $data) {
+                                        $data = Inspection::find($data['inspection_old_id']);
+                                        $livewire->form->fill($data->toArray());
+                                    }),
+                            ]),
+                            Forms\Components\Radio::make('report_type')->label('Report Type')->dehydrated(false)
+                                ->inline()
+                                ->inlineLabel(false)
+                                ->columnSpanFull()
+                                ->options(['Basic Inspection', 'Fannie Mae Inspection', 'Repairs Verification', 'Freddie Mac Inspection'])->live()
+                                ->afterStateUpdated(function ($state, $set) {
+                                    if ($state == 0) {
+                                        $set('form_steps', [1, 2, 3, 4]);
+                                    } elseif ($state == 1) {
+                                        $set('form_steps', [1, 2, 3, 4, 5, 6, 7, 9]);
+                                    } elseif ($state == 2) {
+                                        $set('form_steps', [3, 9]);
+                                    } elseif ($state == 3) {
+                                        $set('form_steps', [1, 2, 3, 4, 5, 6, 8, 9]);
+                                    }
+                                }),
+                            Forms\Components\CheckboxList::make('form_steps')->default([1])->gridDirection('row')->label('Select Report Tabs')
                                 ->options([
                                     1 => 'General Info',
                                     2 => 'Physical Condition & DM',
@@ -41,16 +69,14 @@ class InspectionResource extends Resource
                                     9 => 'Repairs Verification',
                                     10 => 'Senior Housing Supplement',
                                     11 => 'Hospitals',
-                                ])->default(['1'])->columnSpanFull()->columns(4)
+                                ])->columnSpanFull()->columns(4)
                         ]),
                     Forms\Components\Wizard\Step::make('Basic Info')
                         ->visible(fn($get) => in_array('1', $get('form_steps')))
                         ->schema([
                             Forms\Components\TextInput::make('name')
-                                ->required()
                                 ->maxLength(255),
                             Forms\Components\TextInput::make('address')
-                                ->required()
                                 ->maxLength(255),
                             Forms\Components\TextInput::make('address_2')
                                 ->required()
@@ -446,6 +472,7 @@ class InspectionResource extends Resource
                     Forms\Components\Wizard\Step::make('Physical Condition & DM')
                         ->visible(fn($get) => in_array('2', $get('form_steps')))
                         ->schema([
+
                             Forms\Components\Section::make('Physical Condition Assessment and Deffered Maintenance')
                                 ->statePath('physical_condition')
                                 ->schema([
@@ -453,13 +480,13 @@ class InspectionResource extends Resource
                                         ->columns(2)
                                         ->description('Comparsion to Neighborhood; First Impression / Appearance')
                                         ->schema([
-                                            Forms\Components\Select::make('Curb Appeal Rating')
+                                            Forms\Components\Select::make('curb_appeal_rating')->label('Curb Appeal Rating')
                                                 ->required()
                                                 ->options(['1' => '1', '2' => '2', '3' => '3', '4' => '4', '5' => '5', 'Not Applicable' => 'Not Applicable', 'Not Accessible' => 'Not Accessible']),
-                                            Forms\Components\Select::make('Curb Appeal Trend')
+                                            Forms\Components\Select::make('curb_appeal_trend')->label('Curb Appeal Trend')
                                                 ->required()
                                                 ->options(['Imporving' => 'Imporving', 'Stable' => 'Stable', 'Declining' => 'Declining', 'Unknown' => 'Unknown']),
-                                            Forms\Components\Textarea::make('Curb Appeal Inspector Comments')
+                                            Forms\Components\Textarea::make('curb_appeal_inspector_comments')->label('Curb Appeal Inspector Comments')
                                                 ->required()
                                                 ->columnSpanFull()
                                         ]),
@@ -467,13 +494,13 @@ class InspectionResource extends Resource
                                         ->columns(2)
                                         ->description('Inspection Appearance; Signage; Ingress / Egress; Landscaping; Site Lightning; Parking Lot; Striping; Garage; Car Ports; Irrigation System; Drainage; Retaining Walls; Walkways; Fencing; Refuse Containment & Cleanliness; Hazardous Material Storage')
                                         ->schema([
-                                            Forms\Components\Select::make('Site Rating')
+                                            Forms\Components\Select::make('site_rating')->label('Site Rating')
                                                 ->required()
                                                 ->options(['1' => '1', '2' => '2', '3' => '3', '4' => '4', '5' => '5', 'Not Applicable' => 'Not Applicable', 'Not Accessible' => 'Not Accessible']),
-                                            Forms\Components\Select::make('Site Trend')
+                                            Forms\Components\Select::make('site_trend')->label('Site Trend')
                                                 ->required()
                                                 ->options(['Imporving' => 'Imporving', 'Stable' => 'Stable', 'Declining' => 'Declining', 'Unknown' => 'Unknown']),
-                                            Forms\Components\Textarea::make('Site Inspector Comments')
+                                            Forms\Components\Textarea::make('site_inspector_comments')->label('Site Inspector Comments')
                                                 ->required()
                                                 ->columnSpanFull()
                                         ]),
@@ -481,13 +508,13 @@ class InspectionResource extends Resource
                                         ->columns(2)
                                         ->description('HVAC; Electrical; Boilers; Water Heaters; Fire Protection; Sprinklers; Plumbing; Sewer; Solar Systems; Elevators / Escalators; Chiller Plant; Cooling Towers; Building Oxygen; Intercom Systeml; PA System; Security Systems')
                                         ->schema([
-                                            Forms\Components\Select::make('Mechanical Rating')
+                                            Forms\Components\Select::make('mechanical_rating')->label('Mechanical Rating')
                                                 ->required()
                                                 ->options(['1' => '1', '2' => '2', '3' => '3', '4' => '4', '5' => '5', 'Not Applicable' => 'Not Applicable', 'Not Accessible' => 'Not Accessible']),
-                                            Forms\Components\Select::make('Mechanical Trend')
+                                            Forms\Components\Select::make('mechanical_trend')->label('Mechanical Trend')
                                                 ->required()
                                                 ->options(['Imporving' => 'Imporving', 'Stable' => 'Stable', 'Declining' => 'Declining', 'Unknown' => 'Unknown']),
-                                            Forms\Components\Textarea::make('Mechanical Inspector Comments')
+                                            Forms\Components\Textarea::make('mechanical_inspector_comments')->label('Mechanical Inspector Comments')
                                                 ->required()
                                                 ->columnSpanFull()
                                         ]),
@@ -495,13 +522,13 @@ class InspectionResource extends Resource
                                         ->columns(2)
                                         ->description('Siding; Trim; Paint; Windows; Entry Ways; Stairs; Railings; Balconies; Patios; Gutters; Downspouts; Foundations; Doors; Facade; Structure (Beam/Joint)')
                                         ->schema([
-                                            Forms\Components\Select::make('Exteriors Rating')
+                                            Forms\Components\Select::make('exterior_rating')->label('Exteriors Rating')
                                                 ->required()
                                                 ->options(['1' => '1', '2' => '2', '3' => '3', '4' => '4', '5' => '5', 'Not Applicable' => 'Not Applicable', 'Not Accessible' => 'Not Accessible']),
-                                            Forms\Components\Select::make('Exteriors Trend')
+                                            Forms\Components\Select::make('exterior_trend')->label('Exteriors Trend')
                                                 ->required()
                                                 ->options(['Imporving' => 'Imporving', 'Stable' => 'Stable', 'Declining' => 'Declining', 'Unknown' => 'Unknown']),
-                                            Forms\Components\Textarea::make('Exteriors Inspector Comments')
+                                            Forms\Components\Textarea::make('exterior_inspector_comments')->label('Exteriors Inspector Comments')
                                                 ->required()
                                                 ->columnSpanFull()
                                         ]),
@@ -509,13 +536,13 @@ class InspectionResource extends Resource
                                         ->columns(2)
                                         ->description('Roof Condition; Roof Access; Top Floor Ceilings; Shingles / Membrane; Skylights; Flashing; Parapet Walls; Mansard Roofs')
                                         ->schema([
-                                            Forms\Components\Select::make('Roofs Rating')
+                                            Forms\Components\Select::make('roofs_rating')->label('Roofs Rating')
                                                 ->required()
                                                 ->options(['1' => '1', '2' => '2', '3' => '3', '4' => '4', '5' => '5', 'Not Applicable' => 'Not Applicable', 'Not Accessible' => 'Not Accessible']),
-                                            Forms\Components\Select::make('Roofs Trend')
+                                            Forms\Components\Select::make('roofs_trend')->label('Roofs Trend')
                                                 ->required()
                                                 ->options(['Imporving' => 'Imporving', 'Stable' => 'Stable', 'Declining' => 'Declining', 'Unknown' => 'Unknown']),
-                                            Forms\Components\Textarea::make('Roofs Inspector Comments')
+                                            Forms\Components\Textarea::make('roofs_inspector_comments')->label('Roofs Inspector Comments')
                                                 ->required()
                                                 ->columnSpanFull()
                                         ]),
@@ -523,13 +550,13 @@ class InspectionResource extends Resource
                                         ->columns(2)
                                         ->description('HVAC; Ceiling; Floors; Walls; Painting; Wall Cover; Floor Cover; Tiles; Windows; Countertop; Cabinets; Appliances; Lightning; Electrical; Bathroom Accessories; Plumbing Fixtures; Storage; Basements / Attics')
                                         ->schema([
-                                            Forms\Components\Select::make('Occupied Rating')
+                                            Forms\Components\Select::make('occupied_rating')->label('Occupied Rating')
                                                 ->required()
                                                 ->options(['1' => '1', '2' => '2', '3' => '3', '4' => '4', '5' => '5', 'Not Applicable' => 'Not Applicable', 'Not Accessible' => 'Not Accessible']),
-                                            Forms\Components\Select::make('Occupied Trend')
+                                            Forms\Components\Select::make('occupied_trend')->label('Occupied Trend')
                                                 ->required()
                                                 ->options(['Imporving' => 'Imporving', 'Stable' => 'Stable', 'Declining' => 'Declining', 'Unknown' => 'Unknown']),
-                                            Forms\Components\Textarea::make('Occupied Inspector Comments')
+                                            Forms\Components\Textarea::make('occupied_inspector_comments')->label('Occupied Inspector Comments')
                                                 ->required()
                                                 ->columnSpanFull()
                                         ]),
@@ -537,13 +564,13 @@ class InspectionResource extends Resource
                                         ->columns(2)
                                         ->description('Inspection Appearance; Signage; Ingress / Egress; Landscaping; Site Lightning; Parking Lot; Striping; Garage; Car Ports; Irrigation System; Drainage; Retaining Walls; Walkways; Fencing; Refuse Containment & Cleanliness; Hazardous Material Storage')
                                         ->schema([
-                                            Forms\Components\Select::make('Vacant Rating')
+                                            Forms\Components\Select::make('vacant_rating')->label('Vacant Rating')
                                                 ->required()
                                                 ->options(['1' => '1', '2' => '2', '3' => '3', '4' => '4', '5' => '5', 'Not Applicable' => 'Not Applicable', 'Not Accessible' => 'Not Accessible']),
-                                            Forms\Components\Select::make('Vacant Trend')
+                                            Forms\Components\Select::make('vacant_trend')->label('Vacant Trend')
                                                 ->required()
                                                 ->options(['Imporving' => 'Imporving', 'Stable' => 'Stable', 'Declining' => 'Declining', 'Unknown' => 'Unknown']),
-                                            Forms\Components\Textarea::make('Vacant Inspector Comments')
+                                            Forms\Components\Textarea::make('vacant_inspector_comments')->label('Vacant Inspector Comments')
                                                 ->required()
                                                 ->columnSpanFull()
                                         ]),
@@ -551,13 +578,13 @@ class InspectionResource extends Resource
                                         ->columns(2)
                                         ->description('Inspection Appearance; Signage; Ingress / Egress; Landscaping; Site Lightning; Parking Lot; Striping; Garage; Car Ports; Irrigation System; Drainage; Retaining Walls; Walkways; Fencing; Refuse Containment & Cleanliness; Hazardous Material Storage')
                                         ->schema([
-                                            Forms\Components\Select::make('Down Units')
+                                            Forms\Components\Select::make('down_rating')->label('Down Units')
                                                 ->required()
                                                 ->options(['Yes' => 'Yes', 'No' => 'No']),
-                                            Forms\Components\Select::make('Down Trend')
+                                            Forms\Components\Select::make('down_trend')->label('Down Trend')
                                                 ->required()
                                                 ->options(['Imporving' => 'Imporving', 'Stable' => 'Stable', 'Declining' => 'Declining', 'Unknown' => 'Unknown']),
-                                            Forms\Components\Textarea::make('Down Inspector Comments')
+                                            Forms\Components\Textarea::make('down_inspector_comments')->label('Down Inspector Comments')
                                                 ->required()
                                                 ->columnSpanFull()
                                         ]),
@@ -565,13 +592,13 @@ class InspectionResource extends Resource
                                         ->columns(2)
                                         ->description('Mailboxes; Reception Area; Lobby; Food Courts; Dining Area; Kitchen; Halls; Stairways; Meeting Rooms; Public Restrooms; Storage; Basement; Healthcare Assistance Rooms; Pharmacy / Medication Storage; Nurses Station')
                                         ->schema([
-                                            Forms\Components\Select::make('Interior Rating')
+                                            Forms\Components\Select::make('interior_common_rating')->label('Interior Common Rating')
                                                 ->required()
                                                 ->options(['1' => '1', '2' => '2', '3' => '3', '4' => '4', '5' => '5', 'Not Applicable' => 'Not Applicable', 'Not Accessible' => 'Not Accessible']),
-                                            Forms\Components\Select::make('Interior Trend')
+                                            Forms\Components\Select::make('interior_common_trend')->label('Interior Common Trend')
                                                 ->required()
                                                 ->options(['Imporving' => 'Imporving', 'Stable' => 'Stable', 'Declining' => 'Declining', 'Unknown' => 'Unknown']),
-                                            Forms\Components\Textarea::make('Interior Inspector Comments')
+                                            Forms\Components\Textarea::make('interior_common_inspector_comments')->label('Interior Common Inspector Comments')
                                                 ->required()
                                                 ->columnSpanFull()
                                         ]),
@@ -579,13 +606,13 @@ class InspectionResource extends Resource
                                         ->columns(2)
                                         ->description('Pool; Clubhouse; Gym; Laundry Area / Rooms; Playground; Wireless Access; Restaurant / Bar; Business Center; Sport Courts; Spa; Store; Media Center')
                                         ->schema([
-                                            Forms\Components\Select::make('Amenities Rating')
+                                            Forms\Components\Select::make('amenities_rating')->label('Amenities Rating')
                                                 ->required()
                                                 ->options(['1' => '1', '2' => '2', '3' => '3', '4' => '4', '5' => '5', 'Not Applicable' => 'Not Applicable', 'Not Accessible' => 'Not Accessible']),
-                                            Forms\Components\Select::make('Amenities Trend')
+                                            Forms\Components\Select::make('amenities_trend')->label('Amenities Trend')
                                                 ->required()
                                                 ->options(['Imporving' => 'Imporving', 'Stable' => 'Stable', 'Declining' => 'Declining', 'Unknown' => 'Unknown']),
-                                            Forms\Components\Textarea::make('Amenities Inspector Comments')
+                                            Forms\Components\Textarea::make('amenities_inspector_comments')->label('Amenities Inspector Comments')
                                                 ->required()
                                                 ->columnSpanFull()
                                         ]),
@@ -593,13 +620,13 @@ class InspectionResource extends Resource
                                         ->columns(2)
                                         ->description('Reported spills or leaks; Evidence of spills or leaks; Evidence of distressed vegetation; Evidence of mold; Evidence of O&M non-compliance')
                                         ->schema([
-                                            Forms\Components\Select::make('Interior Rating')
+                                            Forms\Components\Select::make('interior_rating')->label('Interior Rating')
                                                 ->required()
                                                 ->options(['1' => '1', '2' => '2', '3' => '3', '4' => '4', '5' => '5', 'Not Applicable' => 'Not Applicable', 'Not Accessible' => 'Not Accessible']),
-                                            Forms\Components\Select::make('Interior Trend')
+                                            Forms\Components\Select::make('interior_trend')->label('Interior Trend')
                                                 ->required()
                                                 ->options(['Imporving' => 'Imporving', 'Stable' => 'Stable', 'Declining' => 'Declining', 'Unknown' => 'Unknown']),
-                                            Forms\Components\Textarea::make('Interior Inspector Comments')
+                                            Forms\Components\Textarea::make('interior_inspector_comments')->label('Interior Inspector Comments')
                                                 ->required()
                                                 ->columnSpanFull()
                                         ]),
@@ -638,42 +665,45 @@ class InspectionResource extends Resource
                                 ])
                         ]),
                     Forms\Components\Wizard\Step::make('Rent Roll')
-                        ->statePath('rent_roll')
                         ->visible(fn($get) => in_array('4', $get('form_steps')))
                         ->schema([
-                            Forms\Components\Select::make('Rent Roll Attached')
-                                ->options(['Yes' => 'Yes', 'No' => 'No'])->live(),
-                            Forms\Components\Select::make('Rent Roll Missing Reason')
-                                ->options(['Hard Copy to follow' => 'Hard Copy to follow', 'Requested but not provided' => 'Requested but not provided', 'Requested but declined' => 'Requested but declined', 'Not Applicable' => 'Not Applicable'])
-                                ->disabled(fn($get) => $get('Rent Roll Attached') != 'No'),
-                            Forms\Components\Select::make('Rent Roll Summary Attached')
-                                ->options(['Yes' => 'Yes', 'No' => 'No']),
-                            Forms\Components\Select::make('Single Tenant Property')
-                                ->options(['Yes' => 'Yes', 'No' => 'No'])->live(),
-                            Forms\Components\TextInput::make('Lease Expires')
-                                ->disabled(fn($get) => $get('Single Tenant Property') != 'Yes'),
-                            Forms\Components\Select::make('Hospitality Property')->live()
-                                ->options(['Yes' => 'Yes', 'No' => 'No']),
-                            Forms\Components\TextInput::make('YTD ADR')->label('YTD ADR')
-                                ->disabled(fn($get) => $get('Hospitality Property') != 'Yes'),
-                            Forms\Components\TextInput::make('RevPAR')->label('RevPAR')
-                                ->disabled(fn($get) => $get('Hospitality Property') != 'Yes'),
-                            Forms\Components\TextInput::make('ADO')->label('ADO')
-                                ->disabled(fn($get) => $get('Hospitality Property') != 'Yes'),
-                            Forms\Components\Section::make('Largest Commerical Tenants')
-                                ->columns(1)
+                            Forms\Components\Section::make('Rent Roll')
+                                ->statePath('rent_roll')
                                 ->schema([
-                                    Forms\Components\Repeater::make('tenant_info')
-                                        ->columns(6)
+                                    Forms\Components\Select::make('rent_roll_attached')
+                                        ->options(['Yes' => 'Yes', 'No' => 'No'])->live(),
+                                    Forms\Components\Select::make('rent_roll_missing_reason')
+                                        ->options(['Hard Copy to follow' => 'Hard Copy to follow', 'Requested but not provided' => 'Requested but not provided', 'Requested but declined' => 'Requested but declined', 'Not Applicable' => 'Not Applicable'])
+                                        ->disabled(fn($get) => $get('rent_roll_attached') != 'No'),
+                                    Forms\Components\Select::make('rent_roll_summary_attached')
+                                        ->options(['Yes' => 'Yes', 'No' => 'No']),
+                                    Forms\Components\Select::make('single_tenant_property')
+                                        ->options(['Yes' => 'Yes', 'No' => 'No'])->live(),
+                                    Forms\Components\TextInput::make('lease_expires')
+                                        ->disabled(fn($get) => $get('single_tenant_property') != 'Yes'),
+                                    Forms\Components\Select::make('hospitality_property')->live()
+                                        ->options(['Yes' => 'Yes', 'No' => 'No']),
+                                    Forms\Components\TextInput::make('ytd_adr')->label('YTD ADR')
+                                        ->disabled(fn($get) => $get('hospitality_property') != 'Yes'),
+                                    Forms\Components\TextInput::make('revpar')->label('RevPAR')
+                                        ->disabled(fn($get) => $get('hospitality_property') != 'Yes'),
+                                    Forms\Components\TextInput::make('ado')->label('ADO')
+                                        ->disabled(fn($get) => $get('hospitality_property') != 'Yes'),
+                                    Forms\Components\Section::make('Largest Commerical Tenants')
+                                        ->columns(1)
                                         ->schema([
-                                            Forms\Components\TextInput::make('Tenant Name'),
-                                            Forms\Components\TextInput::make('Expiration'),
-                                            Forms\Components\TextInput::make('sq_ft')->label('Sq. Ft.')->default(0)->numeric()->live(onBlur: true)->afterStateUpdated(fn($set, $get, $state) => $set('rent_per_sqft', intval($get('annual_rent') / $state))),
-                                            Forms\Components\TextInput::make('NRA Percentage')->label('% NRA'),
-                                            Forms\Components\TextInput::make('annual_rent')->label('Annual Rent')->default(0)->live(onBlur: true)->numeric()->inputMode('decimal')->afterStateUpdated(fn($set, $get, $state) => $set('rent_per_sqft', intval($state / $get('sq_ft')))),
-                                            Forms\Components\TextInput::make('rent_per_sqft')->label('Rent / Sq. Ft.')->readOnly()
+                                            Forms\Components\Repeater::make('tenant_info')
+                                                ->columns(6)
+                                                ->schema([
+                                                    Forms\Components\TextInput::make('Tenant Name'),
+                                                    Forms\Components\TextInput::make('Expiration'),
+                                                    Forms\Components\TextInput::make('sq_ft')->label('Sq. Ft.')->default(0)->numeric()->live(onBlur: true)->afterStateUpdated(fn($set, $get, $state) => $set('rent_per_sqft', intval($get('annual_rent') / $state))),
+                                                    Forms\Components\TextInput::make('NRA Percentage')->label('% NRA'),
+                                                    Forms\Components\TextInput::make('annual_rent')->label('Annual Rent')->default(0)->live(onBlur: true)->numeric()->inputMode('decimal')->afterStateUpdated(fn($set, $get, $state) => $set('rent_per_sqft', intval($state / $get('sq_ft')))),
+                                                    Forms\Components\TextInput::make('rent_per_sqft')->label('Rent / Sq. Ft.')->readOnly()
+                                                ])
                                         ])
-                                ])
+                                ]),
                         ]),
                     Forms\Components\Wizard\Step::make('Management Interview')
                         ->statePath('mgmt_interview')
@@ -682,19 +712,19 @@ class InspectionResource extends Resource
                             Forms\Components\Section::make('Management Information & Interview')
                                 ->columns(2)
                                 ->schema([
-                                    Forms\Components\TextInput::make('Management Company Name')
+                                    Forms\Components\TextInput::make('management_company_name')
                                         ->label('Management Company Name'),
-                                    Forms\Components\TextInput::make('Name of Information Source')
+                                    Forms\Components\TextInput::make('name_information_source')
                                         ->label('Name of Information Source'),
-                                    Forms\Components\TextInput::make('Role or Title of Information Source')
+                                    Forms\Components\TextInput::make('role_title_information_source')
                                         ->label('Role or Title of Information Source'),
-                                    Forms\Components\TextInput::make('Management Affiliation')
+                                    Forms\Components\TextInput::make('management_affiliation')
                                         ->label('Management Affiliation'),
-                                    Forms\Components\TextInput::make('Phone Number')
+                                    Forms\Components\TextInput::make('phone_number')
                                         ->label('Phone Number'),
-                                    Forms\Components\TextInput::make('Email Address')
+                                    Forms\Components\TextInput::make('email_address')
                                         ->label('Email Address'),
-                                    Forms\Components\Select::make('Length of time at property')
+                                    Forms\Components\Select::make('length_at_property')
                                         ->label('Length of time at property')
                                         ->options([
                                             '< 6 mo' => '< 6 mo',
@@ -703,7 +733,7 @@ class InspectionResource extends Resource
                                             '3 yr to < 5 yr' => '3 yr to < 5 yr',
                                             '5 yr or more' => '5 yr or more',
                                         ]),
-                                    Forms\Components\Select::make('Mgmt change from last inspection')
+                                    Forms\Components\Select::make('mgmt_change_last_inspection')
                                         ->label('Mgmt change from last inspection')
                                         ->required()
                                         ->options([
@@ -901,7 +931,7 @@ short-term (<1 month) rentals generally marketed through an online platform such
                                         ->numeric(),
                                 ]),
                             Forms\Components\Section::make('Multifamily Unit Breakdown')
-                                ->statePath('unit_breakdown')
+                                ->statePath('multifamily_unit_breakdown')
                                 ->schema([
                                     Forms\Components\Repeater::make('unit_info')
                                         ->columns(10)
@@ -946,7 +976,7 @@ short-term (<1 month) rentals generally marketed through an online platform such
                                             Forms\Components\TextInput::make('current_use'),
                                             Forms\Components\TextInput::make('overall_condition')
                                         ]),
-                        ]),
+                                ]),
                             Forms\Components\Textarea::make('general_comments')
                                 ->label('General Comments')->columnSpanFull(),
                         ]),
@@ -954,91 +984,91 @@ short-term (<1 month) rentals generally marketed through an online platform such
                         ->statePath('fannie_mae_assmt')
                         ->visible(fn($get) => in_array('7', $get('form_steps')))
                         ->schema([
-                           Forms\Components\Section::make('Limitations of Field Assessment')
-                            ->statePath('limitations_of_field_assessment')
-                            ->schema([
-                                Forms\Components\CheckboxList::make('limitations_experienced')
-                                ->label('Did you experience any of the following limitations to performing this field assessment: (Choose Yes/No)')
-                                ->options([
-                                    "Management unavailable for interview?" => "Management unavailable for interview?",
-                                    "Management experience on the property is less than six months?" => "Management experience on the property is less than six months?",
-                                    "Occupied units were unavailable for assessment, or the total number of units available (occupied or unoccupied) was insufficient?" => "Occupied units were unavailable for assessment, or the total number of units available (occupied or unoccupied) was insufficient?",
-                                    "Significant portions of the common areas, amenities or basements, etc. were unavailable for assessment?" => "Significant portions of the common areas, amenities or basements, etc. were unavailable for assessment?",
-                                    "Snow was covering most exterior areas (parking lots, roofs, landscape areas)?" => "Snow was covering most exterior areas (parking lots, roofs, landscape areas)?",
-                                    "Other Limitation" => "Other Limitation",
-                                ]),
-                                Forms\Components\Textarea::make('limitation_comment')->label('Limitation Comment')->columnSpanFull()
-                            ]),
-                            Forms\Components\Section::make('Comprehensive Property Assessment Ratings')
-                            ->statePath('property_assessment_ratings')
-                            ->schema([
-                                Forms\Components\Select::make('life_safety')->label('Life Safety')
-                                ->options([
-                                    '1. No Life Safety issues observed' => '1. No Life Safety issues observed',
-                                    '2. No/minor Life Safety issues observed' => '2. No/minor Life Safety issues observed',
-                                    '3. Some Life Safety issues observed requiring immediate attention; but no capital expenditure' => '3. Some Life Safety issues observed requiring immediate attention; but no capital expenditure',
-                                    '4. Life Safety issues observed that require immediate attention and possible capital expenditure' => '4. Life Safety issues observed that require immediate attention and possible capital expenditure',
-                                    '5. Significant Life Safety issues requiring capital expenditure' => '5. Significant Life Safety issues requiring capital expenditure'
-                                ]),
-                                Forms\Components\Textarea::make('life_safety_comments')->columnSpanFull(),
-                                Forms\Components\Select::make('deffered_maintenance')->label('Deffered Maintenance')
-                                    ->options([
-                                        '1. No Life Safety issues observed' => '1. No Life Safety issues observed',
-                                        '2. No/minor Life Safety issues observed' => '2. No/minor Life Safety issues observed',
-                                        '3. Some Life Safety issues observed requiring immediate attention; but no capital expenditure' => '3. Some Life Safety issues observed requiring immediate attention; but no capital expenditure',
-                                        '4. Life Safety issues observed that require immediate attention and possible capital expenditure' => '4. Life Safety issues observed that require immediate attention and possible capital expenditure',
-                                        '5. Significant Life Safety issues requiring capital expenditure' => '5. Significant Life Safety issues requiring capital expenditure'
-                                    ]),
-                                Forms\Components\Textarea::make('deffered_maintenance_comments')->columnSpanFull(),
-                                Forms\Components\Select::make('routine_maintenance')->label('Routine Maintenance')
-                                    ->options([
-                                        '1. No Life Safety issues observed' => '1. No Life Safety issues observed',
-                                        '2. No/minor Life Safety issues observed' => '2. No/minor Life Safety issues observed',
-                                        '3. Some Life Safety issues observed requiring immediate attention; but no capital expenditure' => '3. Some Life Safety issues observed requiring immediate attention; but no capital expenditure',
-                                        '4. Life Safety issues observed that require immediate attention and possible capital expenditure' => '4. Life Safety issues observed that require immediate attention and possible capital expenditure',
-                                        '5. Significant Life Safety issues requiring capital expenditure' => '5. Significant Life Safety issues requiring capital expenditure'
-                                    ]),
-                                Forms\Components\Textarea::make('routine_maintenance_comments')->columnSpanFull(),
-                                Forms\Components\Select::make('capital_needs')->label('Capital Needs')
-                                    ->options([
-                                        '1. No Life Safety issues observed' => '1. No Life Safety issues observed',
-                                        '2. No/minor Life Safety issues observed' => '2. No/minor Life Safety issues observed',
-                                        '3. Some Life Safety issues observed requiring immediate attention; but no capital expenditure' => '3. Some Life Safety issues observed requiring immediate attention; but no capital expenditure',
-                                        '4. Life Safety issues observed that require immediate attention and possible capital expenditure' => '4. Life Safety issues observed that require immediate attention and possible capital expenditure',
-                                        '5. Significant Life Safety issues requiring capital expenditure' => '5. Significant Life Safety issues requiring capital expenditure'
-                                    ]),
-                                Forms\Components\Textarea::make('capital_needs_comments')->columnSpanFull(),
-                                Forms\Components\Select::make('volume_of_issues_noted')->label('Level/Volume of issues noted and appropriate follow-up recommendations')
-                                    ->options([
-                                        '1. No Life Safety issues observed' => '1. No Life Safety issues observed',
-                                        '2. No/minor Life Safety issues observed' => '2. No/minor Life Safety issues observed',
-                                        '3. Some Life Safety issues observed requiring immediate attention; but no capital expenditure' => '3. Some Life Safety issues observed requiring immediate attention; but no capital expenditure',
-                                        '4. Life Safety issues observed that require immediate attention and possible capital expenditure' => '4. Life Safety issues observed that require immediate attention and possible capital expenditure',
-                                        '5. Significant Life Safety issues requiring capital expenditure' => '5. Significant Life Safety issues requiring capital expenditure'
-                                    ]),
-                                Forms\Components\Textarea::make('volume_of_issues_noted_comments')->columnSpanFull(),
-                                Forms\Components\Select::make('overall_property_rating')->label('Overall Property Ratings')
-                                    ->options([
-                                        '1' => '1',
-                                        '2' => '2',
-                                        '3' => '3',
-                                        '4' => '4',
-                                        '5' => '5'
-                                    ]),
-                                Forms\Components\Textarea::make('overall_property_rating_comments')->columnSpanFull(),
-                                Forms\Components\Section::make('Seller/Servicer Certification')
-                                ->statePath('seller_servicer_certification')
-                                    ->columns(3)
+                            Forms\Components\Section::make('Limitations of Field Assessment')
+                                ->statePath('limitations_of_field_assessment')
                                 ->schema([
-                                    Forms\Components\DatePicker::make('date'),
-                                    Forms\Components\TextInput::make('first_name')->label('First Name'),
-                                    Forms\Components\TextInput::make('last_name')->label('Last Name'),
-                                    Forms\Components\TextInput::make('title')->label('Title'),
-                                    Forms\Components\TextInput::make('phone_number')->label('Phone Number'),
-                                    Forms\Components\TextInput::make('email_address')->label('Email Address'),
-                                ])
+                                    Forms\Components\CheckboxList::make('limitations_experienced')
+                                        ->label('Did you experience any of the following limitations to performing this field assessment: (Choose Yes/No)')
+                                        ->options([
+                                            "Management unavailable for interview?" => "Management unavailable for interview?",
+                                            "Management experience on the property is less than six months?" => "Management experience on the property is less than six months?",
+                                            "Occupied units were unavailable for assessment, or the total number of units available (occupied or unoccupied) was insufficient?" => "Occupied units were unavailable for assessment, or the total number of units available (occupied or unoccupied) was insufficient?",
+                                            "Significant portions of the common areas, amenities or basements, etc. were unavailable for assessment?" => "Significant portions of the common areas, amenities or basements, etc. were unavailable for assessment?",
+                                            "Snow was covering most exterior areas (parking lots, roofs, landscape areas)?" => "Snow was covering most exterior areas (parking lots, roofs, landscape areas)?",
+                                            "Other Limitation" => "Other Limitation",
+                                        ]),
+                                    Forms\Components\Textarea::make('limitation_comment')->label('Limitation Comment')->columnSpanFull()
+                                ]),
+                            Forms\Components\Section::make('Comprehensive Property Assessment Ratings')
+                                ->statePath('property_assessment_ratings')
+                                ->schema([
+                                    Forms\Components\Select::make('life_safety')->label('Life Safety')
+                                        ->options([
+                                            '1. No Life Safety issues observed' => '1. No Life Safety issues observed',
+                                            '2. No/minor Life Safety issues observed' => '2. No/minor Life Safety issues observed',
+                                            '3. Some Life Safety issues observed requiring immediate attention; but no capital expenditure' => '3. Some Life Safety issues observed requiring immediate attention; but no capital expenditure',
+                                            '4. Life Safety issues observed that require immediate attention and possible capital expenditure' => '4. Life Safety issues observed that require immediate attention and possible capital expenditure',
+                                            '5. Significant Life Safety issues requiring capital expenditure' => '5. Significant Life Safety issues requiring capital expenditure'
+                                        ]),
+                                    Forms\Components\Textarea::make('life_safety_comments')->columnSpanFull(),
+                                    Forms\Components\Select::make('deffered_maintenance')->label('Deffered Maintenance')
+                                        ->options([
+                                            '1. No Life Safety issues observed' => '1. No Life Safety issues observed',
+                                            '2. No/minor Life Safety issues observed' => '2. No/minor Life Safety issues observed',
+                                            '3. Some Life Safety issues observed requiring immediate attention; but no capital expenditure' => '3. Some Life Safety issues observed requiring immediate attention; but no capital expenditure',
+                                            '4. Life Safety issues observed that require immediate attention and possible capital expenditure' => '4. Life Safety issues observed that require immediate attention and possible capital expenditure',
+                                            '5. Significant Life Safety issues requiring capital expenditure' => '5. Significant Life Safety issues requiring capital expenditure'
+                                        ]),
+                                    Forms\Components\Textarea::make('deffered_maintenance_comments')->columnSpanFull(),
+                                    Forms\Components\Select::make('routine_maintenance')->label('Routine Maintenance')
+                                        ->options([
+                                            '1. No Life Safety issues observed' => '1. No Life Safety issues observed',
+                                            '2. No/minor Life Safety issues observed' => '2. No/minor Life Safety issues observed',
+                                            '3. Some Life Safety issues observed requiring immediate attention; but no capital expenditure' => '3. Some Life Safety issues observed requiring immediate attention; but no capital expenditure',
+                                            '4. Life Safety issues observed that require immediate attention and possible capital expenditure' => '4. Life Safety issues observed that require immediate attention and possible capital expenditure',
+                                            '5. Significant Life Safety issues requiring capital expenditure' => '5. Significant Life Safety issues requiring capital expenditure'
+                                        ]),
+                                    Forms\Components\Textarea::make('routine_maintenance_comments')->columnSpanFull(),
+                                    Forms\Components\Select::make('capital_needs')->label('Capital Needs')
+                                        ->options([
+                                            '1. No Life Safety issues observed' => '1. No Life Safety issues observed',
+                                            '2. No/minor Life Safety issues observed' => '2. No/minor Life Safety issues observed',
+                                            '3. Some Life Safety issues observed requiring immediate attention; but no capital expenditure' => '3. Some Life Safety issues observed requiring immediate attention; but no capital expenditure',
+                                            '4. Life Safety issues observed that require immediate attention and possible capital expenditure' => '4. Life Safety issues observed that require immediate attention and possible capital expenditure',
+                                            '5. Significant Life Safety issues requiring capital expenditure' => '5. Significant Life Safety issues requiring capital expenditure'
+                                        ]),
+                                    Forms\Components\Textarea::make('capital_needs_comments')->columnSpanFull(),
+                                    Forms\Components\Select::make('volume_of_issues_noted')->label('Level/Volume of issues noted and appropriate follow-up recommendations')
+                                        ->options([
+                                            '1. No Life Safety issues observed' => '1. No Life Safety issues observed',
+                                            '2. No/minor Life Safety issues observed' => '2. No/minor Life Safety issues observed',
+                                            '3. Some Life Safety issues observed requiring immediate attention; but no capital expenditure' => '3. Some Life Safety issues observed requiring immediate attention; but no capital expenditure',
+                                            '4. Life Safety issues observed that require immediate attention and possible capital expenditure' => '4. Life Safety issues observed that require immediate attention and possible capital expenditure',
+                                            '5. Significant Life Safety issues requiring capital expenditure' => '5. Significant Life Safety issues requiring capital expenditure'
+                                        ]),
+                                    Forms\Components\Textarea::make('volume_of_issues_noted_comments')->columnSpanFull(),
+                                    Forms\Components\Select::make('overall_property_rating')->label('Overall Property Ratings')
+                                        ->options([
+                                            '1' => '1',
+                                            '2' => '2',
+                                            '3' => '3',
+                                            '4' => '4',
+                                            '5' => '5'
+                                        ]),
+                                    Forms\Components\Textarea::make('overall_property_rating_comments')->columnSpanFull(),
+                                    Forms\Components\Section::make('Seller/Servicer Certification')
+                                        ->statePath('seller_servicer_certification')
+                                        ->columns(3)
+                                        ->schema([
+                                            Forms\Components\DatePicker::make('date'),
+                                            Forms\Components\TextInput::make('first_name')->label('First Name'),
+                                            Forms\Components\TextInput::make('last_name')->label('Last Name'),
+                                            Forms\Components\TextInput::make('title')->label('Title'),
+                                            Forms\Components\TextInput::make('phone_number')->label('Phone Number'),
+                                            Forms\Components\TextInput::make('email_address')->label('Email Address'),
+                                        ])
 
-                            ])
+                                ])
                         ]),
                     Forms\Components\Wizard\Step::make('FRE Assmt Addendum')
                         ->statePath('fre_assmt')
@@ -1047,11 +1077,11 @@ short-term (<1 month) rentals generally marketed through an online platform such
                             Forms\Components\Section::make('Physical Inspection Additional Questions')
                                 ->statePath('physical_assmt_add_questions')
                                 ->schema([
-                                  Forms\Components\Select::make('deferred_maintenance_outstanding')
-                                    ->label('Are any deferred maintenance items outstanding from the last inspection?')
-                                    ->options(['Yes' => 'Yes', 'No' => 'No']),
+                                    Forms\Components\Select::make('deferred_maintenance_outstanding')
+                                        ->label('Are any deferred maintenance items outstanding from the last inspection?')
+                                        ->options(['Yes' => 'Yes', 'No' => 'No']),
                                     Forms\Components\Textarea::make('deferred_maintenance_detail')
-                                    ->label('If Yes, please specify items that remain outstanding and include impact of outstanding items on overall property appeal and condition'),
+                                        ->label('If Yes, please specify items that remain outstanding and include impact of outstanding items on overall property appeal and condition'),
                                     Forms\Components\Select::make('harmful_environment_condition')
                                         ->label('Was a harmful environmental condition observed which is not covered by an existing O&M plan (such as mold)?')
                                         ->options(['Yes' => 'Yes', 'No' => 'No']),
@@ -1069,26 +1099,95 @@ short-term (<1 month) rentals generally marketed through an online platform such
                         ->statePath('repairs_verification')
                         ->visible(fn($get) => in_array('9', $get('form_steps')))
                         ->schema([
+                            Forms\Components\Section::make('Property Information')
+                                ->statePath('property_info')
+                                ->columns(4)
+                                ->schema([
+                                    Forms\Components\TextInput::make('name'),
+                                    Forms\Components\TextInput::make('address'),
+                                    Forms\Components\TextInput::make('address_2'),
+                                    Forms\Components\TextInput::make('city'),
+                                    Forms\Components\TextInput::make('state_id')
+                                        ->label('State')
+                                        ->numeric(),
+                                    Forms\Components\TextInput::make('zip'),
+                                    Forms\Components\TextInput::make('country'),
+                                ]),
+                            Forms\Components\Section::make('Inspection Scheduling Contact Info')
+                                ->columns(4)
+                                ->schema([
+                                    Forms\Components\TextInput::make('contact_company')
+                                        ->label('Contact Company')
+                                        ->required()
+                                        ->maxLength(255),
+                                    Forms\Components\TextInput::make('contact_name')
+                                        ->label('Contact Name')
+                                        ->required()
+                                        ->maxLength(255),
+                                    Forms\Components\TextInput::make('contact_phone')
+                                        ->label('Contact Phone')
+                                        ->required()
+                                        ->maxLength(255),
+                                    Forms\Components\TextInput::make('contact_email')
+                                        ->label('Contact Email')
+                                        ->email()
+                                        ->required()
+                                        ->maxLength(255),
+                                    Forms\Components\TextInput::make('inspection_company')
+                                        ->label('Inspection Company')
+                                        ->required()
+                                        ->maxLength(255),
+                                    Forms\Components\TextInput::make('inspector_name')
+                                        ->label("Inspector's Name")
+                                        ->required()
+                                        ->maxLength(255),
+                                    Forms\Components\TextInput::make('inspector_company_phone')
+                                        ->label("Inspection Co. Phone")
+                                        ->required()
+                                        ->maxLength(255),
+                                    Forms\Components\TextInput::make('inspector_id')
+                                        ->label("Inspector's ID")
+                                        ->required()
+                                        ->maxLength(255),
+                                ]),
+                            Forms\Components\Section::make('Servicer Info')
+                                ->columns(4)
+                                ->schema([
+                                    Forms\Components\TextInput::make('servicer_name')->label('Servicer Name'),
+                                    Forms\Components\TextInput::make('loan_number')->label('Loan Number'),
+                                    Forms\Components\Select::make('primary_type')
+                                        ->label('Primary Property Type')
+                                        ->required()
+                                        ->options(['Health Care' => 'Health Care', 'Industrial' => 'Industrial', 'Lodging' => 'Lodging', 'Multifamily' => 'Multifamily', 'Mobile Home Park' => 'Mobile Home Park', 'Mixed Use' => 'Mixed Use', 'Office' => 'Office', 'Other' => 'Other', 'Retail' => 'Retail', 'Self Storage' => 'Self Storage']),
+                                ]),
+                            Forms\Components\Section::make('Completion Details')
+                                ->columns(2)
+                                ->schema([
+                                    Forms\Components\TextInput::make('expected_percentage_complete')->label('Expected percentage completed')
+                                        ->numeric()->suffix('%')->maxValue(100),
+                                    Forms\Components\TextInput::make('overall_observed_percentage_complete')->label('Overall observed percentage completed')
+                                        ->numeric()->suffix('%')->maxValue(100),
+                                ]),
                             Forms\Components\Section::make('Repairs Verification')
                                 ->schema([
                                     Forms\Components\Textarea::make('general_summary_comments')
-                                    ->label('General description of improvements and summary comments'),
+                                        ->label('General description of improvements and summary comments'),
                                     Forms\Components\Repeater::make('verification_list')
                                         ->columns(4)
-                                    ->schema([
-                                        Forms\Components\Textarea::make('item_description'),
-                                        Forms\Components\Textarea::make('inspector_comments'),
-                                        Forms\Components\FileUpload::make('photo'),
-                                        Forms\Components\Select::make('repair_status')
-                                        ->options([
-                                            'Repairs Complete' => 'Repairs Complete',
-                                            'Partially - Inprogress' => 'Partially - Inprogress',
-                                            'Partially - Complete' => 'Partially - Complete',
-                                            'Repairs Scheduled' => 'Repairs Scheduled',
-                                            'Repairs Planned' => 'Repairs Planned',
-                                            'Unknown' => 'Unknown',
+                                        ->schema([
+                                            Forms\Components\Textarea::make('item_description'),
+                                            Forms\Components\Textarea::make('inspector_comments'),
+                                            Forms\Components\FileUpload::make('photo'),
+                                            Forms\Components\Select::make('repair_status')
+                                                ->options([
+                                                    'Repairs Complete' => 'Repairs Complete',
+                                                    'Partially - Inprogress' => 'Partially - Inprogress',
+                                                    'Partially - Complete' => 'Partially - Complete',
+                                                    'Repairs Scheduled' => 'Repairs Scheduled',
+                                                    'Repairs Planned' => 'Repairs Planned',
+                                                    'Unknown' => 'Unknown',
+                                                ])
                                         ])
-                                    ])
 
                                 ]),
                         ]),
@@ -1101,17 +1200,165 @@ short-term (<1 month) rentals generally marketed through an online platform such
                         ->statePath('hospitals')
                         ->visible(fn($get) => in_array('11', $get('form_steps')))
                         ->schema([
+                            Forms\Components\Section::make('General Property Info')
+                                ->columns(3)
+                                ->schema([
+                                    Forms\Components\Select::make('new_patients_accepted')
+                                        ->label('New Patients Currently being Accepted')
+                                        ->options(['Yes' => 'Yes', 'No' => 'No']),
+                                    Forms\Components\Select::make('admission_waiting_period')
+                                        ->label('Admission Waiting Period')
+                                        ->options([
+                                            'Yes, 1-15 Days' => 'Yes, 1-15 Days',
+                                            'Yes, 16-30 Days' => 'Yes, 16-30 Days',
+                                            'Yes, 31-60 Days' => 'Yes, 31-60 Days',
+                                            'Yes, 61-120 Days' => 'Yes, 61-120 Days',
+                                            'Yes, 121+ Days' => 'Yes, 121+ Days',
+                                            'No Waiting Period' => 'No Waiting Period'
+                                        ]),
+                                    Forms\Components\Select::make('proximity_to_hospital')
+                                        ->label('Proximity to a Hospital')
+                                        ->options([
+                                            'On site' => 'On site',
+                                            'Less than 1 mile' => 'Less than 1 mile',
+                                            '1 to < 5 miles' => '1 to < 5 miles',
+                                            '5 to <10 miles' => '5 to <10 miles',
+                                            '10 or more miles' => '10 or more miles',
+                                        ])
+                                ]),
+                            Forms\Components\Section::make('Level of Care Breakdown')
+                                ->statePath('level_of_care_breakdown')
+                                ->schema([
+                                    Forms\Components\Repeater::make('unit_info')
+                                        ->columns(7)
+                                        ->schema([
+                                            Forms\Components\Select::make('unit_type')
+                                                ->label('Unit Type')->options([
+                                                    'Assisted Living/Congregate Care' => 'Assisted Living/Congregate Care',
+                                                    'Hospital' => 'Hospital',
+                                                    'Nursing Home, Unskilled' => 'Nursing Home, Unskilled',
+                                                    'Nursing Home, Skilled' => 'Nursing Home, Skilled',
+                                                    'Specialty Health Care' => 'Specialty Health Care'
+                                                ]),
+                                            Forms\Components\TextInput::make('total_beds')->label('Total Beds')->numeric(),
+                                            Forms\Components\TextInput::make('occupied_beds')->label('Total Beds Occupied')->numeric(),
+                                            Forms\Components\TextInput::make('total_units')->label('Total Units')->numeric(),
+                                            Forms\Components\TextInput::make('occupied_units')->label('Total Units Occupied')->numeric(),
+                                            Forms\Components\TextInput::make('average_sq_feet_unit')->label('Sq. Feet / Unit')->numeric()->inputMode('decimal'),
+                                            Forms\Components\TextInput::make('monthly_rent')->label('Monthly Rent')->numeric()->inputMode('decimal'),
+                                        ]),
+                                    Forms\Components\Grid::make(2)
+                                        ->schema([
+                                            Forms\Components\TextInput::make('administrator_name')->label("Administrator's Name"),
+                                            Forms\Components\Select::make('administrator_length_at_property')->label('Length of Time at Property')
+                                                ->options([
+                                                    '< 6 mos' => '< 6 mos',
+                                                    '6 m to < 1 yr' => '6 m to < 1 yr',
+                                                    '1 to < 3 yrs' => '1 to < 3 yrs',
+                                                    '3 to < 5 yrs' => '3 to < 5 yrs',
+                                                    '5 yrs or longer' => '5 yrs or longer'
+                                                ]),
+                                            Forms\Components\TextInput::make('director_nursing_name')->label("Director of Nursing's Name"),
+                                            Forms\Components\Select::make('director_nursing_length_at_property')->label('Length of Time at Property')
+                                                ->options([
+                                                    '< 6 mos' => '< 6 mos',
+                                                    '6 m to < 1 yr' => '6 m to < 1 yr',
+                                                    '1 to < 3 yrs' => '1 to < 3 yrs',
+                                                    '3 to < 5 yrs' => '3 to < 5 yrs',
+                                                    '5 yrs or longer' => '5 yrs or longer'
+                                                ]),
+                                        ]),
+                                    Forms\Components\Section::make('Direct Care Staff Numbers')
+                                        ->statePath('direct_care_staff_numbers')
+                                        ->columns(7)
+                                        ->schema([
+                                            Forms\Components\Placeholder::make('nurses_rns')->label('Nurses RNs'),
+                                            Forms\Components\TextInput::make('nurses_rns_1')->label(''),
+                                            Forms\Components\TextInput::make('nurses_rns_2')->label(''),
+                                            Forms\Components\TextInput::make('nurses_rns_3')->label(''),
+                                            Forms\Components\TextInput::make('nurses_rns_comments')->label('')->helperText('Comments')->columnSpan(3),
+                                            Forms\Components\Placeholder::make('nurses_lpns')->label('Nurses LPNs'),
+                                            Forms\Components\TextInput::make('nurses_lpns_1')->label(''),
+                                            Forms\Components\TextInput::make('nurses_lpns_2')->label(''),
+                                            Forms\Components\TextInput::make('nurses_lpns_3')->label(''),
+                                            Forms\Components\TextInput::make('nurses_lpns_comments')->label('')->helperText('Comments')->columnSpan(3),
+                                            Forms\Components\Placeholder::make('other_direct_care')->label('Other Direct Care'),
+                                            Forms\Components\TextInput::make('other_direct_care_1')->label(''),
+                                            Forms\Components\TextInput::make('other_direct_care_2')->label(''),
+                                            Forms\Components\TextInput::make('other_direct_care_3')->label(''),
+                                            Forms\Components\TextInput::make('other_direct_care_comments')->label('')->helperText('Comments')->columnSpan(3),
+                                            Forms\Components\Placeholder::make('non_direct_care')->label('Non Direct Care Personnel'),
+                                            Forms\Components\TextInput::make('non_direct_care_1')->label(''),
+                                            Forms\Components\TextInput::make('non_direct_care_2')->label(''),
+                                            Forms\Components\TextInput::make('non_direct_care_3')->label(''),
+                                            Forms\Components\TextInput::make('non_direct_care_comments')->label('')->helperText('Comments')->columnSpan(3),
+                                        ]),
+                                ]),
+                            Forms\Components\Section::make('Regulatory / Licensing Agency Information')
+                                ->statePath('regulatory_agency_information')
+                                ->columns(3)
+                                ->schema([
+                                    Forms\Components\TextInput::make('name_of_agency')->label('Name of Agency'),
+                                    Forms\Components\TextInput::make('contact_person')->label('Contact Person'),
+                                    Forms\Components\DatePicker::make('expiration_date_license')->label('Expiration Date of Operating License'),
+                                    Forms\Components\Select::make('all_licenses_current')->label('All Licenses Current')
+                                        ->options(['Yes' => 'Yes', 'No' => 'No']),
+                                    Forms\Components\DatePicker::make('date_medicare_inspection')->label('Date of last Medicare inspection'),
+                                    Forms\Components\Select::make('medicare_certified')->label('Property Medicare Certified')
+                                        ->options(['Yes' => 'Yes', 'No' => 'No']),
+                                    Forms\Components\DatePicker::make('date_medicaid_inspection')->label('Date of last Medicaid inspection'),
+                                    Forms\Components\Select::make('medicaid_certified')->label('Property Medicaid Certified')
+                                        ->options(['Yes' => 'Yes', 'No' => 'No']),
+                                    Forms\Components\Textarea::make('violations_description')->label('Please describe any violations, costs associated, resolution or outstanding issues')->columnSpanFull(),
+                                ]),
+                            Forms\Components\Section::make('Property Condition')
+                                ->statePath('property_condition')
+                                ->columns(3)
+                                ->schema([
+                                    Forms\Components\Select::make('handrails_in_halls')->label('Handrails in the halls')
+                                        ->options(['Yes' => 'Yes', 'No, Describe Below' => 'No, Describe Below']),
+                                    Forms\Components\Select::make('grab_bars_present')->label('Grab bars present in rest rooms')
+                                        ->options(['Yes' => 'Yes', 'No, Describe Below' => 'No, Describe Below']),
+                                    Forms\Components\Select::make('exits_marked')->label('Exits clearly marked')
+                                        ->options(['Yes' => 'Yes', 'No, Describe Below' => 'No, Describe Below']),
+                                    Forms\Components\Select::make('staff_interacts_well')->label('Staff interacts well with residents')
+                                        ->options(['Yes' => 'Yes', 'No, Describe Below' => 'No, Describe Below']),
+                                    Forms\Components\Select::make('intercom_system')->label('Intercom System')
+                                        ->options(['Yes' => 'Yes', 'No, Describe Below' => 'No, Describe Below']),
+                                    Forms\Components\Select::make('looks_smells_clean')->label('Facility looks and smells clean')
+                                        ->options(['Yes' => 'Yes', 'No, Describe Below' => 'No, Describe Below']),
+                                    Forms\Components\Select::make('generator_function')->label('Generator Function')
+                                        ->options(['Yes' => 'Yes', 'No, Describe Below' => 'No, Describe Below']),
+                                    Forms\Components\Textarea::make('additional_condition_description')->label('Additional description of any safety or deficiency issues observed')->columnSpanFull(),
+                                    Forms\Components\TextInput::make('down_units_numbers')->label('Down Units (List the unit #)')->inlineLabel()->columnSpanFull()
+                                ]),
+                            Forms\Components\Section::make('Detailed Report of Units Inspected')
+                                ->statePath('detailed_report_of_units_inspected')
+                                ->schema([
+                                    Forms\Components\Repeater::make('unit_inspection_detail')
+                                        ->columns(7)
+                                        ->schema([
+                                            Forms\Components\TextInput::make('unit_number')->label('Unit Number'),
+                                            Forms\Components\TextInput::make('bedrooms')->label('Bedrooms'),
+                                            Forms\Components\TextInput::make('baths')->label('Baths'),
+                                            Forms\Components\TextInput::make('sq_feet')->label('Square Feet'),
+                                            Forms\Components\TextInput::make('asking_rent')->label('Asking Rent'),
+                                            Forms\Components\Select::make('current_use')->label('Current Use')
+                                                ->options(['Occupied Unfurnished' => 'Occupied Unfurnished', 'Occupied Furnished' => 'Occupied Furnished', 'Down Unit' => 'Down Unit', 'Vacant Unfurnished, Ready' => 'Vacant Unfurnished, Ready', 'Vacant Unfurnished' => 'Vacant Unfurnished', 'Vacant Furnished, Ready' => 'Vacant Furnished, Ready', 'Vacant Furnished' => 'Vacant Furnished', 'Non-Revenue' => 'Non-Revenue', 'Commercial Unit' => 'Commercial Unit']),
+                                            Forms\Components\Select::make('overall_condition')->label('Overall Condition')
+                                                ->options(['1' => '1', '2' => '2', '3' => '3', '4' => '4', '5' => '5', 'Not Applicable' => 'Not Applicable', 'Not Accessible' => 'Not Accessible', 'Not Inspected' => 'Not Inspected']),
+                                        ])
+                                ])
+
+
                         ]),
-                ])->columns(3)->skippable()->submitAction(new HtmlString(Blade::render(<<<BLADE
-    <x-filament::button
-        type="submit"
-        size="sm"
-    >
-        Submit
-    </x-filament::button>
+                ])
+                    ->columns(3)
+        ->skippable()
+        ->submitAction(new HtmlString(Blade::render(<<<BLADE
+    <x-filament::button type="submit" size="sm">Submit</x-filament::button>
 BLADE
-                ))),
-            ])->columns(1);
+        ))),]);
     }
 
     public static function table(Table $table): Table

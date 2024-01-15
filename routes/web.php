@@ -20,7 +20,9 @@ Route::get('install', function (){
     \App\Models\User::create([
         'name' => 'Admin',
         'email' => 'admin@admin.com',
-        'password' => \Illuminate\Support\Facades\Hash::make('Admin2525')
+        'password' => \Illuminate\Support\Facades\Hash::make('Admin2525'),
+        'is_active' => 1,
+        'is_admin' => 1
     ]);
 });
 

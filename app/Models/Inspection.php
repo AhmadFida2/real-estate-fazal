@@ -22,8 +22,16 @@ class Inspection extends Model
         'neighborhood_site_data' => 'json',
         'physical_condition' => 'json',
         'images' => 'json',
+        'rent_roll' => 'json',
         'form_steps' => 'json',
-        'mgmt_interview' => 'json'
+        'mgmt_interview' => 'json',
+        'multifamily' => 'json',
+        'fannie_mae_assmt' => 'json',
+        'fre_assmt' => 'json',
+        'repairs_verification' => 'json',
+        'senior_supplement' => 'json',
+        'hospitals' => 'json',
+
     ];
 
     public function user()
