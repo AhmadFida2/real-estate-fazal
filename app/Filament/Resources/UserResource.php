@@ -23,24 +23,28 @@ class UserResource extends Resource
     public static function form(Form $form): Form
     {
         return $form
-            ->columns(3)
             ->schema([
-                Forms\Components\TextInput::make('name')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('email')
-                    ->email()
-                    ->required(),
-                Forms\Components\TextInput::make('password')
-                    ->required()
-                ->dehydrateStateUsing(fn($state) => Hash::make($state)),
-               Forms\Components\Grid::make(2)
-                ->schema([
-                    Forms\Components\Toggle::make('is_admin')
-                        ->required(),
-                    Forms\Components\Toggle::make('is_active')
-                        ->required(),
-                ])
+                Forms\Components\Section::make('Basic Info')
+                    ->columns(3)
+                    ->schema([
+                        Forms\Components\TextInput::make('name')
+                            ->required()
+                            ->maxLength(255),
+                        Forms\Components\TextInput::make('email')
+                            ->email()
+                            ->required(),
+                        Forms\Components\TextInput::make('password')
+                            ->required()
+                            ->dehydrateStateUsing(fn($state) => Hash::make($state)),
+                    ]),
+                Forms\Components\Section::make('Privileges')
+                    ->columns(3)
+                    ->schema([
+                        Forms\Components\Toggle::make('is_admin')->label('Admin')
+                            ->required(),
+                        Forms\Components\Toggle::make('is_active')->label('Active')
+                            ->required(),
+                    ])
             ]);
     }
 

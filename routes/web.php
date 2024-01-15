@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 Route::redirect('/','/admin')->name('login');
 
 Route::get('install', function (){
-    \Illuminate\Support\Facades\Artisan::call('migrate:fresh');
+    \Illuminate\Support\Facades\Artisan::call('migrate:fresh --force');
     \App\Models\User::create([
         'name' => 'Admin',
         'email' => 'admin@admin.com',
@@ -24,6 +24,7 @@ Route::get('install', function (){
         'is_active' => 1,
         'is_admin' => 1
     ]);
+    return redirect('/');
 });
 
 
