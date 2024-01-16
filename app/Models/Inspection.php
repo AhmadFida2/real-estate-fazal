@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\InspectionScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -37,5 +38,14 @@ class Inspection extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    protected static function booted(): void
+    {
+        if (auth()->check()) {
+            if (!auth()->user()->is_admin) {
+                static::addGlobalScope(new InspectionScope);
+            }
+        }
     }
 }

@@ -36,7 +36,13 @@ class InspectionResource extends JsonResource
             'Operation Maintenance Plans' => $this->operation_maintenance_plans,
             'Neighborhood Site Data' => $this->neighborhood_site_data,
             'Physical Condition' => $this->physical_condition,
-            'Images' => $this->images,
+            'Images' => collect(array_filter($this->images))->map(function ($image) {
+                return [
+                    'photo_type' => $image['photo_type'],
+                    'photo_description' => $image['photo_description'],
+                    'photo_url' => asset("storage/{$image['photo_url']}"), // Use the asset helper here
+                ];
+            })->values()->all(),
             'rent_roll' => $this->rent_roll,
             'mgmt_interview' => $this->mgmt_interview,
             'multifamily' => $this->multifamily,

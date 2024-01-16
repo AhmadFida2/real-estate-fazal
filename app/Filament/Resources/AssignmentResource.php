@@ -35,6 +35,7 @@ class AssignmentResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->emptyStateHeading('No Upcoming Assignments')
             ->columns([
                 Tables\Columns\TextColumn::make('date')
                     ->date()

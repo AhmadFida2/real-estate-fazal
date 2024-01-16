@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\AssignmentScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -18,5 +19,12 @@ class Assignment extends Model
         return $this->belongsTo(User::class);
     }
 
+    protected static function booted(): void
+    {
+        if (!auth()->user()->is_admin) {
+            static::addGlobalScope(new AssignmentScope);
+        }
+
+    }
 
 }
