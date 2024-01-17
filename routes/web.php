@@ -27,4 +27,9 @@ Route::get('install', function (){
     return redirect('/');
 });
 
+Route::get('storage-link', function (){
+    \Illuminate\Support\Facades\Artisan::call('storage:link');
+    return redirect('/');
+});
+
 

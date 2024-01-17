@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Scopes\InspectionScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class Inspection extends Model
 {
@@ -47,5 +48,31 @@ class Inspection extends Model
                 static::addGlobalScope(new InspectionScope);
             }
         }
+
+        static::deleted(function ($model) {
+            // Delete associated photos from storage
+            foreach ($model->images as $image) {
+                if (Storage::exists($image['photo_url'])) {
+                    Storage::delete($image['photo_url']);
+                }
+            }
+        });
+
+        static::updated(function ($model) {
+            // Delete old photos only if they are replaced with new ones
+            $originalImages = $model->getOriginal('images');
+            $currentImages = $model->images;
+
+            foreach ($originalImages as $originalImage) {
+                $originalPhotoUrl = $originalImage['photo_url'];
+
+                // Check if the old image is not in the updated images
+                if (!collect($currentImages)->pluck('photo_url')->contains($originalPhotoUrl)) {
+                    if (Storage::exists($originalPhotoUrl)) {
+                        Storage::delete($originalPhotoUrl);
+                    }
+                }
+            }
+        });
     }
 }
