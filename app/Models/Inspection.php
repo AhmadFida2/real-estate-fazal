@@ -50,29 +50,88 @@ class Inspection extends Model
         }
 
         static::deleted(function ($model) {
+
             // Delete associated photos from storage
-            foreach ($model->images as $image) {
-                if (Storage::exists($image['photo_url'])) {
-                    Storage::delete($image['photo_url']);
-                }
+            if(!is_null($model->images)) {
+                $model->deletePhotos($model->images);
+            }
+            if(!is_null($model->repairs_verification)) {
+                $model->deletePhotos($model->repairs_verification['verification_list']);
             }
         });
 
         static::updated(function ($model) {
+
             // Delete old photos only if they are replaced with new ones
             $originalImages = $model->getOriginal('images');
+            $originalRepairsVerification = $model->getOriginal('repairs_verification');
+
             $currentImages = $model->images;
+            $currentRepairsVerification = $model->repairs_verification;
 
-            foreach ($originalImages as $originalImage) {
-                $originalPhotoUrl = $originalImage['photo_url'];
+            if(!is_null($model->repairs_verification))
+            {
+                $model->deleteOldPhotos($originalRepairsVerification['verification_list'], $currentRepairsVerification['verification_list']);
 
-                // Check if the old image is not in the updated images
-                if (!collect($currentImages)->pluck('photo_url')->contains($originalPhotoUrl)) {
-                    if (Storage::exists($originalPhotoUrl)) {
-                        Storage::delete($originalPhotoUrl);
+            }
+            if(!is_null($model->images))
+            {
+                $model->deleteOldPhotos($originalImages, $currentImages);
+            }
+
+        });
+
+    }
+
+    protected function deletePhotos($photos): void
+    {
+        foreach ($photos as $photo) {
+            $photoField = array_key_exists('photo', $photo) ? 'photo' : 'photo_url';
+            if (is_array($photo[$photoField])) {
+                foreach ($photo[$photoField] as $photo_ind) {
+                    $photoPath = "public/{$photo_ind}";
+                    if (Storage::exists($photoPath)) {
+                        Storage::delete($photoPath);
+                    }
+                }
+            } else {
+                $photoPath = "public/{$photo[$photoField]}";
+                if (Storage::exists($photoPath)) {
+                    Storage::delete($photoPath);
+                }
+
+            }
+        }
+
+
+    }
+
+    protected function deleteOldPhotos($originalPhotos, $currentPhotos): void
+    {
+        foreach ($originalPhotos as $originalPhoto) {
+            $originalPhotoField = array_key_exists('photo', $originalPhoto) ? 'photo' : 'photo_url';
+            $originalPhotoUrl = $originalPhoto[$originalPhotoField];
+
+            if (is_array($originalPhotoUrl)) {
+                foreach ($originalPhotoUrl as $singlePhoto) {
+                    if (!collect($currentPhotos)->pluck($originalPhotoField)->flatten()->contains($singlePhoto)) {
+                        $photoPath = "public/{$singlePhoto}";
+
+                        if (Storage::exists($photoPath)) {
+                            Storage::delete($photoPath);
+                        }
+                    }
+                }
+            } else {
+                if (!collect($currentPhotos)->pluck($originalPhotoField)->contains($originalPhotoUrl)) {
+                    $photoPath = "public/{$originalPhotoUrl}";
+
+                    if (Storage::exists($photoPath)) {
+                        Storage::delete($photoPath);
                     }
                 }
             }
-        });
+        }
+
     }
 }

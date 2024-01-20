@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::redirect('/','/admin')->name('login');
 
-Route::get('install', function (){
+Route::get('install/{seed}', function ($seed){
     \Illuminate\Support\Facades\Artisan::call('migrate:fresh --force');
     \App\Models\User::create([
         'name' => 'Admin',
@@ -24,6 +24,11 @@ Route::get('install', function (){
         'is_active' => 1,
         'is_admin' => 1
     ]);
+    if($seed)
+    {
+        \Illuminate\Support\Facades\Artisan::call('db:seed --force');
+    }
+    \Illuminate\Support\Facades\Artisan::call('storage:link');
     return redirect('/');
 });
 
