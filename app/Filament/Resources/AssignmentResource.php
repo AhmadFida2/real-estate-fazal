@@ -7,6 +7,7 @@ use App\Filament\Resources\AssignmentResource\RelationManagers;
 use App\Models\Assignment;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -28,34 +29,47 @@ class AssignmentResource extends Resource
                 Forms\Components\TextInput::make('address')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\Select::make('user_id')->relationship('user','name')
+                Forms\Components\Select::make('user_id')->relationship('user', 'name')
             ]);
     }
 
     public static function table(Table $table): Table
     {
-        return $table
-            ->emptyStateHeading('No Upcoming Assignments')
-            ->columns([
-                Tables\Columns\TextColumn::make('date')
-                    ->date()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('address')
-                    ->searchable(),
-                Tables\Columns\IconColumn::make('is_completed')
-                    ->boolean(),
-            ])
-            ->filters([
-                //
-            ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
-            ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
-            ]);
+        if (auth()->user()->is_admin) {
+            return $table
+                ->emptyStateHeading('No Upcoming Assignments')
+                ->columns([
+                    Tables\Columns\TextColumn::make('date')
+                        ->date()
+                        ->sortable(),
+                    Tables\Columns\TextColumn::make('user.name'),
+                    Tables\Columns\TextColumn::make('address')->words(8),
+                    Tables\Columns\IconColumn::make('is_completed')
+                        ->label('Completed')
+                        ->boolean()
+                ])
+                ->actions([
+                    Tables\Actions\EditAction::make(),
+                ])
+                ->bulkActions([
+                    Tables\Actions\BulkActionGroup::make([
+                        Tables\Actions\DeleteBulkAction::make(),
+                    ]),
+                ]);
+        } else {
+            return $table
+                ->emptyStateHeading('No Upcoming Assignments')
+                ->columns([
+                    Tables\Columns\TextColumn::make('date')
+                        ->date()
+                        ->sortable(),
+                    Tables\Columns\TextColumn::make('address')->words(8),
+                    Tables\Columns\ToggleColumn::make('is_completed')
+                        ->label('Mark as Complete')
+                    ->afterStateUpdated(fn($state)=> $state ? Notification::make()->title('Marked as Complete!')->success()->send() : Notification::make()->title('Marked as Incomplete!')->danger()->send())
+
+                ]);
+        }
     }
 
     public static function getRelations(): array
