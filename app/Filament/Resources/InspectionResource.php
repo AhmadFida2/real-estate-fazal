@@ -187,7 +187,7 @@ class InspectionResource extends Resource
                 Select::make('rating_scale')
                     ->required()
                     ->label('Rating Scale')
-                    ->options(['MBA' => 'MBA', 'Fannie Mae' => 'Fannie Mae']),
+                    ->options(['MBA' => 'MBA'])->default('MBA')->disabled()->dehydrated(),
                 Forms\Components\DateTimePicker::make('inspection_date')
                     ->required()
                     ->label('Inspection Date'),
@@ -1943,6 +1943,225 @@ short-term (<1 month) rentals generally marketed through an online platform such
                 Section::make('Part VI: Regulatory Compliance')
                     ->statePath('regulatory_compliance')
                     ->schema([
+                        Section::make('Regulatory / Licensing Agency')
+                            ->schema([
+                                TextInput::make('regulator_name')->label('Name of Regulatory or Licensing Agency'),
+                                TextInput::make('regulator_contact_person')->label('Regulatory Agency Contact Person'),
+                                Forms\Components\DatePicker::make('license_expiration_date')->label('Expiration Date of Operating License')
+                            ]),
+                        Section::make('Regulatory / Licensing Agency Inspection')
+                            ->schema([
+                                Forms\Components\DatePicker::make('last_visit_date')->label('Date of Last Agency Visit')
+                            ]),
+                        Section::make('Purpose of Visit')
+                            ->statePath('purpose_of_visit')
+                            ->schema([
+                                Section::make('Certification/Licensure')
+                                    ->statePath('certification_licensure')
+                                    ->columns(4)
+                                    ->schema([
+                                        Select::make('status')->label('Yes / No / N/A')
+                                            ->options(['Yes' => 'Yes', 'No' => 'No', 'Not Applicable' => 'Not Applicable']),
+                                        Textarea::make('comments')->label('Comments')->columnSpan(3)
+                                    ]),
+                                Section::make('Life/Safety')
+                                    ->statePath('life_safety')
+                                    ->columns(4)
+                                    ->schema([
+                                        Select::make('status')->label('Yes / No / N/A')
+                                            ->options(['Yes' => 'Yes', 'No' => 'No', 'Not Applicable' => 'Not Applicable']),
+                                        Textarea::make('comments')->label('Comments')->columnSpan(3)
+                                    ]),
+                                Section::make('Follow-up')
+                                    ->statePath('follow_up')
+                                    ->columns(4)
+                                    ->schema([
+                                        Select::make('status')->label('Yes / No / N/A')
+                                            ->options(['Yes' => 'Yes', 'No' => 'No', 'Not Applicable' => 'Not Applicable']),
+                                        Textarea::make('comments')->label('Comments')->columnSpan(3)
+                                    ]),
+                                Section::make('Other (describe)')
+                                    ->statePath('other_purpose')
+                                    ->columns(4)
+                                    ->schema([
+                                        TextInput::make('purpose')->label('Purpose')->columnSpan(2),
+                                        Textarea::make('comments')->label('Comments')->columnSpan(2)
+                                    ]),
+                                Section::make('Were deficiencies cited?')
+                                    ->statePath('deficiencies_cited')
+                                    ->columns(4)
+                                    ->schema([
+                                        Select::make('status')->label('Yes / No / N/A')
+                                            ->options(['Yes' => 'Yes', 'No' => 'No', 'Not Applicable' => 'Not Applicable']),
+                                        Textarea::make('comments')->label('Comments')->columnSpan(3)
+                                    ]),
+                                Section::make('Were non-monetary penalties assessed?')
+                                    ->statePath('non_monetary_fines_assessed')
+                                    ->columns(4)
+                                    ->schema([
+                                        Select::make('status')->label('Yes / No / N/A')
+                                            ->options(['Yes' => 'Yes', 'No' => 'No', 'Not Applicable' => 'Not Applicable']),
+                                        Textarea::make('comments')->label('Comments')->columnSpan(3)
+                                    ]),
+                                Section::make('Were monetary penalties/fines assessed?')
+                                    ->statePath('monetary_fines_assessed')
+                                    ->columns(4)
+                                    ->schema([
+                                        Select::make('status')->label('Yes / No / N/A')
+                                            ->options(['Yes' => 'Yes', 'No' => 'No', 'Not Applicable' => 'Not Applicable']),
+                                        Textarea::make('comments')->label('Comments')->columnSpan(3)
+                                    ]),
+                                Section::make('Agency considers property in compliance?')
+                                    ->statePath('property_in_compliance')
+                                    ->columns(4)
+                                    ->schema([
+                                        Select::make('status')->label('Yes / No / N/A')
+                                            ->options(['Yes' => 'Yes', 'No' => 'No', 'Not Applicable' => 'Not Applicable']),
+                                        Textarea::make('comments')->label('Comments')->columnSpan(3)
+                                    ]),
+                                Section::make('Copy of regulatory agency\'s report received?')
+                                    ->statePath('regulatory_agency_report_received')
+                                    ->columns(4)
+                                    ->schema([
+                                        Select::make('status')->label('Yes / No / N/A')
+                                            ->options(['Yes' => 'Yes', 'No' => 'No', 'Not Applicable' => 'Not Applicable']),
+                                        Textarea::make('comments')->label('Comments')->columnSpan(3)
+                                    ]),
+                                Section::make('Copy of operator\'s plan of correction received?')
+                                    ->statePath('operator_correction_received')
+                                    ->columns(4)
+                                    ->schema([
+                                        Select::make('status')->label('Yes / No / N/A')
+                                            ->options(['Yes' => 'Yes', 'No' => 'No', 'Not Applicable' => 'Not Applicable']),
+                                        Textarea::make('comments')->label('Comments')->columnSpan(3)
+                                    ]),
+                                Section::make('Were any of the corrective actions related to the resident care and/or criminal background checks?')
+                                    ->statePath('resident_care_criminal_background')
+                                    ->columns(4)
+                                    ->schema([
+                                        Select::make('status')->label('Yes / No / N/A')
+                                            ->options(['Yes' => 'Yes', 'No' => 'No', 'Not Applicable' => 'Not Applicable']),
+                                        Textarea::make('plan_of_action')->label('If yes, what is the plan(s) of correction and status of such corrective actions?')->columnSpan(3)
+                                    ]),
+
+
+                            ]),
+                        Section::make('Changes in Regulatory Oversight?')
+                            ->statePath('changes_in_oversight')
+                            ->schema([
+                                Section::make('Staffing Requirements')
+                                    ->statePath('staffing_requirements')
+                                    ->columns(4)
+                                    ->schema([
+                                        Select::make('status')->label('Yes / No / N/A')
+                                            ->options(['Yes' => 'Yes', 'No' => 'No', 'Not Applicable' => 'Not Applicable']),
+                                        Textarea::make('comments')->label('Comments')->columnSpan(3)
+                                    ]),
+                                Section::make('Physical Design')
+                                    ->statePath('physical_design')
+                                    ->columns(4)
+                                    ->schema([
+                                        Select::make('status')->label('Yes / No / N/A')
+                                            ->options(['Yes' => 'Yes', 'No' => 'No', 'Not Applicable' => 'Not Applicable']),
+                                        Textarea::make('comments')->label('Comments')->columnSpan(3)
+                                    ]),
+                                Section::make('Health & Safety Codes')
+                                    ->statePath('health_safety_codes')
+                                    ->columns(4)
+                                    ->schema([
+                                        Select::make('status')->label('Yes / No / N/A')
+                                            ->options(['Yes' => 'Yes', 'No' => 'No', 'Not Applicable' => 'Not Applicable']),
+                                        Textarea::make('comments')->label('Comments')->columnSpan(3)
+                                    ]),
+                                Section::make('Government Subsidies')
+                                    ->statePath('government_subsidies')
+                                    ->columns(4)
+                                    ->schema([
+                                        Select::make('status')->label('Yes / No / N/A')
+                                            ->options(['Yes' => 'Yes', 'No' => 'No', 'Not Applicable' => 'Not Applicable']),
+                                        Textarea::make('comments')->label('Comments')->columnSpan(3)
+                                    ]),
+                                Section::make('Reimbursement Programs')
+                                    ->statePath('reimbursement_programs')
+                                    ->columns(4)
+                                    ->schema([
+                                        Select::make('status')->label('Yes / No / N/A')
+                                            ->options(['Yes' => 'Yes', 'No' => 'No', 'Not Applicable' => 'Not Applicable']),
+                                        Textarea::make('comments')->label('Comments')->columnSpan(3)
+                                    ]),
+
+                            ]),
+                        Section::make('Other Required Property Licenses')
+                            ->statePath('other_required_licenses')
+                            ->schema([
+                                Section::make('Commercial Kitchen/Food & Beverage Permit')
+                                    ->statePath('commercial_kitchen_beverage_permit')
+                                    ->columns(5)
+                                    ->schema([
+                                        Select::make('status')->label('Yes / No / N/A')
+                                            ->options(['Yes' => 'Yes', 'No' => 'No', 'Not Applicable' => 'Not Applicable']),
+                                        Forms\Components\DatePicker::make('expire_date')->label('Expire Date'),
+                                        Textarea::make('comments')->label('Comments')->columnSpan(3)
+                                    ]),
+                                Section::make('Commercial Vehicle')
+                                    ->statePath('commercial_vehicle')
+                                    ->columns(5)
+                                    ->schema([
+                                        Select::make('status')->label('Yes / No / N/A')
+                                            ->options(['Yes' => 'Yes', 'No' => 'No', 'Not Applicable' => 'Not Applicable']),
+                                        Forms\Components\DatePicker::make('expire_date')->label('Expire Date'),
+                                        Textarea::make('comments')->label('Comments')->columnSpan(3)
+                                    ]),
+                                Section::make('Elevator')
+                                    ->statePath('elevator')
+                                    ->columns(5)
+                                    ->schema([
+                                        Select::make('status')->label('Yes / No / N/A')
+                                            ->options(['Yes' => 'Yes', 'No' => 'No', 'Not Applicable' => 'Not Applicable']),
+                                        Forms\Components\DatePicker::make('expire_date')->label('Expire Date'),
+                                        Textarea::make('comments')->label('Comments')->columnSpan(3)
+                                    ]),
+                                Section::make('Third Party Healthcare')
+                                    ->statePath('third_party_healthcare')
+                                    ->columns(5)
+                                    ->schema([
+                                        Select::make('status')->label('Yes / No / N/A')
+                                            ->options(['Yes' => 'Yes', 'No' => 'No', 'Not Applicable' => 'Not Applicable']),
+                                        Forms\Components\DatePicker::make('expire_date')->label('Expire Date'),
+                                        Textarea::make('comments')->label('Comments')->columnSpan(3)
+                                    ]),
+                                Section::make('Other (describe)')
+                                    ->statePath('other')
+                                    ->columns(5)
+                                    ->schema([
+                                        TextInput::make('name')->label('License Name'),
+                                        Forms\Components\DatePicker::make('expire_date')->label('Expire Date'),
+                                        Textarea::make('comments')->label('Comments')->columnSpan(3)
+                                    ]),
+
+                            ]),
+                        Section::make('Miscellaneous')
+                        ->statePath('miscellaneous')
+                        ->schema([
+                            Section::make('Are there any material violations, lawsuits or judgments against any licensed professional employed by the operator?')
+                                ->statePath('material_violations_lawsuits_professional')
+                                ->columns(5)
+                                ->schema([
+                                    Select::make('status')->label('Yes / No')
+                                        ->options(['Yes' => 'Yes', 'No' => 'No']),
+                                    Textarea::make('detail')->label('Detail')->columnSpan(4)
+                                ]),
+                            Section::make('Are there any material violations, lawsuits or judgments against any other personnel at the property?')
+                                ->statePath('material_violations_lawsuits_personnel')
+                                ->columns(5)
+                                ->schema([
+                                    Select::make('status')->label('Yes / No')
+                                        ->options(['Yes' => 'Yes', 'No' => 'No']),
+                                    Textarea::make('detail')->label('Detail')->columnSpan(4)
+                                ]),
+
+                        ])
+
 
                     ]),
 

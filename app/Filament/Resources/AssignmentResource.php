@@ -65,10 +65,11 @@ class AssignmentResource extends Resource
                         ->sortable(),
                     Tables\Columns\TextColumn::make('address')->words(8),
                     Tables\Columns\ToggleColumn::make('is_completed')
-                        ->label('Mark as Complete')
+                        ->disabled(fn($state) => $state)
+                        ->label('Mark as Complete (Irreversible)')
                     ->afterStateUpdated(fn($state)=> $state ? Notification::make()->title('Marked as Complete!')->success()->send() : Notification::make()->title('Marked as Incomplete!')->danger()->send())
 
-                ]);
+                ])->actions([]);
         }
     }
 

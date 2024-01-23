@@ -25,8 +25,11 @@ class Assignment extends Model
 
     protected static function booted(): void
     {
-        if (!auth()->user()->is_admin) {
-            static::addGlobalScope(new AssignmentScope);
+        if(auth()->check())
+        {
+            if (!auth()->user()->is_admin) {
+                static::addGlobalScope(new AssignmentScope);
+            }
         }
 
     }

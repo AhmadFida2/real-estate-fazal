@@ -29,7 +29,7 @@ class AssignmentPolicy
      */
     public function create(User $user): bool
     {
-        return $user->is_admin;
+        return auth()->user()->is_admin;
     }
 
     /**
@@ -45,7 +45,7 @@ class AssignmentPolicy
      */
     public function delete(User $user, Assignment $assignment): bool
     {
-        return $user->is_admin;
+        return auth()->user()->is_admin;
     }
 
     /**
@@ -53,7 +53,7 @@ class AssignmentPolicy
      */
     public function restore(User $user, Assignment $assignment): bool
     {
-        return $user->is_admin;
+        return auth()->user()->is_admin;
     }
 
     /**
@@ -61,6 +61,6 @@ class AssignmentPolicy
      */
     public function forceDelete(User $user, Assignment $assignment): bool
     {
-        return $user->is_admin;
+        return auth()->user()->is_admin;
     }
 }
