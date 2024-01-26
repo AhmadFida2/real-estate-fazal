@@ -5,6 +5,7 @@ namespace App\Filament\Resources\PropertyResource\Pages;
 use App\Filament\Resources\InspectionResource;
 
 use Filament\Resources\Pages\CreateRecord;
+use Illuminate\Support\Facades\Cache;
 
 class CreateInspection extends CreateRecord
 {
@@ -43,7 +44,14 @@ class CreateInspection extends CreateRecord
     protected function mutateFormDataBeforeCreate(array $data): array
     {
         $data['user_id'] = auth()->id();
+        $key = $data['temp_key'];
+        unset($data['temp_key']);
+        Cache::delete($key);
+        $allKeys = Cache::get('temp_keys');
+        $allKeys = array_diff($allKeys, [$key]);
+        Cache::forever('temp_keys', $allKeys);
         return $data;
     }
+
 
 }

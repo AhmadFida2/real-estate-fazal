@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\PropertyResource\Pages;
 use App\Models\Inspection;
+use Filament\Actions\Action;
 use Filament\Forms;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Section;
@@ -11,11 +12,15 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
+use Filament\Notifications\Notification;
 use Filament\Resources\Pages\CreateRecord;
 use Filament\Resources\Resource;
 use Filament\Support\Markdown;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Support\Facades\Cache;
+use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
+use function Symfony\Component\Translation\t;
 
 
 class InspectionResource extends Resource
@@ -160,6 +165,7 @@ class InspectionResource extends Resource
             ->visible(fn($get) => in_array('1', $get('form_steps')))
             ->dehydrated(fn($get) => in_array('1', $get('form_steps')))
             ->schema([
+                Forms\Components\Hidden::make('temp_key')->default(0),
                 TextInput::make('name')
                     ->required()
                     ->maxLength(255),
@@ -177,9 +183,9 @@ class InspectionResource extends Resource
                 TextInput::make('zip')
                     ->required()
                     ->maxLength(255),
-                TextInput::make('country')
-                    ->required()
-                    ->maxLength(255),
+//                TextInput::make('country')
+//                    ->required()
+//                    ->maxLength(255),
                 TextInput::make('overall_rating')
                     ->required()
                     ->label('Overall Rating')
@@ -227,7 +233,7 @@ class InspectionResource extends Resource
                             ->label('Loan Number')
                             ->maxLength(255),
                         TextInput::make('property_id')
-                            ->label('InspectionCollection ID')
+                            ->label('Property ID')
                             ->maxLength(255),
                         TextInput::make('servicer_inspection_id')
                             ->label('Servicer Inspection ID')
@@ -375,11 +381,11 @@ class InspectionResource extends Resource
                             ->label('Annual Occupancy')->numeric(),
                         TextInput::make('annual_turnover')
                             ->label('Annual Turnover')->numeric(),
-                        TextInput::make('rent_roll_obtained')
-                            ->label('Rent Roll Obtained')->numeric(),
+                        Select::make('rent_roll_obtained')
+                            ->label('Rent Roll Obtained')
+                            ->options(['Yes' => 'Yes', 'No' => 'No']),
                         Forms\Components\DatePicker::make('rent_roll_date')
-                            ->label('Rent Roll Date')
-                        ,
+                            ->label('Rent Roll Date'),
                         Select::make('is_affordable_housing')
                             ->label('Is InspectionCollection Affordable Housing?')
                             ->options(['Yes' => 'Yes', 'No' => 'No', 'Not Applicable' => 'Not Applicable']),
@@ -467,12 +473,12 @@ class InspectionResource extends Resource
                                     ->label('Name or Type')
                                 ,
                                 TextInput::make('distance_competitor_1')
-                                    ->label('Distance')->numeric(),
+                                    ->label('Distance'),
                                 TextInput::make('name_or_type_competitor_2')
                                     ->label('Name or Type')
                                 ,
                                 TextInput::make('distance_competitor_2')
-                                    ->label('Distance')->numeric(),
+                                    ->label('Distance'),
                             ]),
                         Select::make('single_family_percent_use')
                             ->label('Single Family')
@@ -651,23 +657,59 @@ class InspectionResource extends Resource
     public static function reportPhotoStep(): Forms\Components\Component
     {
         return Forms\Components\Tabs\Tab::make('Photos')
-            ->columns(3)
+            ->columns(2)
             ->visible(fn($get) => in_array('3', $get('form_steps')))
             ->dehydrated(fn($get) => in_array('3', $get('form_steps')))
             ->schema([
+                Forms\Components\FileUpload::make('temp_images')->multiple()->image()->dehydrated(false)->hiddenOn('edit')
+                    ->label('Bulk Image Upload')->imageResizeUpscale(false),
+                Forms\Components\Actions::make([
+                    Forms\Components\Actions\Action::make('process_images')->action(function ($get, $set) {
+                        $rep_data = $get('images');
+                        $urls = [];
+                        $images = $get('temp_images');
+                        foreach ($images as $key => $image) {
+                            if ($image instanceof TemporaryUploadedFile) {
+                                $basename = basename($image->store('public'));
+                                $image->delete();
+                            } else {
+                                $basename = $image;
+                            }
+                            $rep_data[] = [
+                                'photo_type' => '',
+                                'photo_description' => '',
+                                'photo_url' => [$basename]
+                            ];
+                            $urls[] = $basename;
+                        }
+                        $key = now()->timestamp;
+                        Cache::forever($key, $urls);
+                        $keys = Cache::get('temp_keys',[]);
+                        $keys[] = $key;
+                        Cache::forever('temp_keys',$keys);
+                        $set('temp_images', []);
+                        $set('temp_key', $key);
+                        $set('images', $rep_data);
+                    })
+                ])->hiddenOn('edit')->alignCenter()->verticallyAlignCenter(),
                 Repeater::make('images')
                     ->statePath('images')
+                    ->grid(4)
                     ->addActionLabel('Add Photo')
+                    ->reorderableWithButtons(true)
+                    ->addable(false)
                     ->reorderable()
-                    ->columns(3)
                     ->columnSpanFull()
+                    ->columns(1)
                     ->schema([
+                        Forms\Components\FileUpload::make('photo_url')->label('Photo')->deletable(false),
                         Select::make('photo_type')->label('Photo Type')
                             ->options(['Exterior' => 'Exterior', 'Interior' => 'Interior', 'Roof' => 'Roof', 'Neighborhood' => 'Neighborhood', 'Routine Maintenance' => 'Routine Maintenance', 'Deferred Maintenance' => 'Deferred Maintenance', 'Life Safety' => 'Life Safety']),
                         Textarea::make('photo_description')->label('Photo Description'),
-                        Forms\Components\FileUpload::make('photo_url')->label('Photo')->image()->imageResizeMode('cover')->imageResizeTargetWidth('1024')->imageResizeUpscale(false)->acceptedFileTypes(['image/jpeg', 'image/bmp', 'image/png'])->multiple()->reorderable()->appendFiles()
                     ])
+                    ->default([])
             ]);
+
     }
 
     public static function reportRentStep(): Forms\Components\Component
@@ -735,8 +777,12 @@ class InspectionResource extends Resource
                                 ->label('Name of Information Source'),
                             TextInput::make('role_title_information_source')
                                 ->label('Role or Title of Information Source'),
-                            TextInput::make('management_affiliation')
-                                ->label('Management Affiliation'),
+                            Select::make('management_affiliation')
+                                ->label('Mgmt Affiliation')
+                                ->options([
+                                    'Affiliated with the Borrower' => 'Affiliated with the Borrower',
+                                    'Nonaffiliated, Third Party' => 'Nonaffiliated, Third Party'
+                                ]),
                             TextInput::make('phone_number')
                                 ->label('Phone Number'),
                             TextInput::make('email_address')
@@ -797,36 +843,42 @@ class InspectionResource extends Resource
                                     Select::make('Heat at the Property')
                                         ->label('Heat at the Property')
                                         ->options([
+                                            'Not Applicable' => 'Not Applicable',
                                             'Paid by Tenant' => 'Paid by Tenant',
                                             'Paid by Owner' => 'Paid by Owner',
                                         ]),
                                     Select::make('Water at the Property')
                                         ->label('Water at the Property')
                                         ->options([
+                                            'Not Applicable' => 'Not Applicable',
                                             'Paid by Tenant' => 'Paid by Tenant',
                                             'Paid by Owner' => 'Paid by Owner',
                                         ]),
                                     Select::make('Electric at the Property')
                                         ->label('Electric at the Property')
                                         ->options([
+                                            'Not Applicable' => 'Not Applicable',
                                             'Paid by Tenant' => 'Paid by Tenant',
                                             'Paid by Owner' => 'Paid by Owner',
                                         ]),
                                     Select::make('Gas at the Property')
                                         ->label('Gas at the Property')
                                         ->options([
+                                            'Not Applicable' => 'Not Applicable',
                                             'Paid by Tenant' => 'Paid by Tenant',
                                             'Paid by Owner' => 'Paid by Owner',
                                         ]),
                                     Select::make('Trash at the Property')
                                         ->label('Trash at the Property')
                                         ->options([
+                                            'Not Applicable' => 'Not Applicable',
                                             'Paid by Tenant' => 'Paid by Tenant',
                                             'Paid by Owner' => 'Paid by Owner',
                                         ]),
                                     Select::make('Cable at the Property')
                                         ->label('Cable at the Property')
                                         ->options([
+                                            'Not Applicable' => 'Not Applicable',
                                             'Paid by Tenant' => 'Paid by Tenant',
                                             'Paid by Owner' => 'Paid by Owner',
                                         ]),
@@ -1153,7 +1205,7 @@ short-term (<1 month) rentals generally marketed through an online platform such
                             ->label('State')
                             ->numeric(),
                         TextInput::make('zip'),
-                        TextInput::make('country'),
+//                        TextInput::make('country'),
                     ]),
                 Section::make('Inspection Scheduling Contact Info')
                     ->columns(4)
@@ -1210,7 +1262,7 @@ short-term (<1 month) rentals generally marketed through an online platform such
                             ->schema([
                                 Textarea::make('item_description'),
                                 Textarea::make('inspector_comments'),
-                                Forms\Components\FileUpload::make('photo')->image()->imageResizeMode('cover')->imageResizeTargetWidth('1024')->imageResizeUpscale(false)->acceptedFileTypes(['image/jpeg', 'image/bmp', 'image/png'])->multiple()->reorderable()->appendFiles(),
+                                Forms\Components\FileUpload::make('photo')->image()->imageResizeMode('cover')->imageResizeTargetWidth('1024')->imageResizeUpscale(false)->acceptedFileTypes(['image/jpeg', 'image/bmp', 'image/png'])->reorderable()->appendFiles(),
                                 Select::make('repair_status')
                                     ->options([
                                         'Repairs Complete' => 'Repairs Complete',
@@ -2141,26 +2193,26 @@ short-term (<1 month) rentals generally marketed through an online platform such
 
                             ]),
                         Section::make('Miscellaneous')
-                        ->statePath('miscellaneous')
-                        ->schema([
-                            Section::make('Are there any material violations, lawsuits or judgments against any licensed professional employed by the operator?')
-                                ->statePath('material_violations_lawsuits_professional')
-                                ->columns(5)
-                                ->schema([
-                                    Select::make('status')->label('Yes / No')
-                                        ->options(['Yes' => 'Yes', 'No' => 'No']),
-                                    Textarea::make('detail')->label('Detail')->columnSpan(4)
-                                ]),
-                            Section::make('Are there any material violations, lawsuits or judgments against any other personnel at the property?')
-                                ->statePath('material_violations_lawsuits_personnel')
-                                ->columns(5)
-                                ->schema([
-                                    Select::make('status')->label('Yes / No')
-                                        ->options(['Yes' => 'Yes', 'No' => 'No']),
-                                    Textarea::make('detail')->label('Detail')->columnSpan(4)
-                                ]),
+                            ->statePath('miscellaneous')
+                            ->schema([
+                                Section::make('Are there any material violations, lawsuits or judgments against any licensed professional employed by the operator?')
+                                    ->statePath('material_violations_lawsuits_professional')
+                                    ->columns(5)
+                                    ->schema([
+                                        Select::make('status')->label('Yes / No')
+                                            ->options(['Yes' => 'Yes', 'No' => 'No']),
+                                        Textarea::make('detail')->label('Detail')->columnSpan(4)
+                                    ]),
+                                Section::make('Are there any material violations, lawsuits or judgments against any other personnel at the property?')
+                                    ->statePath('material_violations_lawsuits_personnel')
+                                    ->columns(5)
+                                    ->schema([
+                                        Select::make('status')->label('Yes / No')
+                                            ->options(['Yes' => 'Yes', 'No' => 'No']),
+                                        Textarea::make('detail')->label('Detail')->columnSpan(4)
+                                    ]),
 
-                        ])
+                            ])
 
 
                     ]),

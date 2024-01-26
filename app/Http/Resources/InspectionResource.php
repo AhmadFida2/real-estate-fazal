@@ -70,9 +70,7 @@ class InspectionResource extends JsonResource
     protected function formatRepairsVerificationPhotos($verificationList)
     {
         return collect($verificationList)->map(function ($item) {
-            $item['photo'] = array_map(function ($url) {
-                return asset("storage/{$url}");
-            }, $item['photo']);
+            $item['photo'] = asset("storage/{$item['photo']}");
             return $item;
         })->all();
     }
@@ -80,9 +78,7 @@ class InspectionResource extends JsonResource
     protected function formatImages($images)
     {
         return collect($images)->map(function ($image) {
-            $image['photo_url'] = array_map(function ($url) {
-                return asset("storage/{$url}");
-            }, $image['photo_url']);
+            $image['photo_url'] = asset("storage/{$image['photo_url']}");
             return $image;
         })->all();
     }
