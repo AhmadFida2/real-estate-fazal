@@ -48,7 +48,7 @@ class CreateExcel implements ShouldQueue
             ->actions([
                 Action::make('download')
                     ->button()
-                    ->url('/excel-download/'. str($output[0]))
+                    ->url('/excel-download/'. str($output))
             ])
             ->sendToDatabase($user);
 
