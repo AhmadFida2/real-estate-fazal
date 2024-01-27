@@ -43,7 +43,7 @@ Route::get('excel-download/{file}', function ($file) {
 })->name('excel-download');
 
 Route::get('/test', function (){
-   dd(\Illuminate\Support\Facades\DB::table('notifications')->get());
+   \App\Jobs\CreateExcel::dispatch(\App\Models\Inspection::find(1));
    return redirect('/');
 });
 
