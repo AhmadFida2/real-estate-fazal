@@ -42,4 +42,9 @@ Route::get('excel-download/{file}', function ($file) {
     return response()->download(public_path($file), $file_name)->deleteFileAfterSend();
 })->name('excel-download');
 
+Route::get('/test', function (){
+   \App\Jobs\CreateExcel::dispatch(\App\Models\Inspection::find(1));
+   return redirect('/');
+});
+
 
