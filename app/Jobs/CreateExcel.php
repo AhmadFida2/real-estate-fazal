@@ -17,12 +17,13 @@ class CreateExcel implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    public $record;
     /**
      * Create a new job instance.
      */
-    public function __construct()
+    public function __construct($record)
     {
-        //
+        $this->record = $record;
     }
 
     /**
@@ -30,7 +31,7 @@ class CreateExcel implements ShouldQueue
      */
     public function handle(): void
     {
-        $data = new InspectionResource(Inspection::find(1));
+        $data = new InspectionResource($this->record);
         $data = $data->toJson();
         Storage::disk('public')->put('temp_file.txt', $data);
         $path = Storage::disk('local')->path('public\test.py');
@@ -43,7 +44,7 @@ class CreateExcel implements ShouldQueue
             ->actions([
                 Action::make('download')
                     ->button()
-                    ->url('excel-download/'. str($output[0]))
+                    ->url('/excel-download/'. str($output[0]))
             ])
             ->sendToDatabase($user);
 

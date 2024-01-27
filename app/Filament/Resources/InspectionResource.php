@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\PropertyResource\Pages;
+use App\Jobs\CreateExcel;
 use App\Models\Inspection;
 use Filament\Actions\Action;
 use Filament\Forms;
@@ -80,8 +81,12 @@ class InspectionResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\ViewAction::make()
+                Tables\Actions\EditAction::make()->iconButton(),
+                Tables\Actions\ViewAction::make()->iconButton(),
+                Tables\Actions\Action::make('download')
+                ->icon('heroicon-o-arrow-down-tray')
+                ->iconButton()
+                ->action(fn($record)=> CreateExcel::dispatch($record))
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

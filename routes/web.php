@@ -36,14 +36,10 @@ Route::get('storage-link', function () {
     return redirect('/');
 });
 
-Route::get('/test', function () {
-    \App\Jobs\CreateExcel::dispatch();
-    return redirect('/');
-});
-
 Route::get('excel-download/{file}', function ($file) {
-    $file = $file . ".txt";
-    return response()->download(public_path($file),'MBA-Inspection.xlsm')->deleteFileAfterSend();
+    $file = 'storage/' . $file . ".txt";
+    $file_name = 'Inspection_'. now()->format('d-m-Y H-i-s') . '.xlsm';
+    return response()->download(public_path($file), $file_name)->deleteFileAfterSend();
 })->name('excel-download');
 
 
