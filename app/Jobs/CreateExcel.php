@@ -41,7 +41,7 @@ class CreateExcel implements ShouldQueue
         $path = Storage::disk('local')->path('public/test.py');
         exec("python3 {$path}", $output);
         $user = auth()->user();
-        dd($output[0]);
+        $fname = $output[0];
         Notification::make()
             ->title('File Generated')
             ->success()
@@ -49,7 +49,7 @@ class CreateExcel implements ShouldQueue
             ->actions([
                 Action::make('download')
                     ->button()
-                    ->url('/excel-download/'. str($output))
+                    ->url('/excel-download/'. $fname)
             ])
             ->sendToDatabase($user);
 
