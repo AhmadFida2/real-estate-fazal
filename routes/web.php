@@ -13,9 +13,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::redirect('/','/admin')->name('login');
+Route::redirect('/', '/admin')->name('login');
 
-Route::get('install/{seed}', function ($seed){
+Route::get('install/{seed}', function ($seed) {
     \Illuminate\Support\Facades\Artisan::call('migrate:fresh --force');
     \App\Models\User::create([
         'name' => 'Admin',
@@ -24,17 +24,26 @@ Route::get('install/{seed}', function ($seed){
         'is_active' => 1,
         'is_admin' => 1
     ]);
-    if($seed)
-    {
+    if ($seed) {
         \Illuminate\Support\Facades\Artisan::call('db:seed --force');
     }
     \Illuminate\Support\Facades\Artisan::call('storage:link');
     return redirect('/');
 });
 
-Route::get('storage-link', function (){
+Route::get('storage-link', function () {
     \Illuminate\Support\Facades\Artisan::call('storage:link');
     return redirect('/');
 });
+
+Route::get('/test', function () {
+    \App\Jobs\CreateExcel::dispatch();
+    return redirect('/');
+});
+
+Route::get('excel-download/{file}', function ($file) {
+    $file = $file . ".txt";
+    return response()->download(public_path($file),'MBA-Inspection.xlsm')->deleteFileAfterSend();
+})->name('excel-download');
 
 
