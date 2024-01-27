@@ -48,7 +48,10 @@ class CreateInspection extends CreateRecord
         unset($data['temp_key']);
         Cache::delete($key);
         $allKeys = Cache::get('temp_keys');
-        $allKeys = array_diff($allKeys, [$key]);
+        if($allKeys)
+        {
+            $allKeys = array_diff($allKeys, [$key]);
+        }
         Cache::forever('temp_keys', $allKeys);
         return $data;
     }
