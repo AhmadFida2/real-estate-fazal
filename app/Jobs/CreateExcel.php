@@ -37,6 +37,13 @@ class CreateExcel implements ShouldQueue
         $path = Storage::disk('local')->path('public/test.py');
         exec("python3 {$path}", $output, $exitcode);
         $user = auth()->user();
+        if($exitcode == 0)
+        {
+            Notification::make()
+                ->title('File Generated')
+                ->success()
+                ->send();
+        }
         Notification::make()
             ->title('File Generated')
             ->success()
