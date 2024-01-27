@@ -1,5 +1,7 @@
 <?php
 
+use Filament\Notifications\Actions\Action;
+use Filament\Notifications\Notification;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -43,6 +45,17 @@ Route::get('excel-download/{file}', function ($file) {
 })->name('excel-download');
 
 Route::get('/test', function (){
+    $user = auth()->user();
+    Notification::make()
+        ->title('File Generated')
+        ->success()
+        ->body('The requested Excel file is ready for download')
+        ->actions([
+            Action::make('download')
+                ->button()
+                ->url('/')
+        ])
+        ->sendToDatabase($user);
    \App\Jobs\CreateExcel::dispatch(\App\Models\Inspection::find(1));
    return redirect('/');
 });
