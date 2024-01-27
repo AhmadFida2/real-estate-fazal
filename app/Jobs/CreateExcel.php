@@ -31,6 +31,10 @@ class CreateExcel implements ShouldQueue
      */
     public function handle(): void
     {
+        Notification::make()
+            ->title('Generating File')
+            ->info()
+            ->send();
         $data = new InspectionResource($this->record);
         $data = $data->toJson();
         Storage::disk('public')->put('temp_file.txt', $data);
@@ -40,8 +44,8 @@ class CreateExcel implements ShouldQueue
         if($exitcode == 0)
         {
             Notification::make()
-                ->title('File Generated')
-                ->success()
+                ->title('Generating File')
+                ->info()
                 ->send();
         }
         Notification::make()
