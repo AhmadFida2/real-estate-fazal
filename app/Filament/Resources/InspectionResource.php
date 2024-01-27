@@ -86,7 +86,7 @@ class InspectionResource extends Resource
                 Tables\Actions\Action::make('download')
                 ->icon('heroicon-o-arrow-down-tray')
                 ->iconButton()
-                ->action(fn($record)=> CreateExcel::dispatch($record))
+                ->action(fn($record)=> CreateExcel::dispatch($record->id))
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

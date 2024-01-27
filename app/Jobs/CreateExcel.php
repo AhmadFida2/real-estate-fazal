@@ -17,13 +17,13 @@ class CreateExcel implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public $record;
+    public $record_id;
     /**
      * Create a new job instance.
      */
     public function __construct($record)
     {
-        $this->record = $record;
+        $this->record_id = $record;
     }
 
     /**
@@ -35,7 +35,7 @@ class CreateExcel implements ShouldQueue
             ->title('Generating File')
             ->info()
             ->send();
-        $data = new InspectionResource($this->record);
+        $data = new InspectionResource(Inspection::find($this->record_id));
         $data = $data->toJson();
         Storage::disk('public')->put('temp_file.txt', $data);
         $path = Storage::disk('local')->path('public/test.py');
