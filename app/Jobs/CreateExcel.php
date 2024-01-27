@@ -40,6 +40,7 @@ class CreateExcel implements ShouldQueue
         Storage::disk('public')->put('temp_file.txt', $data);
         $path = Storage::disk('local')->path('public/test.py');
         exec("python3 {$path}", $output, $exitcode);
+        dd($output);
         $user = auth()->user();
         if($exitcode == 0)
         {
