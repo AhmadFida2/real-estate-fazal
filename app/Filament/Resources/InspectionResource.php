@@ -95,7 +95,7 @@ class InspectionResource extends Resource
                         $data = new \App\Http\Resources\InspectionResource($record);
                         $data = $data->toJson();
                         Storage::disk('public')->put('temp_file.txt', $data);
-                        $path = Storage::disk('local')->path('public/test.py');
+                        $path = Storage::disk('local')->path('test.py');
                         exec("python3 {$path}", $output);
                         $user = auth()->user();
                         $fname = $output[0];
