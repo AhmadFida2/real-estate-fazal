@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\AssignmentResource\Pages;
 
 use App\Filament\Resources\AssignmentResource;
+use App\Models\User;
 use Filament\Actions;
 use Filament\Notifications\Actions\Action;
 use Filament\Notifications\Notification;
@@ -14,7 +15,7 @@ class CreateAssignment extends CreateRecord
 
     protected function afterCreate(): void
     {
-        $user = $this->record->user();
+        $user = User::find($this->record->user_id);
         Notification::make()
             ->title('New Assignment!')
             ->info()
