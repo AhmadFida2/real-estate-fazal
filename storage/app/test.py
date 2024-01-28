@@ -9,11 +9,15 @@ def generate_random_string(length=15):
     return random_string
 
 f_name = 'storage/' + sys.argv[1]
-random_string = generate_random_string()
+
 file = open(f_name,'r')
 data = file.read()
-data = json.loads(data)
+data = json.loads(data) # You will get your data here that is now loaded from json
 file.close()
+
+# Process all data here and then use my code at the end
+#Saving Final Xlsm
+random_string = generate_random_string()
 file = open('storage/'+random_string+'.txt','w')
 file.write(json.dumps(data))
 file.close
