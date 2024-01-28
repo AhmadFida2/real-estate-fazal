@@ -29,7 +29,10 @@ class AssignmentResource extends Resource
                 Forms\Components\TextInput::make('address')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\Select::make('user_id')->relationship('user', 'name', modifyQueryUsing: fn($query) => $query->where('is_admin', false))
+                Forms\Components\Select::make('user_id')
+                    ->relationship('user', 'name', modifyQueryUsing: fn($query) => $query->where('is_admin', false))
+                    ->searchable()
+                    ->preload()
             ]);
     }
 
