@@ -12,9 +12,9 @@ class CreateAssignment extends CreateRecord
 {
     protected static string $resource = AssignmentResource::class;
 
-    protected function afterCreate($record): void
+    protected function afterCreate(): void
     {
-        $user = $record->user();
+        $user = $this->record->user();
         Notification::make()
             ->title('New Assignment!')
             ->info()
