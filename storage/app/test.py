@@ -1,7 +1,4 @@
-import json
-import random
-import string
-import sys
+import json,random,string,sys
 
 def generate_random_string(length=15):
     characters = string.ascii_letters + string.digits
