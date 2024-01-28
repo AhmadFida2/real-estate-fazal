@@ -1,14 +1,16 @@
 import json
 import random
 import string
+import sys
 
 def generate_random_string(length=15):
     characters = string.ascii_letters + string.digits
     random_string = ''.join(random.choice(characters) for _ in range(length))
     return random_string
 
+f_name = 'storage/' + sys.argv[1]
 random_string = generate_random_string()
-file = open('storage/temp_file.txt','r')
+file = open(f_name,'r')
 data = file.read()
 data = json.loads(data)
 file.close()

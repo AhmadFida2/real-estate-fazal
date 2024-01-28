@@ -21,6 +21,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 use function Symfony\Component\Translation\t;
 
@@ -94,11 +95,13 @@ class InspectionResource extends Resource
                             ->send();
                         $data = new \App\Http\Resources\InspectionResource($record);
                         $data = $data->toJson();
-                        Storage::disk('public')->put('temp_file.txt', $data);
-                        $path = Storage::disk('local')->path('test.py');
+                        $d_file = Str::random(10) . '.txt';
+                        Storage::disk('public')->put($d_file, $data);
+                        $path = Storage::disk('local')->path('test.py') . " " . $d_file;
                         exec("python3 {$path}", $output);
                         $user = auth()->user();
                         $fname = $output[0];
+                        Storage::disk('public')->delete($d_file);
                         Notification::make()
                             ->title('File Generated')
                             ->success()
