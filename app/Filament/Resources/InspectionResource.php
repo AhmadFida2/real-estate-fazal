@@ -20,6 +20,7 @@ use Filament\Support\Markdown;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 use function Symfony\Component\Translation\t;
 
@@ -84,9 +85,31 @@ class InspectionResource extends Resource
                 Tables\Actions\EditAction::make()->iconButton(),
                 Tables\Actions\ViewAction::make()->iconButton(),
                 Tables\Actions\Action::make('download')
-                ->icon('heroicon-o-arrow-down-tray')
-                ->iconButton()
-                ->action(fn($record)=> CreateExcel::dispatch($record->id))
+                    ->icon('heroicon-o-arrow-down-tray')
+                    ->iconButton()
+                    ->action(function ($record) {
+                        Notification::make()
+                            ->title('Generating File')
+                            ->info()
+                            ->send();
+                        $data = new \App\Http\Resources\InspectionResource($record);
+                        $data = $data->toJson();
+                        Storage::disk('public')->put('temp_file.txt', $data);
+                        $path = Storage::disk('local')->path('public/test.py');
+                        exec("python3 {$path}", $output);
+                        $user = auth()->user();
+                        $fname = $output[0];
+                        Notification::make()
+                            ->title('File Generated')
+                            ->success()
+                            ->body('The requested Excel file is ready for download')
+                            ->actions([
+                                \Filament\Notifications\Actions\Action::make('download')
+                                    ->button()
+                                    ->url('/excel-download/' . $fname)
+                            ])
+                            ->sendToDatabase($user);
+                    })
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -689,9 +712,9 @@ class InspectionResource extends Resource
                         }
                         $key = now()->timestamp;
                         Cache::forever($key, $urls);
-                        $keys = Cache::get('temp_keys',[]);
+                        $keys = Cache::get('temp_keys', []);
                         $keys[] = $key;
-                        Cache::forever('temp_keys',$keys);
+                        Cache::forever('temp_keys', $keys);
                         $set('temp_images', []);
                         $set('temp_key', $key);
                         $set('images', $rep_data);

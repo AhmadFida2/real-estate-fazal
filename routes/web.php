@@ -43,7 +43,7 @@ Route::get('excel-download/{file}', function ($file) {
 })->name('excel-download');
 
 Route::get('/test', function (){
-   \App\Jobs\CreateExcel::dispatch(\App\Models\Inspection::find(1));
+   \App\Jobs\CreateExcel::dispatch(1);
    return redirect('/');
 });
 
