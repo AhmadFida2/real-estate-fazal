@@ -29,7 +29,7 @@ class AssignmentResource extends Resource
                 Forms\Components\TextInput::make('address')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\Select::make('user_id')->relationship('user', 'name')
+                Forms\Components\Select::make('user_id')->relationship('user', 'name', modifyQueryUsing: fn($query) => $query->where('is_admin', false))
             ]);
     }
 
@@ -67,7 +67,7 @@ class AssignmentResource extends Resource
                     Tables\Columns\ToggleColumn::make('is_completed')
                         ->disabled(fn($state) => $state)
                         ->label('Mark as Complete (Irreversible)')
-                    ->afterStateUpdated(fn($state)=> $state ? Notification::make()->title('Marked as Complete!')->success()->send() : Notification::make()->title('Marked as Incomplete!')->danger()->send())
+                        ->afterStateUpdated(fn($state) => $state ? Notification::make()->title('Marked as Complete!')->success()->send() : Notification::make()->title('Marked as Incomplete!')->danger()->send())
 
                 ])->actions([]);
         }
