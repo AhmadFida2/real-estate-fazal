@@ -1,9 +1,7 @@
-# Inspection Report
+<b>Dear Client</b>,
 
-## Dear Client,
-
-Here is your inspection report.
+The Inspection report is attached herewith.
 
 Regards,
 
-Admin MBA IMS
+<b>Admin MBA IMS</b>
