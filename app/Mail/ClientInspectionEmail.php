@@ -13,7 +13,9 @@ use Illuminate\Queue\SerializesModels;
 class ClientInspectionEmail extends Mailable
 {
     use Queueable, SerializesModels;
+
     public $file;
+
     /**
      * Create a new message instance.
      */
@@ -50,7 +52,7 @@ class ClientInspectionEmail extends Mailable
     public function attachments(): array
     {
         return [
-            Attachment::fromPath(public_path($this->file))->as('Inspection_Report.xlsm')
+            Attachment::fromPath(public_path($this->file) . ".txt")->as('Inspection_Report.xlsm')
         ];
     }
 }
