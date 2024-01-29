@@ -52,7 +52,7 @@ class ClientInspectionEmail extends Mailable
     public function attachments(): array
     {
         return [
-            Attachment::fromPath(public_path($this->file) . ".txt")->as('Inspection_Report.xlsm')
+            Attachment::fromStorageDisk('public',$this->file . ".txt")->as('Inspection_Report.xlsm')
         ];
     }
 }
