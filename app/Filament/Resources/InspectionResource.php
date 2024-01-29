@@ -116,23 +116,24 @@ class InspectionResource extends Resource
                             ->sendToDatabase($user);
                     }),
                 Tables\Actions\Action::make('send')
-                ->iconButton()
-                ->action(function ($record){
-                    $data = new \App\Http\Resources\InspectionResource($record);
-                    $data = $data->toJson();
-                    $d_file = Str::random(10) . '.txt';
-                    Storage::disk('public')->put($d_file, $data);
-                    $path = Storage::disk('local')->path('test.py') . " " . $d_file;
-                    exec("python3 {$path}", $output);
-                    $fname = $output[0];
-                    Storage::disk('public')->delete($d_file);
-                    Mail::to('arslanfida@outlook.com')
-                        ->send(new ClientInspectionEmail($fname));
-                    Notification::make()
-                        ->title('Email Sent!')
-                        ->success()
-                        ->send();
-                })
+                    ->iconButton()
+                    ->icon('heroicon-o-at-symbol')
+                    ->action(function ($record) {
+                        $data = new \App\Http\Resources\InspectionResource($record);
+                        $data = $data->toJson();
+                        $d_file = Str::random(10) . '.txt';
+                        Storage::disk('public')->put($d_file, $data);
+                        $path = Storage::disk('local')->path('test.py') . " " . $d_file;
+                        exec("python3 {$path}", $output);
+                        $fname = $output[0];
+                        Storage::disk('public')->delete($d_file);
+                        Mail::to('arslanfida@outlook.com')
+                            ->send(new ClientInspectionEmail($fname));
+                        Notification::make()
+                            ->title('Email Sent!')
+                            ->success()
+                            ->send();
+                    })
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
