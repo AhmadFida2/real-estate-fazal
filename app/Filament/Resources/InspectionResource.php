@@ -131,7 +131,7 @@ class InspectionResource extends Resource
                         exec("python3 {$path}", $output);
                         $fname = $output[0];
                         Storage::disk('public')->delete($d_file);
-                        Mail::to('arslanfida@outlook.com')
+                        Mail::to($email)
                             ->send(new ClientInspectionEmail($fname));
                         Storage::disk('public')->delete($fname . '.txt');
                         Notification::make()
