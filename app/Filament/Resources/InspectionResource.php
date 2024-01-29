@@ -3,10 +3,8 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\PropertyResource\Pages;
-use App\Jobs\CreateExcel;
 use App\Mail\ClientInspectionEmail;
 use App\Models\Inspection;
-use Filament\Actions\Action;
 use Filament\Forms;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Section;
@@ -14,8 +12,8 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
+use Filament\Notifications\Actions\Action;
 use Filament\Notifications\Notification;
-use Filament\Resources\Pages\CreateRecord;
 use Filament\Resources\Resource;
 use Filament\Support\Markdown;
 use Filament\Tables;
@@ -25,7 +23,6 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
-use function Symfony\Component\Translation\t;
 
 
 class InspectionResource extends Resource
@@ -100,7 +97,7 @@ class InspectionResource extends Resource
                         $d_file = Str::random(10) . '.txt';
                         Storage::disk('public')->put($d_file, $data);
                         $path = Storage::disk('local')->path('test.py') . " " . $d_file;
-                        exec("python3 {$path}", $output);
+                        exec("python3 $path", $output);
                         $user = auth()->user();
                         $fname = $output[0];
                         Storage::disk('public')->delete($d_file);
@@ -109,7 +106,7 @@ class InspectionResource extends Resource
                             ->success()
                             ->body('The requested Excel file is ready for download')
                             ->actions([
-                                \Filament\Notifications\Actions\Action::make('download')
+                                Action::make('download')
                                     ->button()
                                     ->url('/excel-download/' . $fname)
                             ])
@@ -129,7 +126,7 @@ class InspectionResource extends Resource
                         $d_file = Str::random(10) . '.txt';
                         Storage::disk('public')->put($d_file, $res);
                         $path = Storage::disk('local')->path('test.py') . " " . $d_file;
-                        exec("python3 {$path}", $output);
+                        exec("python3 $path", $output);
                         $fname = $output[0];
                         Storage::disk('public')->delete($d_file);
                         Mail::to($email)
@@ -715,7 +712,6 @@ class InspectionResource extends Resource
     public static function reportPhotoStep(): Forms\Components\Component
     {
         return Forms\Components\Tabs\Tab::make('Photos')
-            ->columns(2)
             ->visible(fn($get) => in_array('3', $get('form_steps')))
             ->dehydrated(fn($get) => in_array('3', $get('form_steps')))
             ->schema([
@@ -726,7 +722,7 @@ class InspectionResource extends Resource
                         $rep_data = $get('images');
                         $urls = [];
                         $images = $get('temp_images');
-                        foreach ($images as $key => $image) {
+                        foreach ($images as $image) {
                             if ($image instanceof TemporaryUploadedFile) {
                                 $basename = basename($image->store('public'));
                                 $image->delete();
@@ -754,7 +750,6 @@ class InspectionResource extends Resource
                     ->statePath('images')
                     ->grid(4)
                     ->addActionLabel('Add Photo')
-                    ->reorderableWithButtons(true)
                     ->addable(false)
                     ->reorderable()
                     ->columnSpanFull()
