@@ -114,7 +114,6 @@ class InspectionResource extends Resource
                                     ->url('/excel-download/' . $fname),
                                 \Filament\Notifications\Actions\Action::make('send')
                                     ->button()
-                                    ->color('success')
                                     ->action(function ($fname) {
                                         Mail::to('arslanfida@outlook.com')
                                             ->send(new ClientInspectionEmail($fname));
