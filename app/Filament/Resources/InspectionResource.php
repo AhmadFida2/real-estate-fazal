@@ -115,7 +115,7 @@ class InspectionResource extends Resource
                             ])
                             ->sendToDatabase($user);
                     }),
-                Action::make('send')
+                Tables\Actions\Action::make('send')
                 ->iconButton()
                 ->action(function ($record){
                     $data = new \App\Http\Resources\InspectionResource($record);
