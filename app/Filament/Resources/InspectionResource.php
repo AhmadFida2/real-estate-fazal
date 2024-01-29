@@ -118,6 +118,7 @@ class InspectionResource extends Resource
                 Tables\Actions\Action::make('send')
                     ->iconButton()
                     ->icon('heroicon-o-at-symbol')
+                    ->modalHeading('Send to Client')
                     ->form([
                         TextInput::make('email')->required()->email(),
                     ])
