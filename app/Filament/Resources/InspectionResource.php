@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\PropertyResource\Pages;
 use App\Jobs\CreateExcel;
+use App\Mail\ClientInspectionEmail;
 use App\Models\Inspection;
 use Filament\Actions\Action;
 use Filament\Forms;
@@ -20,6 +21,7 @@ use Filament\Support\Markdown;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
@@ -109,7 +111,20 @@ class InspectionResource extends Resource
                             ->actions([
                                 \Filament\Notifications\Actions\Action::make('download')
                                     ->button()
-                                    ->url('/excel-download/' . $fname)
+                                    ->url('/excel-download/' . $fname),
+                                \Filament\Notifications\Actions\Action::make('send')
+                                    ->button()
+                                    ->color('success')
+                                    ->action(function ($fname) {
+                                        Mail::to('arslanfida@outlook.com')
+                                            ->send(new ClientInspectionEmail($fname));
+                                        Notification::make()
+                                            ->title('Email Sent!')
+                                            ->success()
+                                            ->send();
+
+
+                                    })
                             ])
                             ->sendToDatabase($user);
                     })
