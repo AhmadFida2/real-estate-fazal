@@ -93,11 +93,17 @@ class Inspection extends Model
                     if (Storage::exists($photoPath)) {
                         Storage::delete($photoPath);
                     }
+                    if (Storage::disk('s3')->exists($photo_ind)) {
+                        Storage::delete($photo_ind);
+                    }
                 }
             } else {
                 $photoPath = "public/{$photo[$photoField]}";
                 if (Storage::exists($photoPath)) {
                     Storage::delete($photoPath);
+                }
+                if (Storage::disk('s3')->exists($photo[$photoField])) {
+                    Storage::delete($photo[$photoField]);
                 }
 
             }
@@ -120,6 +126,10 @@ class Inspection extends Model
                         if (Storage::exists($photoPath)) {
                             Storage::delete($photoPath);
                         }
+                        if (Storage::disk('s3')->exists($singlePhoto)) {
+                            Storage::delete($singlePhoto);
+                        }
+
                     }
                 }
             } else {
@@ -128,6 +138,9 @@ class Inspection extends Model
 
                     if (Storage::exists($photoPath)) {
                         Storage::delete($photoPath);
+                    }
+                    if (Storage::disk('s3')->exists($originalPhotoUrl)) {
+                        Storage::delete($originalPhotoUrl);
                     }
                 }
             }

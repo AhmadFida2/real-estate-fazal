@@ -733,7 +733,7 @@ class InspectionResource extends Resource
                                 // Resize the image while maintaining the aspect ratio
                                 $img->resize(800);
                                 $img = $img->toJpeg(); //Test
-                                Storage::disk('s3')->putFile('/', $f_name, 'public');
+                                Storage::disk('s3')->putFile('/', $img, 'public');
                                 $image->delete();
                             }
                             $rep_data[] = [
