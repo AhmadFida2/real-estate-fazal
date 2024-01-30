@@ -25,8 +25,8 @@ class ClearTempImages extends Command
 
                 foreach ($urls as $url) {
                     // Assuming URLs are stored as file paths in storage
-                    $filePath = 'public/' . $url;
-                    Storage::delete($filePath);
+                    $filePath = $url;
+                    Storage::disk('s3')->delete($filePath);
                 }
 
                 // Optionally, you can remove the cache keys after deleting files
