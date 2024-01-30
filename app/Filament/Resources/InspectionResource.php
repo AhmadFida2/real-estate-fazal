@@ -733,7 +733,7 @@ class InspectionResource extends Resource
                                     $constraint->aspectRatio();
                                 });
                                 $img = $img->stream()->detach();
-                                Storage::disk('public')->put($f_name, $img);
+                                Storage::disk('s3')->put($f_name, $img);
                                 $image->delete();
                             }
                             $rep_data[] = [
