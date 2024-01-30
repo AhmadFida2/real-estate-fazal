@@ -16,4 +16,10 @@ class EditInspection extends EditRecord
             Actions\DeleteAction::make(),
         ];
     }
+
+    protected function mutateFormDataBeforeSave(array $data): array
+    {
+        unset($data['temp_key']);
+        return $data;
+    }
 }
