@@ -727,7 +727,7 @@ class InspectionResource extends Resource
                         foreach ($images as $image) {
                             if ($image instanceof TemporaryUploadedFile) {
                                 $manager = new ImageManager(new Driver());
-                                $ext = $image->getClientOriginalExtension();
+                                $ext = '.jpg';
                                 $f_name = Str::random(40) . '.' . $ext;
                                 $img = $manager->read($image->getRealPath());
                                 // Resize the image while maintaining the aspect ratio
