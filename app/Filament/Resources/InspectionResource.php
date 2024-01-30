@@ -22,7 +22,8 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use Intervention\Image\ImageManager as Image;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 
 
@@ -725,14 +726,15 @@ class InspectionResource extends Resource
                         $images = $get('temp_images');
                         foreach ($images as $image) {
                             if ($image instanceof TemporaryUploadedFile) {
+                                $manager = new ImageManager(new Driver());
                                 $ext = $image->getClientOriginalExtension();
                                 $f_name = Str::random(40) . $ext;
-                                $img = Image::read($image->getRealPath());
+                                $img = $manager->read($image->getRealPath());
                                 // Resize the image while maintaining the aspect ratio
                                 $img->resize(800, null, function ($constraint) {
                                     $constraint->aspectRatio();
                                 });
-                                $img = $img->stream()->detach();
+                                $img = $img->toJpeg();
                                 Storage::disk('s3')->put($f_name, $img);
                                 $image->delete();
                             }
