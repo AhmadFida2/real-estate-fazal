@@ -727,13 +727,13 @@ class InspectionResource extends Resource
                         foreach ($images as $image) {
                             if ($image instanceof TemporaryUploadedFile) {
                                 $manager = new ImageManager(new Driver());
-                                $ext = '.jpg';
+                                $ext = $image->getClientOriginalExtension();
                                 $f_name = Str::random(40) . '.' . $ext;
                                 $img = $manager->read($image->getRealPath());
                                 // Resize the image while maintaining the aspect ratio
-                                $img->scaleDown(800);
-                                $img = $img->toJpeg()->toString(); //Test
-                                Storage::disk('s3')->putFileAs(path: '/', file: $img, name: $f_name,options: 'public');
+                                $img->resize(800);
+                                $img = $img->toJpeg();
+                                Storage::disk('s3')->put($f_name, $img,'public');
                                 $image->delete();
                             }
                             $rep_data[] = [
