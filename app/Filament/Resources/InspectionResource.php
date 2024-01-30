@@ -728,7 +728,7 @@ class InspectionResource extends Resource
                             if ($image instanceof TemporaryUploadedFile) {
                                 $manager = new ImageManager(new Driver());
                                 $ext = $image->getClientOriginalExtension();
-                                $f_name = Str::random(40) . $ext;
+                                $f_name = Str::random(40) . '.' . $ext;
                                 $img = $manager->read($image->getRealPath());
                                 // Resize the image while maintaining the aspect ratio
                                 $img->resize(800);
