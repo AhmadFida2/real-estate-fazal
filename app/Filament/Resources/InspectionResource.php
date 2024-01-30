@@ -22,8 +22,8 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use Intervention\Image\Image;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
+use Intervention\Image\ImageManagerStatic as Image;
 
 
 class InspectionResource extends Resource
