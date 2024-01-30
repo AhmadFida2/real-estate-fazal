@@ -94,7 +94,7 @@ class Inspection extends Model
                         Storage::delete($photoPath);
                     }
                     if (Storage::disk('s3')->exists($photo_ind)) {
-                        Storage::delete($photo_ind);
+                        Storage::disk('s3')->delete($photo_ind);
                     }
                 }
             } else {
@@ -103,7 +103,7 @@ class Inspection extends Model
                     Storage::delete($photoPath);
                 }
                 if (Storage::disk('s3')->exists($photo[$photoField])) {
-                    Storage::delete($photo[$photoField]);
+                    Storage::disk('s3')->delete($photo[$photoField]);
                 }
 
             }
@@ -127,7 +127,7 @@ class Inspection extends Model
                             Storage::delete($photoPath);
                         }
                         if (Storage::disk('s3')->exists($singlePhoto)) {
-                            Storage::delete($singlePhoto);
+                            Storage::disk('s3')->delete($singlePhoto);
                         }
 
                     }
@@ -140,7 +140,7 @@ class Inspection extends Model
                         Storage::delete($photoPath);
                     }
                     if (Storage::disk('s3')->exists($originalPhotoUrl)) {
-                        Storage::delete($originalPhotoUrl);
+                        Storage::disk('s3')->delete($originalPhotoUrl);
                     }
                 }
             }
