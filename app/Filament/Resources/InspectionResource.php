@@ -732,7 +732,7 @@ class InspectionResource extends Resource
                                 $img = $manager->read($image->getRealPath());
                                 // Resize the image while maintaining the aspect ratio
                                 $img->scaleDown(800);
-                                $img = $img->toJpeg(); //Test
+                                $img = $img->toJpeg()->toString(); //Test
                                 Storage::disk('s3')->putFileAs('/', $img, $f_name,'public');
                                 $image->delete();
                             }
