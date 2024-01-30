@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Storage;
 
 class InspectionResource extends JsonResource
 {
@@ -70,7 +71,7 @@ class InspectionResource extends JsonResource
     protected function formatRepairsVerificationPhotos($verificationList)
     {
         return collect($verificationList)->map(function ($item) {
-            $item['photo'] = asset("storage/{$item['photo']}");
+            $item['photo'] = Storage::disk('s3')->url($item['photo']);
             return $item;
         })->all();
     }
@@ -78,7 +79,7 @@ class InspectionResource extends JsonResource
     protected function formatImages($images)
     {
         return collect($images)->map(function ($image) {
-            $image['photo_url'] = asset("storage/{$image['photo_url']}");
+            $image['photo_url'] = Storage::disk('s3')->url($image['photo_url']);
             return $image;
         })->all();
     }
