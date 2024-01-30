@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Intervention\Image\Image;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 
 
@@ -119,7 +120,7 @@ class InspectionResource extends Resource
                     ->form([
                         TextInput::make('email')->required()->email(),
                     ])
-                    ->action(function ($record,$data) {
+                    ->action(function ($record, $data) {
                         $email = $data['email'];
                         $res = new \App\Http\Resources\InspectionResource($record);
                         $res = $res->toJson();
@@ -724,17 +725,23 @@ class InspectionResource extends Resource
                         $images = $get('temp_images');
                         foreach ($images as $image) {
                             if ($image instanceof TemporaryUploadedFile) {
-                                $basename = basename($image->store('public'));
+                                $ext = $image->getClientOriginalExtension();
+                                $f_name = Str::random(40) . $ext;
+                                $img = Image::make($image->getRealPath());
+                                // Resize the image while maintaining the aspect ratio
+                                $img->resize(800, null, function ($constraint) {
+                                    $constraint->aspectRatio();
+                                });
+                                $img = $img->stream()->detach();
+                                Storage::disk('public')->put($f_name, $img);
                                 $image->delete();
-                            } else {
-                                $basename = $image;
                             }
                             $rep_data[] = [
                                 'photo_type' => '',
                                 'photo_description' => '',
-                                'photo_url' => [$basename]
+                                'photo_url' => [$f_name]
                             ];
-                            $urls[] = $basename;
+                            $urls[] = $f_name;
                         }
                         $key = now()->timestamp;
                         Cache::forever($key, $urls);
