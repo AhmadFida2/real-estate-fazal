@@ -22,8 +22,8 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Intervention\Image\ImageManager as Image;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
-use Intervention\Image\ImageManagerStatic as Image;
 
 
 class InspectionResource extends Resource
@@ -727,7 +727,7 @@ class InspectionResource extends Resource
                             if ($image instanceof TemporaryUploadedFile) {
                                 $ext = $image->getClientOriginalExtension();
                                 $f_name = Str::random(40) . $ext;
-                                $img = Image::make($image->getRealPath());
+                                $img = Image::read($image->getRealPath());
                                 // Resize the image while maintaining the aspect ratio
                                 $img->resize(800, null, function ($constraint) {
                                     $constraint->aspectRatio();
