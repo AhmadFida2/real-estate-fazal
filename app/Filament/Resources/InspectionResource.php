@@ -762,7 +762,7 @@ class InspectionResource extends Resource
                     ->columnSpanFull()
                     ->columns(1)
                     ->schema([
-                        Forms\Components\FileUpload::make('photo_url')->label('Photo')->deletable(false),
+                        Forms\Components\FileUpload::make('photo_url')->label('Photo')->deletable(false)->disk('s3'),
                         Select::make('photo_type')->label('Photo Type')
                             ->options(['Exterior' => 'Exterior', 'Interior' => 'Interior', 'Roof' => 'Roof', 'Neighborhood' => 'Neighborhood', 'Routine Maintenance' => 'Routine Maintenance', 'Deferred Maintenance' => 'Deferred Maintenance', 'Life Safety' => 'Life Safety']),
                         Textarea::make('photo_description')->label('Photo Description'),
