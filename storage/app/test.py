@@ -87,5 +87,5 @@ if data:
     hospitals = flatten_json(data.get('hospitals', {}))
     write_to_excel(hospitals, 'Hospitals', excel_file_path)
 
-    print(random_string)
+print(random_string)
 
