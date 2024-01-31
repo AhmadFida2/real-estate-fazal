@@ -752,7 +752,7 @@ class InspectionResource extends Resource
                         $set('temp_key', $key);
                         $set('images', $rep_data);
                     })
-                ])->hiddenOn('edit')->alignCenter()->verticallyAlignCenter(),
+                ])->alignCenter()->verticallyAlignCenter(),
                 Repeater::make('images')
                     ->statePath('images')
                     ->grid(4)
