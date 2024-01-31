@@ -101,6 +101,7 @@ class InspectionResource extends Resource
                         $path = Storage::disk('local')->path('test.py') . " " . $d_file;
                         exec("python3 $path", $output);
                         $user = auth()->user();
+                        dd($output);
                         $fname = $output[0];
                         Storage::disk('public')->delete($d_file);
                         Notification::make()
