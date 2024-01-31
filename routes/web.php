@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -38,13 +39,9 @@ Route::get('storage-link', function () {
 
 Route::get('excel-download/{file}', function ($file) {
     $file = 'storage/' . $file . ".txt";
-    $file_name = 'Inspection_'. now()->format('d-m-Y H-i-s') . '.xlsm';
+    $file_name = 'Inspection_'. now()->format('d-m-Y H-i-s') . '.xlsx';
     return response()->download(public_path($file), $file_name)->deleteFileAfterSend();
 })->name('excel-download');
 
-//Route::get('/test', function (){
-//   \App\Jobs\CreateExcel::dispatch(1);
-//   return redirect('/');
-//});
 
 
