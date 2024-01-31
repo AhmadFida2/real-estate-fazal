@@ -38,9 +38,9 @@ Route::get('storage-link', function () {
 });
 
 Route::get('excel-download/{file}', function ($file) {
-    $file = 'storage/' . $file . ".txt";
-    $file_name = 'Inspection_'. now()->format('d-m-Y H-i-s') . '.xlsx';
-    return response()->download(public_path($file), $file_name)->deleteFileAfterSend();
+    $file = 'storage/' . $file . ".xlsx";
+    //$file_name = 'Inspection_'. now()->format('d-m-Y H-i-s') . '.xlsx';
+    return response()->download(public_path($file))->deleteFileAfterSend();
 })->name('excel-download');
 
 
