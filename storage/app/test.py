@@ -39,6 +39,7 @@ data = file.read()
 file.close()
 random_string = generate_random_string()
 excel_file_path = 'public/' + random_string + '.xlsx'
+data = json.loads(data)
 
 if data:
 
