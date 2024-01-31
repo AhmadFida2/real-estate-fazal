@@ -33,12 +33,12 @@ def write_to_excel(data, sheet_name, file_path):
     with pd.ExcelWriter(file_path, engine='openpyxl', mode='a') as writer:
         df.to_excel(writer, sheet_name=sheet_name, index=False)
 
-f_name = 'storage/' + sys.argv[1]
+f_name = 'public/' + sys.argv[1]
 file = open(f_name,'r')
 data = file.read()
 file.close()
 random_string = generate_random_string()
-excel_file_path = 'storage/' + random_string + '.xlsx'
+excel_file_path = 'public/' + random_string + '.xlsx'
 
 if data:
 
