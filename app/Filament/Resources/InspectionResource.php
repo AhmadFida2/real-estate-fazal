@@ -114,31 +114,31 @@ class InspectionResource extends Resource
                             ])
                             ->sendToDatabase($user);
                     }),
-                Tables\Actions\Action::make('send')
-                    ->iconButton()
-                    ->icon('heroicon-o-at-symbol')
-                    ->modalHeading('Send to Client')
-                    ->form([
-                        TextInput::make('email')->required()->email(),
-                    ])
-                    ->action(function ($record, $data) {
-                        $email = $data['email'];
-                        $res = new \App\Http\Resources\InspectionResource($record);
-                        $res = $res->toJson();
-                        $d_file = Str::random(10) . '.txt';
-                        Storage::disk('public')->put($d_file, $res);
-                        $path = Storage::disk('local')->path('test.py') . " " . $d_file;
-                        exec("python3 $path", $output);
-                        $fname = $output[0];
-                        Storage::disk('public')->delete($d_file);
-                        Mail::to($email)
-                            ->send(new ClientInspectionEmail($fname));
-                        Storage::disk('public')->delete($fname . '.txt');
-                        Notification::make()
-                            ->title('Email Sent!')
-                            ->success()
-                            ->send();
-                    })
+//                Tables\Actions\Action::make('send')
+//                    ->iconButton()
+//                    ->icon('heroicon-o-at-symbol')
+//                    ->modalHeading('Send to Client')
+//                    ->form([
+//                        TextInput::make('email')->required()->email(),
+//                    ])
+//                    ->action(function ($record, $data) {
+//                        $email = $data['email'];
+//                        $res = new \App\Http\Resources\InspectionResource($record);
+//                        $res = $res->toJson();
+//                        $d_file = Str::random(10) . '.txt';
+//                        Storage::disk('public')->put($d_file, $res);
+//                        $path = Storage::disk('local')->path('test.py') . " " . $d_file;
+//                        exec("python3 $path", $output);
+//                        $fname = $output[0];
+//                        Storage::disk('public')->delete($d_file);
+//                        Mail::to($email)
+//                            ->send(new ClientInspectionEmail($fname));
+//                        Storage::disk('public')->delete($fname . '.txt');
+//                        Notification::make()
+//                            ->title('Email Sent!')
+//                            ->success()
+//                            ->send();
+//                    })
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
