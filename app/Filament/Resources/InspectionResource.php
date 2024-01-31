@@ -102,7 +102,7 @@ class InspectionResource extends Resource
                         exec("python3 $path", $output);
                         $user = auth()->user();
                         $fname = $output[0];
-                        Storage::disk('public')->delete($d_file);
+                       // Storage::disk('public')->delete($d_file);
                         Notification::make()
                             ->title('File Generated')
                             ->success()
