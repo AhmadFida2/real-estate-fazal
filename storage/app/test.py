@@ -7,6 +7,7 @@ from openpyxl import load_workbook
 from openpyxl.drawing.image import Image as OpenpyxlImage
 from openpyxl.utils import get_column_letter
 
+os.chdir("/home/forge/arsal.click/public")
 print(os.getcwd())
 exit()
 temp_image_dir = 'storage/temp_images'
