@@ -1,6 +1,6 @@
 import requests
 import pandas as pd
-import os,sys,random,string,json
+import os,sys,random,string,json,shutil
 from PIL import Image  # Only import Image
 from io import BytesIO
 from openpyxl import load_workbook
@@ -185,9 +185,10 @@ if data:
     # Hospitals
     hospitals = flatten_json(data.get('hospitals', {}))
     write_to_excel(hospitals, 'Hospitals', excel_file_path)
-
+    shutil.rmtree("storage/temp_images")
     print(random_string)
 else:
+    shutil.rmtree("storage/temp_images")
     print('error')
 
 
