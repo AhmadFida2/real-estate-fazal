@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\PropertyResource\Pages;
+namespace App\Filament\Resources\InspectionResource\Pages;
 
 use App\Filament\Resources\InspectionResource;
 

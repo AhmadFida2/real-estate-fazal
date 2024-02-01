@@ -2,8 +2,7 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\PropertyResource\Pages;
-use App\Mail\ClientInspectionEmail;
+use App\Filament\Resources\InspectionResource\Pages;
 use App\Models\Inspection;
 use Filament\Forms;
 use Filament\Forms\Components\Repeater;
