@@ -45,7 +45,7 @@ Route::get('excel-download/{file}', function ($file) {
     }
     else
     {
-        return response(status: 404);
+       abort(404);
     }
 
 })->name('excel-download');
