@@ -187,5 +187,7 @@ if data:
     write_to_excel(hospitals, 'Hospitals', excel_file_path)
 
     print(random_string)
+else:
+    print('error')
 
 
