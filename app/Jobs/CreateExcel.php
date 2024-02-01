@@ -43,7 +43,7 @@ class CreateExcel implements ShouldQueue
         exec("python3 $path", $output);
         $user = auth()->user();
         \Illuminate\Support\Facades\Log::info($output[0]);
-        dd();
+        dd('A');
         $fname = $output[0];
         if($fname == 'error')
         {
