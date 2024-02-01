@@ -41,6 +41,7 @@ class CreateExcel implements ShouldQueue
         $path = Storage::disk('local')->path('test.py') . " " . $d_file;
         exec("python3 $path", $output);
         $user = auth()->user();
+        dd($output);
         $fname = $output[0];
         if($fname == 'error')
         {
