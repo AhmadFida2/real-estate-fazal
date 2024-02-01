@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class EmptyPublicDir extends Command
@@ -28,5 +29,6 @@ class EmptyPublicDir extends Command
     public function handle()
     {
         File::cleanDirectory(Storage::disk('public')->path(''));
+        Log::info('Public Folder Cleared!');
     }
 }
