@@ -1,14 +1,14 @@
 import requests
 import pandas as pd
 import logging
-import os,sys,random
+import os,sys,random,string
 from PIL import Image  # Only import Image
 from io import BytesIO
 from openpyxl import load_workbook
 from openpyxl.drawing.image import Image as OpenpyxlImage
 from openpyxl.utils import get_column_letter
 
-temp_image_dir = 'storage/temp_images'
+temp_image_dir = 'temp_images'
 os.makedirs(temp_image_dir, exist_ok=True)
 
 def generate_random_string(length=15):
