@@ -35,13 +35,14 @@ class CreateExcel implements ShouldQueue
      */
     public function handle(): void
     {
-        $data = new InspectionResource(Inspection::find($this->record_id));
+        $inspection = Inspection::find($this->record_id);
+        $data = new InspectionResource($inspection);
         $data = $data->toJson();
         $d_file = Str::random(10) . '.txt';
         Storage::disk('public')->put($d_file, $data);
         $path = Storage::disk('local')->path('test.py') . " " . $d_file;
         exec("python3 $path", $output);
-        $user = auth()->user();
+        $user = $inspection->user();
         \Illuminate\Support\Facades\Log::info($output[0]);
         $fname = $output[0];
         if($fname == 'error')
