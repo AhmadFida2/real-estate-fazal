@@ -151,7 +151,6 @@ if data:
                   for photo in data.get('images', [])
                   if all(k in photo for k in ['photo_url', 'photo_description', 'photo_type'])]
 
-    logging.info(f"Photo Data (URLs, Descriptions, Types): {photo_data}")
 
     # Call the function to create the photos sheet with photo_data
     create_photos_sheet_with_images(photo_data, excel_file_path)
