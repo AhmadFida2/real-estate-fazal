@@ -125,12 +125,12 @@ def create_photos_sheet_with_images(photo_data, file_path, start_cell='A1'):
         return
 
 
-f_name =  sys.argv[1]
+f_name = 'storage/' + sys.argv[1]
 file = open(f_name,'r')
 data = file.read()
 file.close()
 random_string = generate_random_string()
-excel_file_path =  random_string + '.xlsx'
+excel_file_path = 'storage/' + random_string + '.xlsx'
 data = json.loads(data)
 
 if not os.path.exists(excel_file_path):
