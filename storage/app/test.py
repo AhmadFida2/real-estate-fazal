@@ -7,7 +7,7 @@ from openpyxl import load_workbook
 from openpyxl.drawing.image import Image as OpenpyxlImage
 from openpyxl.utils import get_column_letter
 
-temp_image_dir = 'storage/temp_images'
+temp_image_dir = 'public/temp_images'
 os.makedirs(temp_image_dir, exist_ok=True)
 
 def generate_random_string(length=15):
@@ -125,12 +125,12 @@ def create_photos_sheet_with_images(photo_data, file_path, start_cell='A1'):
         return
 
 
-f_name = 'storage/' + sys.argv[1]
+f_name = 'public/' + sys.argv[1]
 file = open(f_name,'r')
 data = file.read()
 file.close()
 random_string = generate_random_string()
-excel_file_path = 'storage/' + random_string + '.xlsx'
+excel_file_path = 'public/' + random_string + '.xlsx'
 data = json.loads(data)
 
 if not os.path.exists(excel_file_path):
