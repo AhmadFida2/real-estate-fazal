@@ -12,6 +12,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
+        $schedule->command('queue:work')->everyMinute()->withoutOverlapping();
         $schedule->command('clear:temp-urls')->everyThirtyMinutes();
     }
 
