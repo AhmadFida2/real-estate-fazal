@@ -97,6 +97,7 @@ class InspectionResource extends Resource
                             ->info()
                             ->send();
                         CreateExcel::dispatch($record->id);
+
 //                        $data = new \App\Http\Resources\InspectionResource($record);
 //                        $data = $data->toJson();
 //                        $d_file = Str::random(10) . '.txt';
