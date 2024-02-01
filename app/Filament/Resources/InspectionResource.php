@@ -106,6 +106,7 @@ class InspectionResource extends Resource
                         exec("python3 $path", $output);
                         $user = auth()->user();
                         $fname = $output[0];
+                        Storage::disk('public')->delete($d_file);
                         if($fname == 'error')
                         {
                             Notification::make()
