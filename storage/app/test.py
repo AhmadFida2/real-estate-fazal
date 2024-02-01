@@ -11,6 +11,11 @@ from openpyxl.utils import get_column_letter
 temp_image_dir = 'storage/temp_images'
 os.makedirs(temp_image_dir, exist_ok=True)
 
+def generate_random_string(length=15):
+    characters = string.ascii_letters + string.digits
+    random_string = ''.join(random.choice(characters) for _ in range(length))
+    return random_string
+
 def flatten_json(nested_json, exclude_keys=None):
     if exclude_keys is None:
         exclude_keys = []
