@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Http\Resources\InspectionResource;
 use App\Models\Inspection;
+use AWS\CRT\Log;
 use Filament\Notifications\Actions\Action;
 use Filament\Notifications\Events\DatabaseNotificationsSent;
 use Filament\Notifications\Notification;
@@ -41,7 +42,7 @@ class CreateExcel implements ShouldQueue
         $path = Storage::disk('local')->path('test.py') . " " . $d_file;
         exec("python3 $path", $output);
         $user = auth()->user();
-        dd($output);
+        \Illuminate\Support\Facades\Log::info($output);
         $fname = $output[0];
         if($fname == 'error')
         {
