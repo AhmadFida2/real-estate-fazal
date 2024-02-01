@@ -13,6 +13,7 @@ use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Notifications\Actions\Action;
+use Filament\Notifications\Events\DatabaseNotificationsSent;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Support\Markdown;
@@ -121,7 +122,9 @@ class InspectionResource extends Resource
                                     ->button()
                                     ->url('/excel-download/' . $fname)
                             ])
-                                ->broadcast($user);
+                            ->sendToDatabase($user);
+                            event(new DatabaseNotificationsSent($user));
+
                         }
 
 //
