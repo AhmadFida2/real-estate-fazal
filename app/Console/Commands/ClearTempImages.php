@@ -5,12 +5,13 @@ namespace App\Console\Commands;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class ClearTempImages extends Command
 {
     protected $signature = 'clear:temp-urls';
-    protected $description = 'Clear temporary URLs older than 1 hour from storage';
+    protected $description = 'Clear temporary URLs older than 15 minutes from storage';
 
     public function handle()
     {
@@ -37,7 +38,7 @@ class ClearTempImages extends Command
                 Cache::forever('temp_keys', $allTimestampKeys);
             }
         }
-
+        Log::info('Temporary URLs older than 15 mins cleared from storage.');
         $this->info('Temporary URLs older than 15 mins cleared from storage.');
     }
 }
