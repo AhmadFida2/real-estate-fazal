@@ -30,6 +30,7 @@ class AdminPanelProvider extends PanelProvider
             ->profile()
             ->topNavigation()
             ->databaseNotifications()
+            ->databaseNotificationsPolling(null)
             ->maxContentWidth('full')
             ->sidebarCollapsibleOnDesktop()
             ->sidebarFullyCollapsibleOnDesktop()
