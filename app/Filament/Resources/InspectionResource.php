@@ -92,6 +92,7 @@ class InspectionResource extends Resource
                     ->action(function ($record) {
                         Notification::make()
                             ->title('Generating File')
+                            ->body('You will be notified once its done.')
                             ->info()
                             ->send();
                         $data = new \App\Http\Resources\InspectionResource($record);
@@ -102,8 +103,16 @@ class InspectionResource extends Resource
                         exec("python3 $path", $output);
                         $user = auth()->user();
                         $fname = $output[0];
-                        Storage::disk('public')->delete($d_file);
-                        Notification::make()
+                        if($fname == 'error')
+                        {
+                            Notification::make()
+                                ->title('File Generate Failed.')
+                                ->danger()
+                                ->send();
+                        }
+                        else
+                        {
+                            Notification::make()
                             ->title('File Generated')
                             ->success()
                             ->body(Markdown::inline('The requested Excel file is ready for download. **Once downloaded, file will be deleted from server.**'))
@@ -113,6 +122,9 @@ class InspectionResource extends Resource
                                     ->url('/excel-download/' . $fname)
                             ])
                             ->sendToDatabase($user);
+                        }
+
+//
                     }),
 //                Tables\Actions\Action::make('send')
 //                    ->iconButton()
