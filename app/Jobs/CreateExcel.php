@@ -43,9 +43,29 @@ class CreateExcel implements ShouldQueue
         exec("python3 $path", $output);
         $user = auth()->user();
         \Illuminate\Support\Facades\Log::info($output[0]);
-        return;
         $fname = $output[0];
+        if($fname == 'error')
+        {
+            Notification::make()
+                ->title('File Generate Failed.')
+                ->danger()
+                ->broadcast($user);
+        }
+        else
+        {
+            Notification::make()
+                ->title('File Generated')
+                ->success()
+                ->body(Markdown::inline('The requested Excel file is ready for download. **Once downloaded, file will be deleted from server.**'))
+                ->actions([
+                    Action::make('download')
+                        ->button()
+                        ->url('/excel-download/' . $fname)
+                ])
+                ->sendToDatabase($user);
+            event(new DatabaseNotificationsSent($user));
 
+        }
 
     }
 }
