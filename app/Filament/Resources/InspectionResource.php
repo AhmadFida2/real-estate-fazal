@@ -121,7 +121,7 @@ class InspectionResource extends Resource
                                     ->button()
                                     ->url('/excel-download/' . $fname)
                             ])
-                            ->sendToDatabase($user);
+                                ->broadcast($user);
                         }
 
 //
