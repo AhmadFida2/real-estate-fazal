@@ -1,7 +1,7 @@
 import requests
 import pandas as pd
 import logging
-import os
+import os,sys,random
 from PIL import Image  # Only import Image
 from io import BytesIO
 from openpyxl import load_workbook
