@@ -25,6 +25,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
+use Livewire\Component;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 
 
@@ -90,7 +91,7 @@ class InspectionResource extends Resource
                 Tables\Actions\Action::make('download')
                     ->icon('heroicon-o-arrow-down-tray')
                     ->iconButton()
-                    ->action(function ($record,$livewire) {
+                    ->action(function ($record,Component $livewire) {
                         Notification::make()
                             ->title('Generating File')
                             ->body('You will be notified once its done.')
