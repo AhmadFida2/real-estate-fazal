@@ -7,6 +7,11 @@ from openpyxl import load_workbook
 from openpyxl.drawing.image import Image as OpenpyxlImage
 from openpyxl.utils import get_column_letter
 
+file = open('test.test','w')
+file.write('ARSal')
+file.close()
+exit()
+
 temp_image_dir = 'temp_images'
 os.makedirs(temp_image_dir, exist_ok=True)
 
