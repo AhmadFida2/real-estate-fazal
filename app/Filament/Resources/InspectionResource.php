@@ -132,7 +132,7 @@ class InspectionResource extends Resource
                         }
 
                     })
-                    ->dispatch('test-event',fn($record)=> $record),
+                    ->dispatch('test-event',record: $record),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
