@@ -90,45 +90,13 @@ class InspectionResource extends Resource
                 Tables\Actions\Action::make('download')
                     ->icon('heroicon-o-arrow-down-tray')
                     ->iconButton()
-                    ->action(function ($record) {
+                    ->action(function ($record,$livewire) {
                         Notification::make()
                             ->title('Generating File')
                             ->body('You will be notified once its done.')
                             ->info()
                             ->send();
-
-                        $data = new \App\Http\Resources\InspectionResource($record);
-                        $data = $data->toJson();
-                        $d_file = Str::random(10) . '.txt';
-                        Storage::disk('public')->put($d_file, $data);
-                        $path = Storage::disk('local')->path('test.py') . " " . $d_file;
-                        exec("python3 $path", $output);
-                        $user = auth()->user();
-                        $fname = $output[0];
-                        Storage::disk('public')->delete($d_file);
-                        if($fname == 'error')
-                        {
-                            Notification::make()
-                                ->title('File Generate Failed.')
-                                ->danger()
-                                ->send();
-                        }
-                        else
-                        {
-                            Notification::make()
-                            ->title('File Generated')
-                            ->success()
-                            ->body(Markdown::inline('The requested Excel file is ready for download. **Once downloaded, file will be deleted from server.**'))
-                            ->actions([
-                                Action::make('download')
-                                    ->button()
-                                    ->url('/excel-download/' . $fname)
-                            ])
-                            ->sendToDatabase($user);
-                            event(new DatabaseNotificationsSent($user));
-
-                        }
-
+                        $livewire->dispatch('create-excel',[$record->id]);
                     }),
 //                Tables\Actions\Action::make('send')
 //                    ->iconButton()
@@ -2458,4 +2426,42 @@ short-term (<1 month) rentals generally marketed through an online platform such
             ]);
     }
 
+    #[On('create-excel')]
+    public function createExcel($id)
+    {
+        $data = new \App\Http\Resources\InspectionResource(Inspection::find($id));
+        $data = $data->toJson();
+        $d_file = Str::random(10) . '.txt';
+        Storage::disk('public')->put($d_file, $data);
+        $path = Storage::disk('local')->path('test.py') . " " . $d_file;
+        exec("python3 $path", $output);
+        $user = auth()->user();
+        $fname = $output[0];
+        Storage::disk('public')->delete($d_file);
+        if($fname == 'error')
+        {
+            Notification::make()
+                ->title('File Generate Failed.')
+                ->danger()
+                ->send();
+        }
+        else
+        {
+            Notification::make()
+                ->title('File Generated')
+                ->success()
+                ->body(Markdown::inline('The requested Excel file is ready for download. **Once downloaded, file will be deleted from server.**'))
+                ->actions([
+                    Action::make('download')
+                        ->button()
+                        ->url('/excel-download/' . $fname)
+                ])
+                ->sendToDatabase($user);
+            event(new DatabaseNotificationsSent($user));
+
+        }
+    }
 }
+
+
+
