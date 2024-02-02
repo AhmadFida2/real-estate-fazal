@@ -10,7 +10,6 @@ from openpyxl.utils import get_column_letter
 file = open('test.test','w')
 file.write('ARSal')
 file.close()
-exit()
 
 temp_image_dir = 'temp_images'
 os.makedirs(temp_image_dir, exist_ok=True)
@@ -130,12 +129,12 @@ def create_photos_sheet_with_images(photo_data, file_path, start_cell='A1'):
         return
 
 
-f_name = 'public/' + sys.argv[1]
+f_name = 'app/public/' + sys.argv[1]
 file = open(f_name,'r')
 data = file.read()
 file.close()
 random_string = generate_random_string()
-excel_file_path = 'public/' + random_string + '.xlsx'
+excel_file_path = 'app/public/' + random_string + '.xlsx'
 data = json.loads(data)
 
 if not os.path.exists(excel_file_path):
