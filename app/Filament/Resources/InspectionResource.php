@@ -96,7 +96,7 @@ class InspectionResource extends Resource
                             ->body('You will be notified once its done.')
                             ->info()
                             ->send();
-                        $livewire->dispatch('create-excel',[$record->id]);
+                        $livewire->dispatchSelf('create-excel',[$record->id]);
                     }),
 //                Tables\Actions\Action::make('send')
 //                    ->iconButton()
@@ -2429,6 +2429,7 @@ short-term (<1 month) rentals generally marketed through an online platform such
     #[On('create-excel')]
     public function createExcel($id)
     {
+        dd($id);
         $data = new \App\Http\Resources\InspectionResource(Inspection::find($id));
         $data = $data->toJson();
         $d_file = Str::random(10) . '.txt';
