@@ -24,12 +24,15 @@ class AssignmentResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\DatePicker::make('date')
-                    ->required(),
-                Forms\Components\TextInput::make('address')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\Select::make('user_id')
+                Forms\Components\TextInput::make('client'),
+                Forms\Components\TextInput::make('status'),
+                Forms\Components\DatePicker::make('start_date'),
+                Forms\Components\DatePicker::make('due_date'),
+                Forms\Components\TextInput::make('property_name'),
+                Forms\Components\TextInput::make('city'),
+                Forms\Components\TextInput::make('state'),
+                Forms\Components\TextInput::make('zip'),
+                Forms\Components\Select::make('user_id')->label('Inspector Name')
                     ->relationship('user', 'name', modifyQueryUsing: fn($query) => $query->where('is_admin', false))
                     ->searchable()
                     ->preload()
