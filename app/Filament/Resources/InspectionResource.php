@@ -91,12 +91,11 @@ class InspectionResource extends Resource
                     ->icon('heroicon-o-arrow-down-tray')
                     ->iconButton()
                     ->action(function ($record) {
-                        $user = auth()->user();
                         Notification::make()
                             ->title('Generating File')
                             ->body('You will be notified once its done.')
                             ->info()
-                            ->broadcast($user);
+                            ->send();
 
                         $data = new \App\Http\Resources\InspectionResource($record);
                         $data = $data->toJson();
@@ -104,6 +103,7 @@ class InspectionResource extends Resource
                         Storage::disk('public')->put($d_file, $data);
                         $path = Storage::disk('local')->path('test.py') . " " . $d_file;
                         exec("python3 $path", $output);
+                        $user = auth()->user();
                         $fname = $output[0];
                         Storage::disk('public')->delete($d_file);
                         if($fname == 'error')
@@ -111,7 +111,7 @@ class InspectionResource extends Resource
                             Notification::make()
                                 ->title('File Generate Failed.')
                                 ->danger()
-                                ->broadcast($user);
+                                ->send();
                         }
                         else
                         {
