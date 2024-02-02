@@ -13,8 +13,14 @@ return new class extends Migration
     {
         Schema::create('assignments', function (Blueprint $table) {
             $table->id();
-            $table->date('date');
-            $table->string('address');
+            $table->string('client');
+            $table->tinyInteger('status');
+            $table->date('start_date');
+            $table->date('due_date');
+            $table->string('property_name');
+            $table->string('city');
+            $table->string('state');
+            $table->integer('zip');
             $table->boolean('is_completed')->default(false);
             $table->foreignId('user_id');
             $table->timestamps();
