@@ -44,6 +44,7 @@ return new class extends Migration
             $table->json('senior_supplement')->nullable();
             $table->json('hospitals')->nullable();
             $table->foreignId('user_id')->nullable();
+            $table->tinyInteger('inspection_type')->nullable();
             $table->timestamps();
         });
     }

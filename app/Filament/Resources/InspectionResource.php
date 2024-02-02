@@ -175,8 +175,7 @@ class InspectionResource extends Resource
                             $livewire->form->fill($data->toArray());
                         })->hidden(fn($operation) => $operation == 'view'),
                 ])->verticallyAlignCenter()->alignCenter(),
-                Forms\Components\Radio::make('report_type')->label('Report Type')->dehydrated(false)
-                    ->inline()
+                Forms\Components\Radio::make('inspection_type')->label('Inspection Type')
                     ->inlineLabel(false)
                     ->columnSpanFull()
                     ->options(['Basic Inspection', 'Fannie Mae Inspection', 'Repairs Verification', 'Freddie Mac Inspection'])->live()
@@ -385,7 +384,7 @@ class InspectionResource extends Resource
 
                             ]),
                         Select::make('time_at_property')
-                            ->label('Length of Time at InspectionCollection')
+                            ->label('Length of Time at Property')
                             ->options([
                                 '< 6 mo' => '< 6 mo',
                                 '6 mo to < 1 yr' => '6 mo to < 1 yr',
@@ -404,15 +403,15 @@ class InspectionResource extends Resource
                     ->statePath('comments')
                     ->schema([
                         Textarea::make('servicer_comments')
-                            ->label("Lender's or Servicer's General Comments or Instructions to Inspector for Subject InspectionCollection")
+                            ->label("Lender's or Servicer's General Comments or Instructions to Inspector for Subject Property")
                             ->default('NA')
                         ,
                         Textarea::make('inspector_comments')
-                            ->label("InspectionCollection's Inspector's General Comments or Suggestions to Lender or Servicer on the Subject InspectionCollection")
+                            ->label("Property Inspector's General Comments or Suggestions to Lender or Servicer on the Subject Property")
                             ->default('NOTE: This is not a fire or life safety inspection and it does not address the integrity or structural soundness of the property. ')
                         ,
                     ]),
-                Forms\Components\Fieldset::make('InspectionCollection Profile and Occupancy')
+                Forms\Components\Fieldset::make('Profile and Occupancy')
                     ->columns(3)
                     ->statePath('profile_occupancy_info')
                     ->schema([
@@ -438,7 +437,7 @@ class InspectionResource extends Resource
                         Forms\Components\DatePicker::make('rent_roll_date')
                             ->label('Rent Roll Date'),
                         Select::make('is_affordable_housing')
-                            ->label('Is InspectionCollection Affordable Housing?')
+                            ->label('Is Affordable Housing?')
                             ->options(['Yes' => 'Yes', 'No' => 'No', 'Not Applicable' => 'Not Applicable']),
                         Select::make('unit_of_measurement_used')
                             ->label('Units of Measurement Used')
@@ -469,7 +468,7 @@ class InspectionResource extends Resource
                             ->label('Describe Dark/Down Space If Any')
                         ,
                         Select::make('rental_concessions_offered')
-                            ->label('InspectionCollection Offers Rental Concessions?')
+                            ->label('Offers Rental Concessions?')
                             ->options(['Yes' => 'Yes', 'No' => 'No', 'Not Applicable' => 'Not Applicable', 'Unknown' => 'Unknown']),
                         TextInput::make('describe_rental_concession')
                             ->label('Describe Rental Concessions'),
