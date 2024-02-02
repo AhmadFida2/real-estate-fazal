@@ -192,10 +192,10 @@ if data:
     # Hospitals
     hospitals = flatten_json(data.get('hospitals', {}))
     write_to_excel(hospitals, 'Hospitals', excel_file_path)
-    shutil.rmtree("temp_images")
+    shutil.rmtree('storage/temp_images')
     print(random_string)
 else:
-    shutil.rmtree("temp_images")
+    shutil.rmtree('storage/temp_images')
     print('error')
 
 
