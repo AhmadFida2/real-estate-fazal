@@ -93,12 +93,14 @@ class InspectionResource extends Resource
                     ->icon('heroicon-o-arrow-down-tray')
                     ->iconButton()
                     ->action(function ($record) {
-                        Notification::make()
-                            ->title('Generating File')
-                            ->body('You will be notified once its done.')
-                            ->info()
-                            ->broadcast(auth()->user());
-                        event(new BroadcastNotificationCreated(auth()->user()));
+                        $user = auth()->user();
+                        $user->notify(
+                            Notification::make()
+                                ->title('Generating File')
+                                ->body('You will be notified once its done.')
+                                ->info()
+                                ->broadcast(auth()->user())
+                        );
                         $data = new \App\Http\Resources\InspectionResource($record);
                         $data = $data->toJson();
                         $d_file = Str::random(10) . '.txt';
