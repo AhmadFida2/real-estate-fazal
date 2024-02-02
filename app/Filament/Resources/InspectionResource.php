@@ -98,7 +98,6 @@ class InspectionResource extends Resource
                             ->body('You will be notified once its done.')
                             ->info()
                             ->send();
-                        $livewire->dispatch('test-event',record: $record);
 
                         $data = new \App\Http\Resources\InspectionResource($record);
                         $data = $data->toJson();
@@ -2437,11 +2436,11 @@ short-term (<1 month) rentals generally marketed through an online platform such
             ]);
     }
 
-    #[On('test-event')]
-    public function test($record)
-    {
-       Notification::make()
-           ->title($record->id)
-           ->send();
-    }
+//    #[On('test-event')]
+//    public function test($record)
+//    {
+//       Notification::make()
+//           ->title($record->id)
+//           ->send();
+//    }
 }
