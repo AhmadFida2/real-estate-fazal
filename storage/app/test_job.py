@@ -7,6 +7,9 @@ from openpyxl import load_workbook
 from openpyxl.drawing.image import Image as OpenpyxlImage
 from openpyxl.utils import get_column_letter
 
+target_directory = '/home/forge/arsal.click/public'
+
+os.chdir(target_directory)
 file = open('test.test','w')
 file.write('ARSal')
 file.close()

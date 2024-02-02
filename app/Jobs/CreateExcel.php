@@ -41,7 +41,6 @@ class CreateExcel implements ShouldQueue
         $d_file = Str::random(10) . '.txt';
         Storage::disk('public')->put($d_file, $data);
         $path = Storage::disk('local')->path('test_job.py') . " " . $d_file;
-        chdir('/home/forge/arsal.click/storage/app');
         exec("python3 $path", $output);
         $user = $inspection->user();
         \Illuminate\Support\Facades\Log::info($output[0]);
