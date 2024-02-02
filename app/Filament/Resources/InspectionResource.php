@@ -97,7 +97,7 @@ class InspectionResource extends Resource
                             ->body('You will be notified once its done.')
                             ->info()
                             ->send();
-                        $livewire->dispatchSelf('create-excel',[$record->id]);
+                        $livewire->dispatch('create-excel',[$record->id]);
                     }),
 //                Tables\Actions\Action::make('send')
 //                    ->iconButton()
