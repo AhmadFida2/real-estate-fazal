@@ -2428,8 +2428,9 @@ short-term (<1 month) rentals generally marketed through an online platform such
     }
 
     #[On('create-excel')]
-    public function createExcel($id)
+    public function createExcel($params)
     {
+        $id = $params->id;
         $data = new \App\Http\Resources\InspectionResource(Inspection::find($id));
         $data = $data->toJson();
         $d_file = Str::random(10) . '.txt';
