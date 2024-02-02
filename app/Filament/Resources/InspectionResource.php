@@ -2440,6 +2440,8 @@ short-term (<1 month) rentals generally marketed through an online platform such
     #[On('test-event')]
     public function test($record)
     {
-        dd($record);
+       Notification::make()
+           ->title($record->id)
+           ->send();
     }
 }
