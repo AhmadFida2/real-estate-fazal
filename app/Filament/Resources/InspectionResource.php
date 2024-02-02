@@ -63,12 +63,12 @@ class InspectionResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name')
+                    ->label('Propety Name')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('address')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('address_2')
-                    ->searchable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('inspection_status')
+                    ->label('Status')
+                    ->badge()
+                ->formatStateUsing(fn($state) => $state ? "Complete" : "Pending"),
                 Tables\Columns\TextColumn::make('city')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('zip')
