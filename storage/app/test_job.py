@@ -10,10 +10,6 @@ from openpyxl.utils import get_column_letter
 target_directory = '/home/forge/arsal.click/public'
 
 os.chdir(target_directory)
-file = open('test.test','w')
-file.write('ARSal')
-file.close()
-
 temp_image_dir = 'storage/temp_images'
 os.makedirs(temp_image_dir, exist_ok=True)
 
@@ -192,10 +188,10 @@ if data:
     # Hospitals
     hospitals = flatten_json(data.get('hospitals', {}))
     write_to_excel(hospitals, 'Hospitals', excel_file_path)
-    shutil.rmtree('public/temp_images')
+    shutil.rmtree('storage/temp_images')
     print(random_string)
 else:
-    shutil.rmtree('public/temp_images')
+    shutil.rmtree('storage/temp_images')
     print('error')
 
 
