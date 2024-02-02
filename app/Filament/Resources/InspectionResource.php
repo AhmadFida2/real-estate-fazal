@@ -25,6 +25,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
+use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 
@@ -97,7 +98,7 @@ class InspectionResource extends Resource
                             ->body('You will be notified once its done.')
                             ->info()
                             ->send();
-                        $livewire->dispatch('create-excel',[$record->id]);
+                        $livewire->dispatch('create-excel',id:[$record->id]);
                     }),
 //                Tables\Actions\Action::make('send')
 //                    ->iconButton()
@@ -2428,9 +2429,8 @@ short-term (<1 month) rentals generally marketed through an online platform such
     }
 
     #[On('create-excel')]
-    public function createExcel($params)
+    public function createExcel($id)
     {
-        $id = $params->id;
         $data = new \App\Http\Resources\InspectionResource(Inspection::find($id));
         $data = $data->toJson();
         $d_file = Str::random(10) . '.txt';
