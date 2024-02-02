@@ -13,12 +13,14 @@ use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Notifications\Actions\Action;
+use Filament\Notifications\BroadcastNotification;
 use Filament\Notifications\Events\DatabaseNotificationsSent;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Support\Markdown;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Notifications\Events\BroadcastNotificationCreated;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
@@ -96,7 +98,7 @@ class InspectionResource extends Resource
                             ->body('You will be notified once its done.')
                             ->info()
                             ->broadcast(auth()->user());
-
+                        event(new BroadcastNotificationCreated(auth()->user()));
                         $data = new \App\Http\Resources\InspectionResource($record);
                         $data = $data->toJson();
                         $d_file = Str::random(10) . '.txt';
