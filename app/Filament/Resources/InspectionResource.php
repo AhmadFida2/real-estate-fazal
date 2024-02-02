@@ -65,10 +65,7 @@ class InspectionResource extends Resource
                 Tables\Columns\TextColumn::make('name')
                     ->label('Propety Name')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('inspection_status')
-                    ->label('Status')
-                    ->badge()
-                ->formatStateUsing(fn($state) => $state ? "Complete" : "Pending"),
+
                 Tables\Columns\TextColumn::make('city')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('zip')
@@ -82,6 +79,11 @@ class InspectionResource extends Resource
                 Tables\Columns\TextColumn::make('inspection_date')
                     ->dateTime()
                     ->sortable(),
+                Tables\Columns\TextColumn::make('inspection_status')
+                    ->label('Status')
+                    ->badge()
+                    ->formatStateUsing(fn($state) => $state ? "Complete" : "Pending")
+                    ->color(fn($state) => $state ? "success" : "warning"),
             ])
             ->filters([
                 //
@@ -108,31 +110,28 @@ class InspectionResource extends Resource
                         $user = auth()->user();
                         $fname = $output[0];
                         Storage::disk('public')->delete($d_file);
-                        if($fname == 'error')
-                        {
+                        if ($fname == 'error') {
                             Notification::make()
                                 ->title('File Generate Failed.')
                                 ->danger()
                                 ->send();
-                        }
-                        else
-                        {
+                        } else {
                             Notification::make()
-                            ->title('File Generated')
-                            ->success()
-                            ->body(Markdown::inline('The requested Excel file is ready for download. **Once downloaded, file will be deleted from server.**'))
-                            ->actions([
-                                Action::make('download')
-                                    ->button()
-                                    ->url('/excel-download/' . $fname)
-                            ])
-                            ->sendToDatabase($user);
+                                ->title('File Generated')
+                                ->success()
+                                ->body(Markdown::inline('The requested Excel file is ready for download. **Once downloaded, file will be deleted from server.**'))
+                                ->actions([
+                                    Action::make('download')
+                                        ->button()
+                                        ->url('/excel-download/' . $fname)
+                                ])
+                                ->sendToDatabase($user);
                             event(new DatabaseNotificationsSent($user));
 
                         }
 
                     })
-                    ,
+                ,
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -205,7 +204,7 @@ class InspectionResource extends Resource
                         11 => 'Hospitals',
                     ])->columnSpanFull()->columns(4)->live(),
                 Select::make('inspection_status')->required()
-                ->options(['Pending','Complete'])->default(0)
+                    ->options(['Pending', 'Complete'])->default(0)
 
             ]);
     }
@@ -728,7 +727,7 @@ class InspectionResource extends Resource
                                 // Resize the image while maintaining the aspect ratio
                                 $img->scaleDown(800);
                                 $img = $img->toJpeg();
-                                Storage::disk('s3')->put($f_name, $img,'public');
+                                Storage::disk('s3')->put($f_name, $img, 'public');
                                 $image->delete();
                             }
                             $rep_data[] = [
