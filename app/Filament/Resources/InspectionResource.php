@@ -99,7 +99,7 @@ class InspectionResource extends Resource
                                 ->title('Generating File')
                                 ->body('You will be notified once its done.')
                                 ->info()
-                                ->broadcast(auth()->user())
+                                ->toBroadcast()
                         );
                         $data = new \App\Http\Resources\InspectionResource($record);
                         $data = $data->toJson();
