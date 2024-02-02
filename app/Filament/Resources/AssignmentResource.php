@@ -25,7 +25,9 @@ class AssignmentResource extends Resource
         return $form
             ->schema([
                 Forms\Components\TextInput::make('client'),
-                Forms\Components\TextInput::make('status'),
+                Forms\Components\Select::make('status')->options([
+                    'Un-Scheduled','Scheduled'
+                ])->default(0),
                 Forms\Components\DatePicker::make('start_date'),
                 Forms\Components\DatePicker::make('due_date'),
                 Forms\Components\TextInput::make('property_name'),
@@ -45,11 +47,16 @@ class AssignmentResource extends Resource
             return $table
                 ->emptyStateHeading('No Upcoming Assignments')
                 ->columns([
-                    Tables\Columns\TextColumn::make('date')
-                        ->date()
+                    Tables\Columns\TextColumn::make('client')
                         ->sortable(),
-                    Tables\Columns\TextColumn::make('user.name'),
-                    Tables\Columns\TextColumn::make('address')->words(8),
+                    Tables\Columns\TextColumn::make('status'),
+                    Tables\Columns\TextColumn::make('user.name')->label('Inspector Name'),
+                    Tables\Columns\TextColumn::make('start_date'),
+                    Tables\Columns\TextColumn::make('due_date'),
+                    Tables\Columns\TextColumn::make('property_name'),
+                    Tables\Columns\TextColumn::make('city'),
+                    Tables\Columns\TextColumn::make('state'),
+                    Tables\Columns\TextColumn::make('zip'),
                     Tables\Columns\IconColumn::make('is_completed')
                         ->label('Completed')
                         ->boolean()
