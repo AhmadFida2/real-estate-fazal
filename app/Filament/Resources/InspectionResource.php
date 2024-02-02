@@ -204,6 +204,8 @@ class InspectionResource extends Resource
                         10 => 'Senior Housing Supplement',
                         11 => 'Hospitals',
                     ])->columnSpanFull()->columns(4)->live(),
+                Select::make('inspection_status')->required()
+                ->options(['Pending','Complete'])->default(0)
 
             ]);
     }
