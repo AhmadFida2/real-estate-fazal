@@ -91,10 +91,10 @@ class AssignmentResource extends Resource
                         ->infolist([
                             Grid::make(4)
                                 ->schema([
-                                    TextEntry::make('payment_amount')->label('Payment Amount')->formatStateUsing(fn($record) => "$ " . number_format($record->payment_info['payment_amount'], 2, '.', ',')),
-                                    TextEntry::make('payment_date')->label('Payment Date')->formatStateUsing(fn($record) => fn($record) => $record->payment_info['payment_date']),
-                                    TextEntry::make('invoice_date')->label('Invoice Date')->formatStateUsing(fn($record) => fn($record) => $record->payment_info['invoice_date']),
-                                    TextEntry::make('invoice_amount')->label('Invoice Amount')->formatStateUsing(fn($record) => "$ " . number_format($record->payment_info['invoice_amount'], 2, '.', ',')),
+                                    TextEntry::make('payment_info.payment_amount')->label('Payment Amount'),
+                                    TextEntry::make('payment_info.payment_date')->label('Payment Date'),
+                                    TextEntry::make('payment_info.invoice_date')->label('Invoice Date'),
+                                    TextEntry::make('payment_info.invoice_amount')->label('Invoice Amount'),
                                 ])
                         ])
                         ->modalHeading('Payment Details')->closeModalByClickingAway()->modalAlignment(Alignment::Center),
