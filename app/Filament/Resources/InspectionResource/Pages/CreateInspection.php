@@ -49,8 +49,7 @@ class CreateInspection extends CreateRecord
         unset($data['temp_key']);
         Cache::delete($key);
         $allKeys = Cache::get('temp_keys');
-        if($allKeys)
-        {
+        if ($allKeys) {
             $allKeys = array_diff($allKeys, [$key]);
         }
         Cache::forever('temp_keys', $allKeys);
@@ -60,16 +59,24 @@ class CreateInspection extends CreateRecord
     protected function afterFill(): void
     {
         $data = [];
-        if(Session::has('assignment_data'))
-        {
+        if (Session::has('assignment_data')) {
             $model = Session::get('assignment_data');
-            $data['form_steps'] = [1];
             $data['inspection_type'] = $model->inspection_type;
             $data['name'] = $model->name;
             $data['city'] = $model->city;
             $data['state'] = $model->state;
             $data['zip'] = $model->zip;
             $data['servicer_loan_info']['loan_number'] = $model->loan_number;
+            if ($model->inspection_type == 0) {
+                $data['form_steps'] = [1, 2, 3, 4];
+            } elseif ($model->inspection_type == 1) {
+                $data['form_steps'] = [1, 2, 3, 4, 5, 6, 7, 9];
+            } elseif ($model->inspection_type == 2) {
+                $data['form_steps'] = [3, 9];
+            } elseif ($model->inspection_type == 3) {
+                $data['form_steps'] = [1, 2, 3, 4, 5, 6, 8, 9];
+            }
+
             $this->form->fill($data);
         }
 
