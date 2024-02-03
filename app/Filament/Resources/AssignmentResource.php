@@ -92,7 +92,7 @@ class AssignmentResource extends Resource
                             Grid::make(4)
                                 ->schema([
                                     TextEntry::make('payment_info.payment_amount')->label('Payment Amount')->money('USD'),
-                                    TextEntry::make('payment_info.payment_date')->label('Payment Date')->dateTime(),
+                                    TextEntry::make('payment_info.payment_date')->label('Payment Date')->dateTime('d M Y'),
                                     TextEntry::make('payment_info.invoice_date')->label('Invoice Date')->dateTime(),
                                     TextEntry::make('payment_info.invoice_amount')->label('Invoice Amount')->money('USD'),
                                 ])
