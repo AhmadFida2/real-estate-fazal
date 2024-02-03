@@ -57,11 +57,18 @@ class CreateInspection extends CreateRecord
         return $data;
     }
 
-    protected function beforeFill(): void
+    protected function afterFill(): void
     {
+        $data = [];
         if(Session::has('assignment_data'))
         {
-            dd(Session::get('assignment_data'));
+            $model = Session::get('assignment_data');
+            $data['name'] = $model->name;
+            $data['city'] = $model->city;
+            $data['state'] = $model->state;
+            $data['zip'] = $model->zip;
+            $data['servicer_loan_info']['loan_number'] = $model->loan_number;
+            $this->form->fill($data);
         }
 
     }

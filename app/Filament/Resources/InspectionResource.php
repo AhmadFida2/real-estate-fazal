@@ -247,7 +247,7 @@ class InspectionResource extends Resource
                     ->options(['MBA' => 'MBA'])->default('MBA')->disabled()->dehydrated(),
                 Forms\Components\DateTimePicker::make('inspection_date')
                     ->required()
-                    ->label('Inspection Date'),
+                    ->label('Inspection Date')->default(today()),
                 Select::make('primary_type')
                     ->required()
                     ->live()
