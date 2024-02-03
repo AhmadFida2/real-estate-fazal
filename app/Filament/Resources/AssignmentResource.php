@@ -82,7 +82,7 @@ class AssignmentResource extends Resource
                         ->label('Completed')
                         ->boolean(),
                     Tables\Columns\TextColumn::make('payment_info')->label('Payment Details')
-                    ->listWithLineBreaks()
+                    ->listWithLineBreaks()->default('No Payment Data')
                 ])
                 ->actions([
                     Tables\Actions\EditAction::make(),
