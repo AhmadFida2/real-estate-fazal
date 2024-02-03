@@ -76,7 +76,7 @@ class CreateInspection extends CreateRecord
             } elseif ($model->inspection_type == 3) {
                 $data['form_steps'] = [1, 2, 3, 4, 5, 6, 8, 9];
             }
-
+            $data['inspection_status'] = 0;
             $this->form->fill($data);
         }
 
