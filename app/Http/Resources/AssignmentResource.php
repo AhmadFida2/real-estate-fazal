@@ -16,11 +16,19 @@ class AssignmentResource extends JsonResource
     {
         return [
             'client' => $this->client,
-            'status' => $this->status,
+            'status' => match ($this->status) {
+                0 => 'Un-Scheduled',
+                1 => 'Scheduled',
+            },
             'start_date' => $this->start_date,
             'due_date' => $this->due_date,
             'property_name' => $this->property_name,
-            'inspection_type' => $this->inspection_type,
+            'inspection_type' => match ($this->inspection_type) {
+                0 => 'Basic',
+                1 => 'Fannie Mae',
+                2 => 'Repairs Verification',
+                3 => 'Freddie Mac'
+            },
             'loan_number' => $this->loan_number,
             'city' => $this->city,
             'state' => $this->state,
