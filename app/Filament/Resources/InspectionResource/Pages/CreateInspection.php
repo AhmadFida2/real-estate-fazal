@@ -59,7 +59,11 @@ class CreateInspection extends CreateRecord
 
     protected function beforeFill(): void
     {
-        dd(Session::get('assignment_data'));
+        if(Session::has('assignment_data'))
+        {
+            dd(Session::get('assignment_data'));
+        }
+
     }
 
 
