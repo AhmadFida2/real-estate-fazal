@@ -90,7 +90,7 @@ class AssignmentResource extends Resource
                     Tables\Columns\TextColumn::make('start_date'),
                     Tables\Columns\TextColumn::make('inspection_type')
                         ->formatStateUsing(function($state){
-                            $types = ['Basic Inspection', 'Fannie Mae Inspection', 'Repairs Verification', 'Freddie Mac Inspection'];
+                            $types = ['Basic', 'Fannie Mae', 'Repairs Verification', 'Freddie Mac'];
                             return $types[$state];
                         }),                    Tables\Columns\TextColumn::make('due_date'),
                     Tables\Columns\TextColumn::make('property_name'),
