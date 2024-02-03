@@ -1,9 +1,8 @@
-<?php
+<?php /** @noinspection PhpUndefinedFieldInspection */
 
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\AssignmentResource\Pages;
-use App\Filament\Resources\AssignmentResource\RelationManagers;
 use App\Models\Assignment;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -11,9 +10,6 @@ use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use MongoDB\Driver\Session;
 
 class AssignmentResource extends Resource
 {
@@ -97,8 +93,8 @@ class AssignmentResource extends Resource
 
                 ])->actions([
                     Tables\Actions\Action::make('create_inspection')
-                    ->iconButton()->icon('heroicon-o-plus-circle')
-                    ->color('success')
+                    ->icon('heroicon-o-plus-circle')
+                    ->color('primary')
                     ->action(function ($record){
                         \Illuminate\Support\Facades\Session::flash('assignment_data',$record);
                         return redirect(InspectionResource::getUrl('create'));
