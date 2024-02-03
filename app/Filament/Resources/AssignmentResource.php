@@ -6,6 +6,8 @@ use App\Filament\Resources\AssignmentResource\Pages;
 use App\Models\Assignment;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Infolists\Components\Grid;
+use Filament\Infolists\Components\TextEntry;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Support\Enums\Alignment;
@@ -86,19 +88,16 @@ class AssignmentResource extends Resource
                 ->actions([
                     Tables\Actions\Action::make('payment_data')->icon('heroicon-o-currency-dollar')
                         ->iconButton()->color('secondary')
-                        ->form([
-                            Forms\Components\Grid::make(4)
+                        ->infolist([
+                            Grid::make(4)
                                 ->schema([
-                                    Forms\Components\Placeholder::make('payment_amount')
-                                        ->label('Payment Amount')->content(fn($record) => "$ " . number_format($record->payment_info['payment_amount'], 2, '.', ',')),
-                                    Forms\Components\Placeholder::make('payment_date')
-                                        ->label('Payment Date')->content(fn($record) => $record->payment_info['payment_date']),
-                                    Forms\Components\Placeholder::make('invoice_date')
-                                        ->label('Invoice Date')->content(fn($record) => $record->payment_info['invoice_date']),
-                                    Forms\Components\Placeholder::make('invoice_amount')
-                                        ->label('Invoice Amount')->content(fn($record) => "$ " . number_format($record->payment_info['invoice_amount'], 2, '.', ',')),
+                                    TextEntry::make('payment_amount')->label('Payment Amount')->formatStateUsing(fn($record) => "$ " . number_format($record->payment_info['payment_amount'], 2, '.', ',')),
+                                    TextEntry::make('payment_date')->label('Payment Date')->formatStateUsing(fn($record) => fn($record) => $record->payment_info['payment_date']),
+                                    TextEntry::make('invoice_date')->label('Invoice Date')->formatStateUsing(fn($record) => fn($record) => $record->payment_info['invoice_date']),
+                                    TextEntry::make('invoice_amount')->label('Invoice Amount')->formatStateUsing(fn($record) => "$ " . number_format($record->payment_info['invoice_amount'], 2, '.', ',')),
                                 ])
-                        ])->modalHeading('Payment Details')->closeModalByClickingAway()->modalAlignment(Alignment::Center),
+                        ])
+                        ->modalHeading('Payment Details')->closeModalByClickingAway()->modalAlignment(Alignment::Center),
                     Tables\Actions\EditAction::make()->iconButton(),
                     Tables\Actions\DeleteAction::make()->iconButton(),
 
