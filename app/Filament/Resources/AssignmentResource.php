@@ -44,10 +44,10 @@ class AssignmentResource extends Resource
                     ->statePath('payment_info')
                     ->columns(3)
                     ->schema([
-                        Forms\Components\TextInput::make('payment_amount')->integer()->inputMode('decimal'),
+                        Forms\Components\TextInput::make('payment_amount')->inputMode('decimal'),
                         Forms\Components\DatePicker::make('payment_date'),
                         Forms\Components\DatePicker::make('invoice_date'),
-                        Forms\Components\TextInput::make('invoice_amount')->integer()->inputMode('decimal'),
+                        Forms\Components\TextInput::make('invoice_amount')->inputMode('decimal'),
                     ])
             ]);
     }
