@@ -37,7 +37,7 @@ class AssignmentPolicy
      */
     public function update(User $user, Assignment $assignment): bool
     {
-        return auth()->id() == $assignment->user_id;
+        return (auth()->id() == $assignment->user_id) || auth()->user()->is_admin;
     }
 
     /**
