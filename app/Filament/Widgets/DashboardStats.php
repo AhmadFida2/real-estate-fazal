@@ -13,7 +13,7 @@ class DashboardStats extends BaseWidget
 
     protected static ?string $pollingInterval = null;
 
-    protected static ?int $sort = 1;
+    protected static ?int $sort = 0;
     protected function getStats(): array
     {
         if(auth()->user()->is_admin)

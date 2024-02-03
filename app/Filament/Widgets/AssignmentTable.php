@@ -13,7 +13,7 @@ class AssignmentTable extends BaseWidget
     protected static ?string $heading = 'Upcoming Assignments';
     protected int | string | array $columnSpan = 'full';
 
-    protected static ?int $sort = 0;
+    protected static ?int $sort = 1;
 
     public function table(Table $table): Table
     {
