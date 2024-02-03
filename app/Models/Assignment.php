@@ -15,7 +15,8 @@ class Assignment extends Model
     protected $guarded = [];
 
     protected $casts =[
-        'is_completed' => 'boolean'
+        'is_completed' => 'boolean',
+        'payment_info' => 'json'
     ];
 
     public function user()

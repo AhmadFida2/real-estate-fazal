@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('city');
             $table->string('state');
             $table->integer('zip');
+            $table->json('payment_info')->nullable();
             $table->boolean('is_completed')->default(false);
             $table->foreignId('user_id');
             $table->timestamps();

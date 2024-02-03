@@ -23,7 +23,7 @@ class AssignmentResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('client')->required(),
                 Forms\Components\Select::make('status')->options([
-                    'Un-Scheduled','Scheduled'
+                    'Un-Scheduled', 'Scheduled'
                 ])->default(0),
                 Forms\Components\Radio::make('inspection_type')->label('Inspection Type')->inline()
                     ->inlineLabel(false)
@@ -39,7 +39,16 @@ class AssignmentResource extends Resource
                 Forms\Components\Select::make('user_id')->label('Inspector Name')->required()
                     ->relationship('user', 'name', modifyQueryUsing: fn($query) => $query->where('is_admin', false))
                     ->searchable()
-                    ->preload()
+                    ->preload(),
+                Forms\Components\Section::make('Payment Details')
+                    ->statePath('payment_info')
+                    ->columns(3)
+                    ->schema([
+                        Forms\Components\TextInput::make('payment_amount')->integer()->inputMode('decimal'),
+                        Forms\Components\DatePicker::make('payment_date'),
+                        Forms\Components\DatePicker::make('invoice_date'),
+                        Forms\Components\TextInput::make('invoice_amount')->integer()->inputMode('decimal'),
+                    ])
             ]);
     }
 
@@ -51,24 +60,29 @@ class AssignmentResource extends Resource
                 ->actionsColumnLabel('Actions')
                 ->columns([
                     Tables\Columns\TextColumn::make('client')
+                        ->searchable()
                         ->sortable(),
                     Tables\Columns\TextColumn::make('status')
-                    ->formatStateUsing(fn($state)=> $state? 'Scheduled':'Un-Scheduled'),
+                        ->formatStateUsing(fn($state) => $state ? 'Scheduled' : 'Un-Scheduled'),
                     Tables\Columns\TextColumn::make('user.name')->label('Inspector Name'),
                     Tables\Columns\TextColumn::make('inspection_type')
-                        ->formatStateUsing(function($state){
+                        ->formatStateUsing(function ($state) {
                             $types = ['Basic Inspection', 'Fannie Mae Inspection', 'Repairs Verification', 'Freddie Mac Inspection'];
                             return $types[$state];
-                        }),                    Tables\Columns\TextColumn::make('start_date'),
+                        }), Tables\Columns\TextColumn::make('start_date'),
                     Tables\Columns\TextColumn::make('due_date'),
-                    Tables\Columns\TextColumn::make('property_name'),
-                    Tables\Columns\TextColumn::make('loan_number'),
+                    Tables\Columns\TextColumn::make('property_name')
+                        ->searchable(),
+                    Tables\Columns\TextColumn::make('loan_number')
+                        ->searchable(),
                     Tables\Columns\TextColumn::make('city'),
                     Tables\Columns\TextColumn::make('state'),
                     Tables\Columns\TextColumn::make('zip'),
                     Tables\Columns\IconColumn::make('is_completed')
                         ->label('Completed')
-                        ->boolean()
+                        ->boolean(),
+                    Tables\Columns\TextColumn::make('payment_info')->label('Payment Details')
+                    ->listWithLineBreaks()
                 ])
                 ->actions([
                     Tables\Actions\EditAction::make(),
@@ -86,15 +100,18 @@ class AssignmentResource extends Resource
                 ->actionsColumnLabel('Actions')
                 ->columns([
                     Tables\Columns\TextColumn::make('client')
+                        ->searchable()
                         ->sortable(),
                     Tables\Columns\TextColumn::make('start_date'),
                     Tables\Columns\TextColumn::make('inspection_type')
-                        ->formatStateUsing(function($state){
+                        ->formatStateUsing(function ($state) {
                             $types = ['Basic', 'Fannie Mae', 'Repairs Verification', 'Freddie Mac'];
                             return $types[$state];
-                        }),                    Tables\Columns\TextColumn::make('due_date'),
-                    Tables\Columns\TextColumn::make('property_name'),
-                    Tables\Columns\TextColumn::make('loan_number'),
+                        }), Tables\Columns\TextColumn::make('due_date'),
+                    Tables\Columns\TextColumn::make('property_name')
+                        ->searchable(),
+                    Tables\Columns\TextColumn::make('loan_number')
+                        ->searchable(),
                     Tables\Columns\TextColumn::make('city'),
                     Tables\Columns\TextColumn::make('state'),
                     Tables\Columns\TextColumn::make('zip'),
@@ -105,12 +122,12 @@ class AssignmentResource extends Resource
 
                 ])->actions([
                     Tables\Actions\Action::make('create_inspection')
-                    ->icon('heroicon-o-plus-circle')
-                    ->color('primary')
-                    ->action(function ($record){
-                        \Illuminate\Support\Facades\Session::flash('assignment_data',$record);
-                        return redirect(InspectionResource::getUrl('create'));
-                    })
+                        ->icon('heroicon-o-plus-circle')
+                        ->color('primary')
+                        ->action(function ($record) {
+                            \Illuminate\Support\Facades\Session::flash('assignment_data', $record);
+                            return redirect(InspectionResource::getUrl('create'));
+                        })
                 ])->recordUrl(null);
         }
     }
