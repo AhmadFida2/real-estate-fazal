@@ -23,6 +23,10 @@ Route::get('/inspection/{id}', function (string $id) {
     return new \App\Http\Resources\InspectionResource(\App\Models\Inspection::findOrFail($id));
 });
 
+Route::get('/assignment/{id}', function (string $id) {
+    return new \App\Http\Resources\AssignmentResource(\App\Models\Assignment::findOrFail($id));
+});
+
 Route::get('/inspections', function () {
     return new \App\Http\Resources\InspectionCollection(\App\Models\Inspection::all());
 });

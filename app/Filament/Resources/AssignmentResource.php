@@ -98,7 +98,7 @@ class AssignmentResource extends Resource
                                 Forms\Components\Placeholder::make('invoice_amount')
                                     ->label('Invoice Amount')->content(fn($record) => number_format($record->payment_info['invoice_amount'], 2, '.', ',')),
                             ])
-                            ])->modalHeading('Payment Details')->modalCancelActionLabel('Close'
+                            ])->modalHeading('Payment Details')->modalCancelActionLabel('Close Payment Details'
                         )->modalFooterActionsAlignment(Alignment::Center),
                     Tables\Actions\EditAction::make(),
                     Tables\Actions\DeleteAction::make(),
