@@ -25,6 +25,10 @@ class AssignmentResource extends Resource
                 Forms\Components\Select::make('status')->options([
                     'Un-Scheduled','Scheduled'
                 ])->default(0),
+                Forms\Components\Radio::make('inspection_type')->label('Inspection Type')->inline()
+                    ->inlineLabel(false)
+                    ->columnSpanFull()
+                    ->options(['Basic Inspection', 'Fannie Mae Inspection', 'Repairs Verification', 'Freddie Mac Inspection']),
                 Forms\Components\DatePicker::make('start_date')->required(),
                 Forms\Components\DatePicker::make('due_date')->required(),
                 Forms\Components\TextInput::make('property_name')->required(),
@@ -51,6 +55,7 @@ class AssignmentResource extends Resource
                     Tables\Columns\TextColumn::make('status')
                     ->formatStateUsing(fn($state)=> $state? 'Scheduled':'Un-Scheduled'),
                     Tables\Columns\TextColumn::make('user.name')->label('Inspector Name'),
+                    Tables\Columns\TextColumn::make('inspection_type'),
                     Tables\Columns\TextColumn::make('start_date'),
                     Tables\Columns\TextColumn::make('due_date'),
                     Tables\Columns\TextColumn::make('property_name'),
@@ -80,6 +85,7 @@ class AssignmentResource extends Resource
                     Tables\Columns\TextColumn::make('client')
                         ->sortable(),
                     Tables\Columns\TextColumn::make('start_date'),
+                    Tables\Columns\TextColumn::make('inspection_type'),
                     Tables\Columns\TextColumn::make('due_date'),
                     Tables\Columns\TextColumn::make('property_name'),
                     Tables\Columns\TextColumn::make('loan_number'),

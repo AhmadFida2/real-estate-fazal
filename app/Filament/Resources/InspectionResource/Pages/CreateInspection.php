@@ -64,6 +64,7 @@ class CreateInspection extends CreateRecord
         {
             $model = Session::get('assignment_data');
             $data['form_steps'] = [1];
+            $data['inspection_type'] = $model->inspection_type;
             $data['name'] = $model->name;
             $data['city'] = $model->city;
             $data['state'] = $model->state;

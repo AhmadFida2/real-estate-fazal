@@ -21,6 +21,7 @@ class AssignmentTable extends BaseWidget
             ->query(Assignment::query()->latest()->take(5))
             ->columns([
                 Tables\Columns\TextColumn::make('client'),
+                Tables\Columns\TextColumn::make('inspection_type'),
                 Tables\Columns\TextColumn::make('start_date'),
                 Tables\Columns\TextColumn::make('due_date')
                 ->formatStateUsing(fn($state) => Carbon::parse($state)->diffForHumans()),
