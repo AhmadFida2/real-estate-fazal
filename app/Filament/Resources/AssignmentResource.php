@@ -13,6 +13,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use MongoDB\Driver\Session;
 
 class AssignmentResource extends Resource
 {
@@ -92,7 +93,15 @@ class AssignmentResource extends Resource
                         ->label('Mark as Complete (Irreversible)')
                         ->afterStateUpdated(fn($state) => $state ? Notification::make()->title('Marked as Complete!')->success()->send() : Notification::make()->title('Marked as Incomplete!')->danger()->send())
 
-                ])->actions([])->recordUrl(null);
+                ])->actions([
+                    Tables\Actions\Action::make('create_inspection')
+                    ->iconButton()->icon('heroicon-o-plus-circle')
+                    ->color('success')
+                    ->action(function ($record){
+                        \Illuminate\Support\Facades\Session::flash('assignment_data',$record);
+                        return redirect(InspectionResource::getUrl('create'));
+                    })
+                ])->recordUrl(null);
         }
     }
 

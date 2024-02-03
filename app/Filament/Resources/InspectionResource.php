@@ -174,7 +174,7 @@ class InspectionResource extends Resource
                             $livewire->form->fill($data->toArray());
                         })->hidden(fn($operation) => $operation == 'view'),
                 ])->verticallyAlignCenter()->alignCenter(),
-                Forms\Components\Radio::make('inspection_type')->label('Inspection Type')
+                Forms\Components\Radio::make('inspection_type')->label('Inspection Type')->inline()
                     ->inlineLabel(false)
                     ->columnSpanFull()
                     ->options(['Basic Inspection', 'Fannie Mae Inspection', 'Repairs Verification', 'Freddie Mac Inspection'])->live()

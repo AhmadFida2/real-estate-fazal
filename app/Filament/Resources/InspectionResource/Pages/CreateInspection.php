@@ -6,6 +6,7 @@ use App\Filament\Resources\InspectionResource;
 
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Session;
 
 class CreateInspection extends CreateRecord
 {
@@ -54,6 +55,11 @@ class CreateInspection extends CreateRecord
         }
         Cache::forever('temp_keys', $allKeys);
         return $data;
+    }
+
+    protected function beforeFill(): void
+    {
+        dd(Session::get('assignment_data'));
     }
 
 
