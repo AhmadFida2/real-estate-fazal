@@ -100,8 +100,8 @@ class AssignmentResource extends Resource
                                 ])
                         ])->modalHeading('Payment Details')->modalCancelActionLabel('Close Payment Details'
                         )->modalFooterActionsAlignment(Alignment::Center),
-                    Tables\Actions\EditAction::make(),
-                    Tables\Actions\DeleteAction::make(),
+                    Tables\Actions\EditAction::make()->iconButton(),
+                    Tables\Actions\DeleteAction::make()->iconButton(),
 
                 ])
                 ->bulkActions([
