@@ -81,10 +81,20 @@ class AssignmentResource extends Resource
                     Tables\Columns\IconColumn::make('is_completed')
                         ->label('Completed')
                         ->boolean(),
-                    Tables\Columns\TextColumn::make('payment_info')->label('Payment Details')
-                    ->listWithLineBreaks()->default('No Payment Data')
                 ])
                 ->actions([
+                    Tables\Actions\Action::make('payment_data')->icon('heroicon-o-currency-dollar')
+                        ->iconButton()->color('secondary')
+                        ->form([
+                            Forms\Components\Placeholder::make('payment_amount')
+                            ->label('Payment Amount')->content(fn($record) => $record->payment_info->payment_amount),
+                            Forms\Components\Placeholder::make('payment_date')
+                                ->label('Payment Date')->content(fn($record) => $record->payment_info->payment_date),
+                            Forms\Components\Placeholder::make('invoice_date')
+                                ->label('Invoice Date')->content(fn($record) => $record->payment_info->invoice_date),
+                            Forms\Components\Placeholder::make('invoice_amount')
+                                ->label('Invoice Amount')->content(fn($record) => $record->payment_info->invoice_amount),
+                        ])->modalHeading('Payment Details'),
                     Tables\Actions\EditAction::make(),
                     Tables\Actions\DeleteAction::make(),
 
