@@ -91,10 +91,10 @@ class AssignmentResource extends Resource
                         ->infolist([
                             Grid::make(4)
                                 ->schema([
-                                    TextEntry::make('payment_info.payment_amount')->label('Payment Amount'),
-                                    TextEntry::make('payment_info.payment_date')->label('Payment Date'),
-                                    TextEntry::make('payment_info.invoice_date')->label('Invoice Date'),
-                                    TextEntry::make('payment_info.invoice_amount')->label('Invoice Amount'),
+                                    TextEntry::make('payment_info.payment_amount')->label('Payment Amount')->money('USD'),
+                                    TextEntry::make('payment_info.payment_date')->label('Payment Date')->dateTime(),
+                                    TextEntry::make('payment_info.invoice_date')->label('Invoice Date')->dateTime(),
+                                    TextEntry::make('payment_info.invoice_amount')->label('Invoice Amount')->money('USD'),
                                 ])
                         ])
                         ->modalHeading('Payment Details')->closeModalByClickingAway()->modalAlignment(Alignment::Center),
