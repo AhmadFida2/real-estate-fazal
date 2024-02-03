@@ -10,6 +10,11 @@ use Filament\Widgets\TableWidget as BaseWidget;
 
 class AssignmentTable extends BaseWidget
 {
+    protected static ?string $heading = 'Upcoming Assignments';
+    protected int | string | array $columnSpan = 'full';
+
+    protected static ?int $sort = 0;
+
     public function table(Table $table): Table
     {
         return $table
