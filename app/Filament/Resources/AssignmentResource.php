@@ -97,7 +97,7 @@ class AssignmentResource extends Resource
                                     TextEntry::make('payment_info.invoice_amount')->label('Invoice Amount')->money('USD'),
                                 ])
                         ])
-                        ->modalHeading('Payment Details')->closeModalByClickingAway()->modalAlignment(Alignment::Center)->modalSubmitAction([])->modalCancelAction([]),
+                        ->modalHeading('Payment Details')->closeModalByClickingAway()->modalAlignment(Alignment::Center)->modalSubmitAction()->modalCancelAction(),
                     Tables\Actions\EditAction::make()->iconButton(),
                     Tables\Actions\DeleteAction::make()->iconButton(),
 
