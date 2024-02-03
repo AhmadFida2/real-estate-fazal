@@ -24,17 +24,18 @@ class AssignmentResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('client'),
+                Forms\Components\TextInput::make('client')->required(),
                 Forms\Components\Select::make('status')->options([
                     'Un-Scheduled','Scheduled'
                 ])->default(0),
-                Forms\Components\DatePicker::make('start_date'),
-                Forms\Components\DatePicker::make('due_date'),
-                Forms\Components\TextInput::make('property_name'),
-                Forms\Components\TextInput::make('city'),
-                Forms\Components\TextInput::make('state'),
-                Forms\Components\TextInput::make('zip'),
-                Forms\Components\Select::make('user_id')->label('Inspector Name')
+                Forms\Components\DatePicker::make('start_date')->required(),
+                Forms\Components\DatePicker::make('due_date')->required(),
+                Forms\Components\TextInput::make('property_name')->required(),
+                Forms\Components\TextInput::make('loan_number')->required(),
+                Forms\Components\TextInput::make('city')->required(),
+                Forms\Components\TextInput::make('state')->required(),
+                Forms\Components\TextInput::make('zip')->required(),
+                Forms\Components\Select::make('user_id')->label('Inspector Name')->required()
                     ->relationship('user', 'name', modifyQueryUsing: fn($query) => $query->where('is_admin', false))
                     ->searchable()
                     ->preload()
@@ -55,6 +56,7 @@ class AssignmentResource extends Resource
                     Tables\Columns\TextColumn::make('start_date'),
                     Tables\Columns\TextColumn::make('due_date'),
                     Tables\Columns\TextColumn::make('property_name'),
+                    Tables\Columns\TextColumn::make('loan_number'),
                     Tables\Columns\TextColumn::make('city'),
                     Tables\Columns\TextColumn::make('state'),
                     Tables\Columns\TextColumn::make('zip'),
@@ -64,6 +66,8 @@ class AssignmentResource extends Resource
                 ])
                 ->actions([
                     Tables\Actions\EditAction::make(),
+                    Tables\Actions\DeleteAction::make(),
+
                 ])
                 ->bulkActions([
                     Tables\Actions\BulkActionGroup::make([
@@ -76,11 +80,10 @@ class AssignmentResource extends Resource
                 ->columns([
                     Tables\Columns\TextColumn::make('client')
                         ->sortable(),
-                    Tables\Columns\TextColumn::make('status')
-                        ->formatStateUsing(fn($state)=> $state? 'Scheduled':'Un-Scheduled'),
                     Tables\Columns\TextColumn::make('start_date'),
                     Tables\Columns\TextColumn::make('due_date'),
                     Tables\Columns\TextColumn::make('property_name'),
+                    Tables\Columns\TextColumn::make('loan_number'),
                     Tables\Columns\TextColumn::make('city'),
                     Tables\Columns\TextColumn::make('state'),
                     Tables\Columns\TextColumn::make('zip'),
@@ -89,7 +92,7 @@ class AssignmentResource extends Resource
                         ->label('Mark as Complete (Irreversible)')
                         ->afterStateUpdated(fn($state) => $state ? Notification::make()->title('Marked as Complete!')->success()->send() : Notification::make()->title('Marked as Incomplete!')->danger()->send())
 
-                ])->actions([]);
+                ])->actions([])->recordUrl(null);
         }
     }
 
