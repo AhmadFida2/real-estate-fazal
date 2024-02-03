@@ -26,7 +26,6 @@ class AssignmentResource extends JsonResource
             'state' => $this->state,
             'zip' => $this->zip,
             'payment_info' => $this->payment_info,
-            'inspector_name' => $this->user()->name,
         ];
     }
 }
