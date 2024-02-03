@@ -55,8 +55,11 @@ class AssignmentResource extends Resource
                     Tables\Columns\TextColumn::make('status')
                     ->formatStateUsing(fn($state)=> $state? 'Scheduled':'Un-Scheduled'),
                     Tables\Columns\TextColumn::make('user.name')->label('Inspector Name'),
-                    Tables\Columns\TextColumn::make('inspection_type'),
-                    Tables\Columns\TextColumn::make('start_date'),
+                    Tables\Columns\TextColumn::make('inspection_type')
+                        ->formatStateUsing(function($state){
+                            $types = ['Basic Inspection', 'Fannie Mae Inspection', 'Repairs Verification', 'Freddie Mac Inspection'];
+                            return $types[$state];
+                        }),                    Tables\Columns\TextColumn::make('start_date'),
                     Tables\Columns\TextColumn::make('due_date'),
                     Tables\Columns\TextColumn::make('property_name'),
                     Tables\Columns\TextColumn::make('loan_number'),
@@ -85,8 +88,11 @@ class AssignmentResource extends Resource
                     Tables\Columns\TextColumn::make('client')
                         ->sortable(),
                     Tables\Columns\TextColumn::make('start_date'),
-                    Tables\Columns\TextColumn::make('inspection_type'),
-                    Tables\Columns\TextColumn::make('due_date'),
+                    Tables\Columns\TextColumn::make('inspection_type')
+                        ->formatStateUsing(function($state){
+                            $types = ['Basic Inspection', 'Fannie Mae Inspection', 'Repairs Verification', 'Freddie Mac Inspection'];
+                            return $types[$state];
+                        }),                    Tables\Columns\TextColumn::make('due_date'),
                     Tables\Columns\TextColumn::make('property_name'),
                     Tables\Columns\TextColumn::make('loan_number'),
                     Tables\Columns\TextColumn::make('city'),
