@@ -63,6 +63,7 @@ class CreateInspection extends CreateRecord
         if(Session::has('assignment_data'))
         {
             $model = Session::get('assignment_data');
+            $data['form_steps'] = [1];
             $data['name'] = $model->name;
             $data['city'] = $model->city;
             $data['state'] = $model->state;
