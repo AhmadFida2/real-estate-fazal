@@ -8,6 +8,7 @@ use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
+use Filament\Support\Enums\Alignment;
 use Filament\Tables;
 use Filament\Tables\Table;
 
@@ -89,16 +90,16 @@ class AssignmentResource extends Resource
                            Forms\Components\Grid::make(4)
                             ->schema([
                                 Forms\Components\Placeholder::make('payment_amount')
-                                    ->label('Payment Amount')->content(fn($record) => $record->payment_info['payment_amount']),
+                                    ->label('Payment Amount')->content(fn($record) => number_format($record->payment_info['payment_amount'], 2, '.', ',')),
                                 Forms\Components\Placeholder::make('payment_date')
                                     ->label('Payment Date')->content(fn($record) => $record->payment_info['payment_date']),
                                 Forms\Components\Placeholder::make('invoice_date')
                                     ->label('Invoice Date')->content(fn($record) => $record->payment_info['invoice_date']),
                                 Forms\Components\Placeholder::make('invoice_amount')
-                                    ->label('Invoice Amount')->content(fn($record) => $record->payment_info['invoice_amount']),
+                                    ->label('Invoice Amount')->content(fn($record) => number_format($record->payment_info['invoice_amount'], 2, '.', ',')),
                             ])
                             ])->modalHeading('Payment Details')->modalCancelActionLabel('Close'
-                        ),
+                        )->modalFooterActionsAlignment(Alignment::Center),
                     Tables\Actions\EditAction::make(),
                     Tables\Actions\DeleteAction::make(),
 
