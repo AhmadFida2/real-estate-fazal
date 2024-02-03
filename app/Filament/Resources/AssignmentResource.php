@@ -48,6 +48,7 @@ class AssignmentResource extends Resource
         if (auth()->user()->is_admin) {
             return $table
                 ->emptyStateHeading('No Upcoming Assignments')
+                ->actionsColumnLabel('Actions')
                 ->columns([
                     Tables\Columns\TextColumn::make('client')
                         ->sortable(),
@@ -78,6 +79,7 @@ class AssignmentResource extends Resource
         } else {
             return $table
                 ->emptyStateHeading('No Upcoming Assignments')
+                ->actionsColumnLabel('Actions')
                 ->columns([
                     Tables\Columns\TextColumn::make('client')
                         ->sortable(),
