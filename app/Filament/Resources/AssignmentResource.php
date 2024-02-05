@@ -24,26 +24,30 @@ class AssignmentResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('client')->required(),
-                Forms\Components\Select::make('status')->options([
-                    'Un-Scheduled', 'Scheduled'
-                ])->default(0),
-                Forms\Components\Radio::make('inspection_type')->label('Inspection Type')->inline()
-                    ->inlineLabel(false)
-                    ->columnSpanFull()
-                    ->options(['Basic Inspection', 'Fannie Mae Inspection', 'Repairs Verification', 'Freddie Mac Inspection']),
-                Forms\Components\DatePicker::make('start_date')->required(),
-                Forms\Components\DatePicker::make('due_date')->required(),
-                Forms\Components\TextInput::make('property_name')->required(),
-                Forms\Components\TextInput::make('loan_number')->required(),
-                Forms\Components\TextInput::make('city')->required(),
-                Forms\Components\TextInput::make('state')->required(),
-                Forms\Components\TextInput::make('zip')->required(),
-                Forms\Components\Select::make('user_id')->label('Inspector Name')->required()
-                    ->relationship('user', 'name', modifyQueryUsing: fn($query) => $query->where('is_admin', false))
-                    ->searchable()
-                    ->preload(),
+                Forms\Components\Section::make('Assignment Details')->columns(3)
+                    ->schema([
+                        Forms\Components\Radio::make('inspection_type')->label('Inspection Type')->inline()
+                            ->inlineLabel(false)
+                            ->columnSpanFull()
+                            ->options(['Basic Inspection', 'Fannie Mae Inspection', 'Repairs Verification', 'Freddie Mac Inspection']),
+                        Forms\Components\TextInput::make('client')->required(),
+                        Forms\Components\Select::make('status')->options([
+                            'Un-Scheduled', 'Scheduled'
+                        ])->default(0),
+                     Forms\Components\DatePicker::make('start_date')->required(),
+                        Forms\Components\DatePicker::make('due_date')->required(),
+                        Forms\Components\TextInput::make('property_name')->required(),
+                        Forms\Components\TextInput::make('loan_number')->required(),
+                        Forms\Components\TextInput::make('city')->required(),
+                        Forms\Components\TextInput::make('state')->required(),
+                        Forms\Components\TextInput::make('zip')->required(),
+                        Forms\Components\Select::make('user_id')->label('Inspector Name')->required()
+                            ->relationship('user', 'name', modifyQueryUsing: fn($query) => $query->where('is_admin', false))
+                            ->searchable()
+                            ->preload(),
+                    ]),
                 Forms\Components\Section::make('Payment Details')
+                    ->description('Visible only to Admins')
                     ->statePath('payment_info')
                     ->columns(3)
                     ->schema([
@@ -97,7 +101,7 @@ class AssignmentResource extends Resource
                                     TextEntry::make('payment_info.invoice_amount')->label('Invoice Amount')->money('USD'),
                                 ])
                         ])
-                        ->modalHeading('Payment Details')->closeModalByClickingAway()->modalAlignment(Alignment::Center)->modalFooterActions(fn()=> []),
+                        ->modalHeading('Payment Details')->closeModalByClickingAway()->modalAlignment(Alignment::Center)->modalFooterActions(fn() => []),
                     Tables\Actions\EditAction::make()->iconButton(),
                     Tables\Actions\DeleteAction::make()->iconButton(),
 
