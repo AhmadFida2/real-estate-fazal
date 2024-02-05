@@ -33,8 +33,8 @@ class UserProfile extends BaseEditProfile
                     ->description('Change User Password')
                     ->schema([
                         TextInput::make('current_password')->currentPassword()->filled(fn($get) => !empty($get('password'))),
-                        TextInput::make('password')->confirmed()->password()->revealable()->different('current_password'),
-                        TextInput::make('password_confirmation')
+                        TextInput::make('password')->label('New Password')->confirmed()->password()->revealable()->different('current_password'),
+                        TextInput::make('password_confirmation')->label('Confirm New Password')
                     ]),
             ]);
     }
