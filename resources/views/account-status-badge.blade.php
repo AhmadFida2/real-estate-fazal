@@ -1,10 +1,10 @@
-<div class="px-6 flex inline-flex justify-items-center sm:mt-7">
+<div class="px-6 flex inline-flex justify-items-center py-3">
     <p class="px-3">Account Status: </p>
     <x-filament::badge size="lg" color="success">
         Active
     </x-filament::badge>
 </div>
-<div class="flex inline-flex justify-items-center px-6 sm:mt-7">
+<div class="flex inline-flex justify-items-center px-6 py-3">
     <p class="px-3">Member Since: </p>
     <x-filament::badge size="lg" color="primary">
         {{$this->getUser()->created_at->format('d M Y')}}
