@@ -25,6 +25,13 @@ Route::get('install/{seed}', function ($seed) {
         'is_active' => 1,
         'is_admin' => 1
     ]);
+    \App\Models\User::create([
+        'name' => 'Inspector',
+        'email' => 'test@test.com',
+        'password' => \Illuminate\Support\Facades\Hash::make('Test2525'),
+        'is_active' => 1,
+        'is_admin' => 0
+    ]);
     if ($seed) {
         \Illuminate\Support\Facades\Artisan::call('db:seed --force');
     }
