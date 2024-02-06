@@ -754,7 +754,6 @@ class InspectionResource extends Resource
                 Repeater::make('images')
                     ->statePath('images')
                     ->grid(4)
-                    ->addActionLabel('Add Photo')
                     ->addable(false)
                     ->reorderable()
                     ->live()
