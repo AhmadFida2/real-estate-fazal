@@ -32,4 +32,14 @@ class Handler extends ExceptionHandler
             //
         });
     }
+
+    public function render($request, Throwable $e)
+    {
+        if($e instanceof ViewException)
+        {
+            return false;
+        }
+
+        return parent::render($request, $e);
+    }
 }
