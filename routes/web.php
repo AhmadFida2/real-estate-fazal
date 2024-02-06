@@ -2,7 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use function Spatie\LaravelPdf\Support\pdf;
+use Spatie\LaravelPdf\Facades\Pdf;
 
 
 /*
@@ -57,13 +57,9 @@ Route::get('excel-download/{file}', function ($file) {
 })->name('excel-download');
 
 Route::get('invoice/{id}', function ($id) {
-    dd($id);
     $assignment = \App\Models\Assignment::findOrFail($id);
-    //$pdf = Pdf::loadView('invoice', ['assignment' => $assignment]);
-    return pdf()
-        ->view('invoice', compact('assignment'))
-        ->name('invoice-2023-04-10.pdf');
-    // Test
+    Pdf::view('invoice')->save(public_path('invoice.pdf'));
+    $pdf = Pdf::loadView('invoice', ['assignment' => $assignment]);
     //  return view('invoice', ['assignment' => $assignment]);
 });
 
