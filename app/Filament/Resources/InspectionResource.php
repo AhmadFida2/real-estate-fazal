@@ -810,10 +810,11 @@ class InspectionResource extends Resource
                                     ->schema([
                                         TextInput::make('tenant_name')->label('Tenant Name'),
                                         TextInput::make('expiration')->label('Expiration'),
-                                        TextInput::make('sq_ft')->label('Sq. Ft.')->default(0)->numeric()->live(onBlur: true)->afterStateUpdated(fn($set, $get, $state) => $set('rent_per_sqft', intval($get('annual_rent') / $state))),
+                                        TextInput::make('sq_ft')->label('Sq. Ft.')->default(0)->numeric()->live(onBlur: true),
                                         TextInput::make('nra_percentage')->label('% NRA'),
-                                        TextInput::make('annual_rent')->label('Annual Rent')->default(0)->live(onBlur: true)->numeric()->inputMode('decimal')->afterStateUpdated(fn($set, $get, $state) => $set('rent_per_sqft', intval($state / $get('sq_ft')))),
+                                        TextInput::make('annual_rent')->label('Annual Rent')->default(0)->live(onBlur: true),
                                         TextInput::make('rent_per_sqft')->label('Rent / Sq. Ft.')->readOnly()
+                                            ->formatStateUsing(fn($get) => number_format($get('annual_rent') / $get('sq_ft'), 2))
                                     ])
                             ])
                     ]),
