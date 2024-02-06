@@ -692,7 +692,7 @@ class InspectionResource extends Resource
                         Section::make('Deffered Maintenance Items')
                             ->schema([
                                 Repeater::make('deferred_items')
-                                    ->grid(3)
+                                    ->columns(3)
                                     ->schema([
                                         TextInput::make('description')->label('Description')
                                             ->helperText('Identify Item and Describe Condition (including location)'),
