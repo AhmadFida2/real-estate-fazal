@@ -18,8 +18,10 @@ return new class extends Migration
             $table->date('start_date');
             $table->date('due_date');
             $table->string('property_name');
+            $table->string('property_address');
             $table->tinyInteger('inspection_type');
             $table->string('loan_number');
+            $table->string('investor_number');
             $table->string('city');
             $table->string('state');
             $table->integer('zip');

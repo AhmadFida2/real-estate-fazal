@@ -5,6 +5,7 @@ namespace App\Providers;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Support\ServiceProvider;
+use Spatie\Browsershot\Browsershot;
 
 class AppServiceProvider extends ServiceProvider
 {

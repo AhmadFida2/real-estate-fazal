@@ -2,6 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use function Spatie\LaravelPdf\Support\pdf;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -46,16 +48,22 @@ Route::get('storage-link', function () {
 
 Route::get('excel-download/{file}', function ($file) {
     $file = 'storage/' . $file . ".xlsx";
-    if(file_exists(public_path($file)))
-    {
+    if (file_exists(public_path($file))) {
         return response()->download(public_path($file))->deleteFileAfterSend();
-    }
-    else
-    {
-       abort(404);
+    } else {
+        abort(404);
     }
 
 })->name('excel-download');
+
+Route::get('invoice/{id}', function ($id) {
+    $assignment = \App\Models\Assignment::findOrFail($id);
+    //$pdf = Pdf::loadView('invoice', ['assignment' => $assignment]);
+    return pdf()
+        ->view('invoice', compact('assignment'))
+        ->name('invoice-2023-04-10.pdf');
+    //  return view('invoice', ['assignment' => $assignment]);
+});
 
 
 

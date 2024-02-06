@@ -37,7 +37,9 @@ class AssignmentResource extends Resource
                      Forms\Components\DatePicker::make('start_date')->required(),
                         Forms\Components\DatePicker::make('due_date')->required(),
                         Forms\Components\TextInput::make('property_name')->required(),
+                        Forms\Components\TextInput::make('property_address')->required(),
                         Forms\Components\TextInput::make('loan_number')->required(),
+                        Forms\Components\TextInput::make('investor_number')->required(),
                         Forms\Components\TextInput::make('city')->required(),
                         Forms\Components\TextInput::make('state')->required(),
                         Forms\Components\TextInput::make('zip')->required(),
@@ -78,9 +80,11 @@ class AssignmentResource extends Resource
                             return $types[$state];
                         }), Tables\Columns\TextColumn::make('start_date'),
                     Tables\Columns\TextColumn::make('due_date'),
-                    Tables\Columns\TextColumn::make('property_name')
-                        ->searchable(),
+                    Tables\Columns\TextColumn::make('property_name')->searchable(),
+                    Tables\Columns\TextColumn::make('property_address')->searchable(),
                     Tables\Columns\TextColumn::make('loan_number')
+                        ->searchable(),
+                    Tables\Columns\TextColumn::make('investor_number')
                         ->searchable(),
                     Tables\Columns\TextColumn::make('city'),
                     Tables\Columns\TextColumn::make('state'),
@@ -125,9 +129,11 @@ class AssignmentResource extends Resource
                             $types = ['Basic', 'Fannie Mae', 'Repairs Verification', 'Freddie Mac'];
                             return $types[$state];
                         }), Tables\Columns\TextColumn::make('due_date'),
-                    Tables\Columns\TextColumn::make('property_name')
-                        ->searchable(),
+                    Tables\Columns\TextColumn::make('property_name')->searchable(),
+                    Tables\Columns\TextColumn::make('property_address')->searchable(),
                     Tables\Columns\TextColumn::make('loan_number')
+                        ->searchable(),
+                    Tables\Columns\TextColumn::make('investor_number')
                         ->searchable(),
                     Tables\Columns\TextColumn::make('city'),
                     Tables\Columns\TextColumn::make('state'),
