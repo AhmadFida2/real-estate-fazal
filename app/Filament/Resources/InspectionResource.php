@@ -681,7 +681,7 @@ class InspectionResource extends Resource
                             ->description('Reported spills or leaks; Evidence of spills or leaks; Evidence of distressed vegetation; Evidence of mold; Evidence of O&M non-compliance')
                             ->schema([
                                 Select::make('interior_rating')->label('Interior Rating')
-                                    ->options(['1' => '1', '2' => '2', '3' => '3', '4' => '4', '5' => '5', 'Not Applicable' => 'Not Applicable', 'Not Accessible' => 'Not Accessible']),
+                                    ->options(['No' => 'No', 'Minor' => 'Minor', 'Major' => 'Major']),
                                 Select::make('interior_trend')->label('Interior Trend')
                                     ->options(['Imporving' => 'Imporving', 'Stable' => 'Stable', 'Declining' => 'Declining', 'Unknown' => 'Unknown']),
                                 Textarea::make('interior_inspector_comments')->label('Interior Inspector Comments')
@@ -695,8 +695,11 @@ class InspectionResource extends Resource
                                     ->schema([
                                         TextInput::make('description')->label('Description')
                                             ->helperText('Identify Item and Describe Condition (including location)'),
-                                        TextInput::make('rating')->label('Rating'),
-                                        TextInput::make('life_safety')->label('Life Safety'),
+                                        Select::make('rating')->label('Rating')
+                                            ->options(['Minor' => 'Minor', 'Major' => 'Major']),
+                                        Select::make('life_safety')->label('Life Safety')
+                                            ->options(['Yes' => 'Yes', 'No' => 'No']),
+                                        TextInput::make('photo_number')->label('Photo Number'),
                                         TextInput::make('estimated_cost')->label('Estimated Cost'),
                                     ])
                             ])
