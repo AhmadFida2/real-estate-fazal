@@ -124,7 +124,7 @@ class InspectionResource extends Resource
                                     Action::make('download')
                                         ->button()
                                         ->url('/excel-download/' . $fname)
-                                        ->markAsRead()
+                                        ->extraAttributes(['x-on:click' => 'close'])
                                 ])
                                 ->sendToDatabase($user);
                             event(new DatabaseNotificationsSent($user));
