@@ -765,6 +765,10 @@ class InspectionResource extends Resource
                             ->options(['Exterior' => 'Exterior', 'Interior' => 'Interior', 'Roof' => 'Roof', 'Neighborhood' => 'Neighborhood', 'Routine Maintenance' => 'Routine Maintenance', 'Deferred Maintenance' => 'Deferred Maintenance', 'Life Safety' => 'Life Safety']),
                         Textarea::make('photo_description')->label('Photo Description'),
                     ])
+                    ->itemLabel(function () {
+                        static $position = 1;
+                        return 'Photo # ' . $position++;
+                    })
                     ->default([])
             ]);
 
