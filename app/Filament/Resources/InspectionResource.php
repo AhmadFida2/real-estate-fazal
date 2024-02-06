@@ -755,6 +755,7 @@ class InspectionResource extends Resource
                     ->statePath('images')
                     ->grid(4)
                     ->addable(false)
+                    ->reorderable(false)
                     ->columnSpanFull()
                     ->columns(1)
                     ->schema([
