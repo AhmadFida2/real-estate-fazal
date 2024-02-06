@@ -57,6 +57,7 @@ Route::get('excel-download/{file}', function ($file) {
 })->name('excel-download');
 
 Route::get('invoice/{id}', function ($id) {
+    dd($id);
     $assignment = \App\Models\Assignment::findOrFail($id);
     //$pdf = Pdf::loadView('invoice', ['assignment' => $assignment]);
     return pdf()
