@@ -766,7 +766,7 @@ class InspectionResource extends Resource
                         Textarea::make('photo_description')->label('Photo Description'),
                     ])
                     ->itemLabel(function () {
-                        static $position = 1;
+                        $position = 1;
                         return 'Photo # ' . $position++;
                     })
                     ->default([])
