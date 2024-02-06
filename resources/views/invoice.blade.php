@@ -2,13 +2,13 @@
 <html>
 <head>
     <title>Invoice</title>
-    <link href="/tailwind.min.css" rel="stylesheet">
+    <link href="{{public_path('tailwind.min.css')}}" rel="stylesheet">
 </head>
 <body class="bg-gray-100">
 <div class="max-w-4xl mx-auto p-8 bg-white shadow-lg">
     <div class="flex justify-between items-center">
         <div>
-            <img src="/company_logo.png" alt="Company Logo" class="max-w-xs">
+            <img src="{{public_path('company_logo.png')}}" alt="Company Logo" class="max-w-xs">
         </div>
         <div>
             <p class="text-3xl text-right font-bold">INVOICE</p>
