@@ -814,7 +814,7 @@ class InspectionResource extends Resource
                                         TextInput::make('nra_percentage')->label('% NRA'),
                                         TextInput::make('annual_rent')->label('Annual Rent')->default(0)->live(onBlur: true),
                                         TextInput::make('rent_per_sqft')->label('Rent / Sq. Ft.')->readOnly()
-                                            ->formatStateUsing(fn($get) => number_format($get('annual_rent') / $get('sq_ft'), 2))
+                                            ->formatStateUsing(fn($get) => $get('sq_ft') ? number_format($get('annual_rent') / $get('sq_ft'), 2) : 0)
                                     ])
                             ])
                     ]),
