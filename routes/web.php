@@ -62,6 +62,7 @@ Route::get('invoice/{id}', function ($id) {
     return pdf()
         ->view('invoice', compact('assignment'))
         ->name('invoice-2023-04-10.pdf');
+    // Test
     //  return view('invoice', ['assignment' => $assignment]);
 });
 
