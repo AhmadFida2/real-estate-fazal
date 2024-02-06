@@ -757,6 +757,7 @@ class InspectionResource extends Resource
                     ->addActionLabel('Add Photo')
                     ->addable(false)
                     ->reorderable()
+                    ->live()
                     ->columnSpanFull()
                     ->columns(1)
                     ->schema([
