@@ -19,10 +19,6 @@ class Handler extends ExceptionHandler
         'password_confirmation',
     ];
 
-    protected $dontReport = [
-        ViewException::class
-    ];
-
     /**
      * Register the exception handling callbacks for the application.
      */
@@ -33,13 +29,5 @@ class Handler extends ExceptionHandler
         });
     }
 
-    public function render($request, Throwable $e)
-    {
-        if($e instanceof ViewException)
-        {
-            return false;
-        }
 
-        return parent::render($request, $e);
-    }
 }
