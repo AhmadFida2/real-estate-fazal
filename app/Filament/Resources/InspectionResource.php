@@ -1320,7 +1320,7 @@ short-term (<1 month) rentals generally marketed through an online platform such
                             ->schema([
                                 Textarea::make('item_description'),
                                 Textarea::make('inspector_comments'),
-                                Forms\Components\FileUpload::make('photo')->image()->imageResizeMode('cover')->imageResizeTargetWidth('1024')->imageResizeUpscale(false)->acceptedFileTypes(['image/jpeg', 'image/bmp', 'image/png'])->reorderable()->appendFiles(),
+                                TextInput::make('photo_number')->label('Photo Number'),
                                 Select::make('repair_status')
                                     ->options([
                                         'Repairs Complete' => 'Repairs Complete',

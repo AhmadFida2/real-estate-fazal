@@ -43,38 +43,12 @@ class InspectionResource extends JsonResource
             'multifamily' => $this->multifamily,
             'fannie_mae_assmt' => $this->fannie_mae_assmt,
             'fre_assmt' => $this->fre_assmt,
-            'repairs_verification' => $this->repairs_verification
-                ? [
-                    'verification_list' => $this->formatRepairsVerificationPhotos($this->repairs_verification['verification_list']),
-                    'property_info' => $this->repairs_verification['property_info'],
-                    'contact_company' => $this->repairs_verification['contact_company'],
-                    'contact_name' => $this->repairs_verification['contact_name'],
-                    'contact_phone' => $this->repairs_verification['contact_phone'],
-                    'contact_email' => $this->repairs_verification['contact_email'],
-                    'inspection_company' => $this->repairs_verification['inspection_company'],
-                    'inspector_name' => $this->repairs_verification['inspector_name'],
-                    'inspector_company_phone' => $this->repairs_verification['inspector_company_phone'],
-                    'inspector_id' => $this->repairs_verification['inspector_id'],
-                    'servicer_name' => $this->repairs_verification['servicer_name'],
-                    'loan_number' => $this->repairs_verification['loan_number'],
-                    'primary_type' => $this->repairs_verification['primary_type'],
-                    'expected_percentage_complete' => $this->repairs_verification['expected_percentage_complete'],
-                    'overall_observed_percentage_complete' => $this->repairs_verification['overall_observed_percentage_complete'],
-                    'general_summary_comments' => $this->repairs_verification['general_summary_comments'],
-                ]
-                : null,
+            'repairs_verification' => $this->repairs_verification,
             'senior_supplement' => $this->senior_supplement,
             'hospitals' => $this->hospitals
         ];
     }
 
-    protected function formatRepairsVerificationPhotos($verificationList)
-    {
-        return collect($verificationList)->map(function ($item) {
-            $item['photo'] = Storage::disk('s3')->url($item['photo']);
-            return $item;
-        })->all();
-    }
 
     protected function formatImages($images)
     {
