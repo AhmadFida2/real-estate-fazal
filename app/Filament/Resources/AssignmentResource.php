@@ -13,6 +13,7 @@ use Filament\Resources\Resource;
 use Filament\Support\Enums\Alignment;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Spatie\LaravelPdf\Facades\Pdf;
 
 class AssignmentResource extends Resource
 {
@@ -107,7 +108,12 @@ class AssignmentResource extends Resource
                         ])
                         ->modalHeading('Payment Details')->closeModalByClickingAway()->modalAlignment(Alignment::Center)->modalFooterActions(fn() => []),
                     Tables\Actions\Action::make('download')->iconButton()->icon('heroicon-o-arrow-down-tray')
-                        ->url(fn($record) => '/invoice/' . $record->id),
+                        ->action(function ($record){
+                            $assignment = $record;
+                            $file_name = 'invoice_' . $record->id . ".pdf";
+                            Pdf::view('invoice', compact('assignment'))->save(public_path($file_name));
+                            return response()->download(public_path($file_name));
+                        }),
                     Tables\Actions\EditAction::make()->iconButton(),
                     Tables\Actions\DeleteAction::make()->iconButton(),
 
