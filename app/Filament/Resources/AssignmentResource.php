@@ -13,6 +13,7 @@ use Filament\Resources\Resource;
 use Filament\Support\Enums\Alignment;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Support\Facades\Storage;
 use Spatie\LaravelPdf\Facades\Pdf;
 
 class AssignmentResource extends Resource
@@ -111,6 +112,10 @@ class AssignmentResource extends Resource
                         ->action(function ($record) {
                             $assignment = $record;
                             $file_name = 'storage/invoices/invoice_' . $record->id . ".pdf";
+                            if(!Storage::directoryExists(public_path('storage/invoices')))
+                            {
+                                Storage::disk('public')->makeDirectory('invoices');
+                            }
                             if (file_exists(public_path($file_name))) {
                                 return response()->download(public_path($file_name));
                             }
