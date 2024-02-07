@@ -2,7 +2,7 @@
 <html>
 <head>
     <title>Invoice</title>
-    <link href="{{public_path('tailwind.min.css')}}" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100">
 <div class="max-w-4xl mx-auto p-8 bg-white shadow-lg">
