@@ -58,8 +58,9 @@ Route::get('excel-download/{file}', function ($file) {
 
 Route::get('invoice/{id}', function ($id) {
     $assignment = \App\Models\Assignment::find($id);
-    Pdf::view('invoice',compact('assignment'))->save(public_path('invoice.pdf'));
-    return response()->download(public_path('invoice.pdf'));
+    $file_name = 'invoice_' . now()->format('d-m-Y-H-i-s');
+    Pdf::view('invoice', compact('assignment'))->save(public_path($file_name));
+    return response()->download(public_path($file_name));
 });
 
 
