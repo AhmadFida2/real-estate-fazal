@@ -114,7 +114,7 @@ class AssignmentResource extends Resource
                             $file_name = 'storage/invoices/invoice_' . $record->id . ".pdf";
                             if(!Storage::directoryExists(public_path('storage/invoices')))
                             {
-                                Storage::disk('public')->makeDirectory('storage/invoices');
+                                Storage::disk('public')->makeDirectory('invoices');
                             }
                             if (file_exists(public_path($file_name))) {
                                 return response()->download(public_path($file_name));
