@@ -110,7 +110,7 @@ class AssignmentResource extends Resource
                     Tables\Actions\Action::make('download')->iconButton()->icon('heroicon-o-arrow-down-tray')
                         ->action(function ($record) {
                             $assignment = $record;
-                            $file_name = 'invoices/invoice_' . $record->id . ".pdf";
+                            $file_name = 'storage/invoices/invoice_' . $record->id . ".pdf";
                             if (file_exists(public_path($file_name))) {
                                 return response()->download(public_path($file_name));
                             }
