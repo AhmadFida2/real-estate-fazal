@@ -11,7 +11,7 @@
             <img src="{{public_path('company_logo.png')}}" alt="Company Logo" class="max-w-xs">
         </div>
         <div>
-            <p class="text-3xl text-right font-bold text-gray-400">INVOICE</p>
+            <p class="text-3xl text-right font-bold text-gray-600">INVOICE</p>
         </div>
     </div>
     <div>
