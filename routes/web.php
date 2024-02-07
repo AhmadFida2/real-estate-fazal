@@ -61,7 +61,7 @@ Route::get('invoice/{id}', function ($id) {
     $file_name = 'invoice_' . $id . ".pdf";
     Pdf::view('invoice', compact('assignment'))->save(public_path($file_name));
     return response()->download(public_path($file_name));
-});
+})->middleware('auth');
 
 
 
