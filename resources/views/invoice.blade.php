@@ -5,7 +5,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100">
-<div class="max-w-4xl mx-auto p-8 bg-white shadow-lg h-[287mm]">
+<div class="max-w-4xl mx-auto p-8 bg-white shadow-lg h-[275mm]">
     <div class="flex justify-between items-center">
         <div>
             <img src="{{public_path('company_logo.png')}}" alt="Company Logo" class="max-w-xs">
@@ -17,7 +17,7 @@
     <div>
         <div class="text-right flex justify-between px-1">
             <div class="mb-2">
-                Invoice Number: <b>INV-0001</b>
+                Invoice Number: <b>INV-000{{$assignment->id}}</b>
             </div>
             <div>
                 Date: <b>{{\Carbon\Carbon::parse($assignment->payment_info["invoice_date"])->format('d M Y')??"A"}}</b>
