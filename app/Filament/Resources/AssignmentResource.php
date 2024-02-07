@@ -108,9 +108,12 @@ class AssignmentResource extends Resource
                         ])
                         ->modalHeading('Payment Details')->closeModalByClickingAway()->modalAlignment(Alignment::Center)->modalFooterActions(fn() => []),
                     Tables\Actions\Action::make('download')->iconButton()->icon('heroicon-o-arrow-down-tray')
-                        ->action(function ($record){
+                        ->action(function ($record) {
                             $assignment = $record;
-                            $file_name = 'invoice_' . $record->id . ".pdf";
+                            $file_name = 'invoices/invoice_' . $record->id . ".pdf";
+                            if (file_exists(public_path($file_name))) {
+                                return response()->download(public_path($file_name));
+                            }
                             Pdf::view('invoice', compact('assignment'))->save(public_path($file_name));
                             return response()->download(public_path($file_name));
                         }),
