@@ -5,7 +5,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100">
-<div class="max-w-4xl mx-auto p-8 bg-white shadow-lg h-[275mm]">
+<div class="max-w-4xl mx-auto p-8 bg-white shadow-lg h-[278mm]">
     <div class="flex justify-between items-center">
         <div>
             <img src="{{public_path('company_logo.png')}}" alt="Company Logo" class="max-w-xs">
