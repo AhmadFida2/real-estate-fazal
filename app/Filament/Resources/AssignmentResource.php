@@ -34,7 +34,7 @@ class AssignmentResource extends Resource
                         Forms\Components\Select::make('status')->options([
                             'Un-Scheduled', 'Scheduled'
                         ])->default(0),
-                     Forms\Components\DatePicker::make('start_date')->required(),
+                        Forms\Components\DatePicker::make('start_date')->required(),
                         Forms\Components\DatePicker::make('due_date')->required(),
                         Forms\Components\TextInput::make('property_name')->required(),
                         Forms\Components\TextInput::make('property_address')->required(),
@@ -106,6 +106,8 @@ class AssignmentResource extends Resource
                                 ])
                         ])
                         ->modalHeading('Payment Details')->closeModalByClickingAway()->modalAlignment(Alignment::Center)->modalFooterActions(fn() => []),
+                    Tables\Actions\Action::make('download')->iconButton()->icon('heroicon-o-arrow-down-tray')
+                        ->url(fn($record) => '/invoice/' . $record->id),
                     Tables\Actions\EditAction::make()->iconButton(),
                     Tables\Actions\DeleteAction::make()->iconButton(),
 
