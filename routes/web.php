@@ -59,7 +59,8 @@ Route::get('excel-download/{file}', function ($file) {
 Route::get('invoice/{id}', function ($id) {
     $assignment = \App\Models\Assignment::find($id);
     Pdf::view('invoice',compact('assignment'))->save(public_path('invoice.pdf'));
-    \Illuminate\Support\Facades\Storage::response(public_path('invoice.pdf'));
+    $file = \Illuminate\Support\Facades\Storage::disk('public')->get(public_path('invoice.pdf'));
+    $file->download();
 });
 
 
