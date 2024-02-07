@@ -751,7 +751,11 @@ class InspectionResource extends Resource
                         $set('temp_key', $key);
                         $set('images', $rep_data);
                     })
-                ])->alignCenter()->verticallyAlignCenter(),
+                ])->alignCenter()->verticallyAlignCenter()->extraAttributes([
+                    'wire:loading.attr' => 'disabled',
+                    'wire:target' => 'temp_images',
+
+                ]),
                 Repeater::make('images')
                     ->grid(4)
                     ->addable(false)
