@@ -57,7 +57,7 @@
         </div>
     </div>
     <div class="mt-8">
-        <table class="w-full border border-gray-300 text-left">
+        <table class="w-full border border-gray-300 text-left text-sm">
             <thead>
             <tr class="bg-gray-300">
                 <th class="px-4 py-2">Loan #</th>
