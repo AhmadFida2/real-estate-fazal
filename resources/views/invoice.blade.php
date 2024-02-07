@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <title>Invoice</title>
     <script src="https://cdn.tailwindcss.com"></script>
@@ -11,11 +11,11 @@
             <img src="{{public_path('company_logo.png')}}" alt="Company Logo" class="max-w-xs">
         </div>
         <div>
-            <p class="text-3xl text-right font-bold">INVOICE</p>
+            <p class="text-3xl text-right font-bold text-gray-400">INVOICE</p>
         </div>
     </div>
     <div>
-        <div class="text-right flex justify-between px-1">
+        <div class="text-right flex justify-between px-1 text-sm">
             <div class="mb-2">
                 Invoice Number: <b>INV-000{{$assignment->id}}</b>
             </div>
@@ -24,18 +24,18 @@
             </div>
         </div>
     </div>
-    <div class="mt-8 flex justify-between">
+    <div class="mt-8 flex justify-between text-sm">
         <div class="p-1">
             <b>AMS Real Estate Services, Inc.</b><br>
             310 Comal St. Bld. A, Ste. 301<br>
             Austin, TX 78702<br>
             USA
         </div>
-        <div class="mt-4 text-right">
+        <div class="mt-4 text-right text-sm text-sm">
             Terms: <p class="font-bold">Upon Receipt</p>
         </div>
     </div>
-    <div class="mt-8 grid grid-cols-4 gap-4">
+    <div class="mt-8 grid grid-cols-4 gap-4 text-sm">
         <div class="">
             <div class="font-bold mb-2 font-bold mb-0.5 border border-gray-300 p-1 bg-gray-200">Bill To:</div>
             <div>
@@ -45,7 +45,7 @@
                 USA
             </div>
         </div>
-        <div class="col-start-3 col-span-2">
+        <div class="col-start-3 col-span-2 text-sm">
             <div class="mb-2 font-bold border border-gray-300 p-1 bg-gray-200">Remittance Information:</div>
             <div>
                 <b>Bank: </b>Wells Fargo Bank, NA<br>
