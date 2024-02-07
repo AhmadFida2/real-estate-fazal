@@ -717,9 +717,7 @@ class InspectionResource extends Resource
             ->dehydrated(fn($get) => in_array('3', $get('form_steps')))
             ->schema([
                 Forms\Components\FileUpload::make('temp_images')->multiple()->image()->reorderable()->appendFiles()->dehydrated(false)
-                    ->label('Bulk Image Upload')->imageResizeUpscale(false)->extraAttributes([
-                        'wire:model' => 'temp_images'
-                    ]),
+                    ->label('Bulk Image Upload')->imageResizeUpscale(false),
                 Forms\Components\Actions::make([
                     Forms\Components\Actions\Action::make('process_images')->action(function ($get, $set) {
                         $rep_data = $get('images');
@@ -753,11 +751,7 @@ class InspectionResource extends Resource
                         $set('temp_key', $key);
                         $set('images', $rep_data);
                     })
-                ])->alignCenter()->verticallyAlignCenter()->extraAttributes([
-                    'wire:loading.attr' => 'disabled',
-                    'wire:target' => 'temp_images',
-
-                ]),
+                ])->alignCenter()->verticallyAlignCenter(),
                 Repeater::make('images')
                     ->grid(4)
                     ->addable(false)
