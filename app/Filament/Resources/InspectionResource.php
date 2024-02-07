@@ -753,7 +753,6 @@ class InspectionResource extends Resource
                     })
                 ])->alignCenter()->verticallyAlignCenter(),
                 Repeater::make('images')
-                    ->statePath('images')
                     ->grid(4)
                     ->addable(false)
                     ->reorderable(false)
