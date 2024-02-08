@@ -80,7 +80,7 @@
                     $ {{$assignment->payment_info['invoice_amount']??"     -"}}</td>
             </tr>
             <tr>
-                <td class="border border-gray-800 px-2 py-2 italic text-xs" colspan="3">Thank you for your business!</td>
+                <td class="border border-gray-800 px-2 py-2 italic text-xs text-gray-400" colspan="3">Thank you for your business!</td>
                 <td class="border border-gray-800 px-2 py-2 font-bold text-xs" colspan="2">Total</td>
                 <td class="border border-gray-800 px-2 py-2 text-right text-xs">
                     $ {{$assignment->payment_info['invoice_amount']??"     -"}}</td>
