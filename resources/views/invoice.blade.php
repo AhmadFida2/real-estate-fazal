@@ -76,38 +76,42 @@
                 <td class="border px-2 py-2 text-xs">{{$assignment->property_address??""}}</td>
                 <td class="border px-2 py-2 text-xs">{{$assignment->city??""}}</td>
                 <td class="border px-2 py-2 text-xs">{{$assignment->state??""}}</td>
-                <td class="border px-2 py-2 text-xs text-right">$ {{$assignment->payment_info['invoice_amount']??"     -"}}</td>
+                <td class="border px-2 py-2 text-xs text-right">
+                    $ {{$assignment->payment_info['invoice_amount']??"     -"}}</td>
             </tr>
             <tr>
                 <td class="border px-2 py-2 italic text-xs" colspan="3">Thank you for your business!</td>
                 <td class="border px-2 py-2 font-bold text-xs" colspan="2">Total</td>
-                <td class="border px-2 py-2 text-right text-xs">$ {{$assignment->payment_info['invoice_amount']??"     -"}}</td>
+                <td class="border px-2 py-2 text-right text-xs">
+                    $ {{$assignment->payment_info['invoice_amount']??"     -"}}</td>
             </tr>
             <!-- Repeat for each item -->
             </tbody>
         </table>
     </div>
-    <div class="text-lg font-bold text-center w-full">
-        Payments Info
-    </div>
-    <div class="mt-16">
-        <table class="w-full border border-gray-300 text-left table table-auto">
-            <thead>
-            <tr class="bg-gray-300 text-sm">
-                <th class="px-4 py-2 text-xs">Date</th>
-                <th class="px-4 py-2 text-xs">Amount</th>
-            </tr>
-            </thead>
-            <tbody class="text-xs">
-            @foreach($assignment->payments()->get() as $payment)
-            <tr>
-                <td class="border px-2 py-2 text-xs">{{\Carbon\Carbon::parse($payment->date)->format('d M Y')}}</td>
-                <td class="border px-2 py-2 text-xs text-right">$ {{$payment->amount}}</td>
-            </tr>
-            @endforeach
-            </tbody>
-        </table>
-    </div>
+    @if($assignment->payments())
+        <div class="text-lg font-bold text-center w-full">
+            Payments Info
+        </div>
+        <div class="mt-16">
+            <table class="w-full border text-left table table-auto">
+                <thead>
+                <tr class="bg-gray-300 text-sm">
+                    <th class="px-4 py-2 text-xs">Date</th>
+                    <th class="px-4 py-2 text-xs">Amount</th>
+                </tr>
+                </thead>
+                <tbody class="text-xs">
+                @foreach($assignment->payments()->get() as $payment)
+                    <tr>
+                        <td class="border px-2 py-2 text-xs">{{\Carbon\Carbon::parse($payment->date)->format('d M Y')}}</td>
+                        <td class="border px-2 py-2 text-xs text-right">$ {{number_format($payment->amount,2)}}</td>
+                    </tr>
+                @endforeach
+                </tbody>
+            </table>
+        </div>
+    @endif
 </div>
 </body>
 </html>
