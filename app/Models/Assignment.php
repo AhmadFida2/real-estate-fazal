@@ -47,7 +47,7 @@ class Assignment extends Model
 
     public function remPayments() : float
     {
-        return floatval($this->invoice_amount) - floatval($this->payments()->sum('amount'));
+        return floatval($this->payment_info['invoice_amount']) - floatval($this->payments()->sum('amount'));
     }
 
 }
