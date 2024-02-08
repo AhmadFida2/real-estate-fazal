@@ -35,9 +35,9 @@
             Terms: <p class="font-bold">Upon Receipt</p>
         </div>
     </div>
-    <div class="mt-8 grid grid-cols-4 gap-4 text-sm">
+    <div class="mt-8 grid grid-cols-4 gap-4">
         <div class="">
-            <div class="font-bold mb-2 font-bold mb-0.5 border border-gray-300 p-1 bg-gray-200">Bill To:</div>
+            <div class="font-bold mb-2 font-bold mb-0.5 border border-gray-300 p-1 bg-gray-200 ">Bill To:</div>
             <div>
                 <b>{{$assignment->client??"A"}}</b><br>
                 {{$assignment->property_name??"A"}}<br>
@@ -60,28 +60,28 @@
         <table class="w-full border border-gray-300 text-left">
             <thead>
             <tr class="bg-gray-300 text-sm">
-                <th class="px-4 py-2">Loan #</th>
-                <th class="px-4 py-2">Investor #</th>
-                <th class="px-4 py-2">Property Address</th>
-                <th class="px-4 py-2">City</th>
-                <th class="px-4 py-2">State</th>
-                <th class="px-4 py-2">Amount</th>
+                <th class="px-4 py-2 text-sm">Loan #</th>
+                <th class="px-4 py-2 text-sm">Investor #</th>
+                <th class="px-4 py-2 text-sm">Property Address</th>
+                <th class="px-4 py-2 text-sm">City</th>
+                <th class="px-4 py-2 text-sm">State</th>
+                <th class="px-4 py-2 text-sm">Amount</th>
             </tr>
             </thead>
             <tbody class="text-sm">
             <!-- Add your dynamic data here -->
             <tr>
-                <td class="border px-2 py-2">{{$assignment->loan_number??""}}</td>
-                <td class="border px-2 py-2">{{$assignment->investor_number??""}}</td>
-                <td class="border px-2 py-2">{{$assignment->property_address??""}}</td>
-                <td class="border px-2 py-2">{{$assignment->city??""}}</td>
-                <td class="border px-2 py-2">{{$assignment->state??""}}</td>
-                <td class="border px-2 py-2 text-right">$ {{$assignment->payment_info['invoice_amount']??"     -"}}</td>
+                <td class="border px-2 py-2 text-sm">{{$assignment->loan_number??""}}</td>
+                <td class="border px-2 py-2 text-sm">{{$assignment->investor_number??""}}</td>
+                <td class="border px-2 py-2 text-sm">{{$assignment->property_address??""}}</td>
+                <td class="border px-2 py-2 text-sm">{{$assignment->city??""}}</td>
+                <td class="border px-2 py-2 text-sm">{{$assignment->state??""}}</td>
+                <td class="border px-2 py-2 text-sm text-right">$ {{$assignment->payment_info['invoice_amount']??"     -"}}</td>
             </tr>
             <tr>
-                <td class="border px-2 py-2 italic" colspan="3">Thank you for your business!</td>
-                <td class="border px-2 py-2 font-bold" colspan="2">Total</td>
-                <td class="border px-2 py-2 text-right">$ {{$assignment->payment_info['invoice_amount']??"     -"}}</td>
+                <td class="border px-2 py-2 italic text-sm" colspan="3">Thank you for your business!</td>
+                <td class="border px-2 py-2 font-bold text-sm" colspan="2">Total</td>
+                <td class="border px-2 py-2 text-right text-sm">$ {{$assignment->payment_info['invoice_amount']??"     -"}}</td>
             </tr>
             <!-- Repeat for each item -->
             </tbody>
