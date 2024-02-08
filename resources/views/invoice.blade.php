@@ -57,7 +57,7 @@
         </div>
     </div>
     <div class="mt-16">
-        <table class="w-full border text-left table table-auto">
+        <table class="w-full border border-gray-800 text-left table table-auto">
             <thead>
             <tr class="bg-gray-300 text-sm">
                 <th class="px-4 py-2 text-xs">Loan #</th>
@@ -94,7 +94,7 @@
             Payments Info
         </div>
         <div class="mt-2">
-            <table class="w-full border text-left table table-auto">
+            <table class="w-full border border-gray-800 text-left table table-auto">
                 <thead>
                 <tr class="bg-gray-300 text-sm">
                     <th class="px-4 py-2 text-xs">Date</th>
