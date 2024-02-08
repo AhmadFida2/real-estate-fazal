@@ -87,6 +87,27 @@
             </tbody>
         </table>
     </div>
+    @if($assignment->payments())
+        <p class="text-xl font-bold">Payments Detail</p>
+        <div class="mt-16">
+            <table class="w-full border border-gray-300 text-left text-sm">
+                <thead>
+                <tr class="bg-gray-300">
+                    <th class="px-4 py-2">Date</th>
+                    <th class="px-4 py-2">Amount</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach($assignment->payments() as $payment)
+                    <tr>
+                        <td class="border px-4 py-2">{{$payment->date}}</td>
+                        <td class="border px-4 py-2 text-right">$ {{number_format($payment->amount,2)}}</td>
+                    </tr>
+                @endforeach
+                </tbody>
+            </table>
+        </div>
+    @endif
 </div>
 </body>
 </html>
