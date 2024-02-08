@@ -35,7 +35,7 @@
             Terms: <p class="font-bold">Upon Receipt</p>
         </div>
     </div>
-    <div class="mt-8 grid grid-cols-4 gap-4">
+    <div class="mt-8 gap-4 flex justify-between">
         <div class="">
             <div class="font-bold mb-2 font-bold mb-0.5 border border-gray-300 p-1 bg-gray-200 text-sm">Bill To:</div>
             <div class="text-sm">
@@ -45,7 +45,7 @@
                 USA
             </div>
         </div>
-        <div class="col-start-3 col-span-2 text-sm">
+        <div class="text-sm">
             <div class="mb-2 font-bold border border-gray-300 p-1 bg-gray-200">Remittance Information:</div>
             <div>
                 <b>Bank: </b>Wells Fargo Bank, NA<br>
@@ -98,7 +98,7 @@
                 <thead>
                 <tr class="bg-gray-300 text-sm">
                     <th class="px-4 py-2 text-xs">Date</th>
-                    <th class="px-4 py-2 text-xs">Amount</th>
+                    <th class="px-4 py-2 text-xs text-right">Amount</th>
                 </tr>
                 </thead>
                 <tbody class="text-xs">
