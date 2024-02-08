@@ -119,7 +119,7 @@ class AssignmentResource extends Resource
                                         TextEntry::make('amount')->money('USD')
                                     ]),
                                     Grid::make()->schema([
-                                        TextEntry::make('total')->getStateUsing(fn(Assignment $record) => dd($record->sumPayments())),
+                                        TextEntry::make('total')->getStateUsing(fn(Assignment $record) => $record->sumPayments())->money('USD'),
 
                                     ])
                                 ])
