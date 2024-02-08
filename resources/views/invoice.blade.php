@@ -56,7 +56,7 @@
             </div>
         </div>
     </div>
-    <div class="mt-16 text-sm">
+    <div class="mt-16">
         <table class="w-full border border-gray-300 text-left text-sm">
             <thead>
             <tr class="bg-gray-300">
@@ -88,6 +88,5 @@
         </table>
     </div>
 </div>
-
 </body>
 </html>
