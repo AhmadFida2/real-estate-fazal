@@ -71,17 +71,17 @@
             <tbody class="text-sm">
             <!-- Add your dynamic data here -->
             <tr>
-                <td class="border px-4 py-2">{{$assignment->loan_number??""}}</td>
-                <td class="border px-4 py-2">{{$assignment->investor_number??""}}</td>
-                <td class="border px-4 py-2">{{$assignment->property_address??""}}</td>
-                <td class="border px-4 py-2">{{$assignment->city??""}}</td>
-                <td class="border px-4 py-2">{{$assignment->state??""}}</td>
-                <td class="border px-4 py-2 text-right">$ {{$assignment->payment_info['invoice_amount']??"     -"}}</td>
+                <td class="border px-2 py-2">{{$assignment->loan_number??""}}</td>
+                <td class="border px-2 py-2">{{$assignment->investor_number??""}}</td>
+                <td class="border px-2 py-2">{{$assignment->property_address??""}}</td>
+                <td class="border px-2 py-2">{{$assignment->city??""}}</td>
+                <td class="border px-2 py-2">{{$assignment->state??""}}</td>
+                <td class="border px-2 py-2 text-right">$ {{$assignment->payment_info['invoice_amount']??"     -"}}</td>
             </tr>
             <tr>
-                <td class="border px-4 py-2 italic" colspan="3">Thank you for your business!</td>
-                <td class="border px-4 py-2 font-bold" colspan="2">Total</td>
-                <td class="border px-4 py-2 text-right">$ {{$assignment->payment_info['invoice_amount']??"     -"}}</td>
+                <td class="border px-2 py-2 italic" colspan="3">Thank you for your business!</td>
+                <td class="border px-2 py-2 font-bold" colspan="2">Total</td>
+                <td class="border px-2 py-2 text-right">$ {{$assignment->payment_info['invoice_amount']??"     -"}}</td>
             </tr>
             <!-- Repeat for each item -->
             </tbody>
