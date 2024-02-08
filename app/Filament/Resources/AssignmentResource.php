@@ -137,7 +137,7 @@ class AssignmentResource extends Resource
                                 return response()->download(public_path($file_name));
                             }
                             Pdf::view('invoice', ['assignment' => $record])->save(public_path($file_name));
-                            return response()->download(public_path($file_name));
+                            return response()->download(public_path($file_name))->deleteFileAfterSend();
                         }),
                     Tables\Actions\EditAction::make()->iconButton(),
                     Tables\Actions\DeleteAction::make()->iconButton(),
