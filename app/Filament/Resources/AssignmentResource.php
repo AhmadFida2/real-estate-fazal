@@ -55,11 +55,20 @@ class AssignmentResource extends Resource
                     ->statePath('payment_info')
                     ->columns(3)
                     ->schema([
-                        Forms\Components\TextInput::make('payment_amount')->inputMode('decimal'),
-                        Forms\Components\DatePicker::make('payment_date'),
                         Forms\Components\DatePicker::make('invoice_date'),
                         Forms\Components\TextInput::make('invoice_amount')->inputMode('decimal'),
+                    ]),
+                Forms\Components\Section::make('Payments')
+                ->schema([
+                    Forms\Components\Repeater::make('payments')
+                    ->addActionLabel('New Client Payment')
+                    ->columns(2)
+                    ->relationship()
+                    ->schema([
+                        Forms\Components\DatePicker::make('date'),
+                        Forms\Components\TextInput::make('amount')->inputMode('decimal'),
                     ])
+                ])
             ]);
     }
 

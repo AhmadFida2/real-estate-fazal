@@ -35,4 +35,9 @@ class Assignment extends Model
 
     }
 
+    public function payments() : HasMany
+    {
+        return $this->hasMany(Payment::class);
+    }
+
 }

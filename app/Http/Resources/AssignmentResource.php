@@ -33,7 +33,8 @@ class AssignmentResource extends JsonResource
             'city' => $this->city,
             'state' => $this->state,
             'zip' => $this->zip,
-            'payment_info' => $this->payment_info,
+            'invoice_info' => $this->payment_info,
+            'payments' => $this->payments()
         ];
     }
 }
