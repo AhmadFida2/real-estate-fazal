@@ -90,10 +90,10 @@
         </table>
     </div>
     @if($assignment->payments())
-        <div class="text-lg font-bold text-center w-full">
+        <div class="mt-16 text-lg font-bold text-center w-full">
             Payments Info
         </div>
-        <div class="mt-16">
+        <div class="mt-2">
             <table class="w-full border text-left table table-auto">
                 <thead>
                 <tr class="bg-gray-300 text-sm">
