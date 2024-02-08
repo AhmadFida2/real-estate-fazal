@@ -245,7 +245,7 @@ class InspectionResource extends Resource
                 Select::make('rating_scale')
                     ->required()
                     ->label('Rating Scale')
-                    ->options(['MBA' => 'MBA'])->default('MBA')->disabled()->dehydrated(),
+                    ->options(['MBA' => 'MBA', 'Fannie mae' => 'Fannie mae'])->default('MBA'),
                 Forms\Components\DateTimePicker::make('inspection_date')
                     ->required()
                     ->label('Inspection Date')->default(today()),
