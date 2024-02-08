@@ -111,9 +111,9 @@ class AssignmentResource extends Resource
                     Tables\Actions\Action::make('payment_data')->icon('heroicon-o-currency-dollar')
                         ->iconButton()->color('secondary')
                         ->infolist([
-                            Grid::make(4)
+                            Grid::make(1)
                                 ->schema([
-                                   RepeatableEntry::make('payments')
+                                   RepeatableEntry::make('payments')->columns(2)
                                     ->schema([
                                         TextEntry::make('date'),
                                         TextEntry::make('amount')->money('USD')
