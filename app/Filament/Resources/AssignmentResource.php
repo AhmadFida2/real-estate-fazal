@@ -60,16 +60,16 @@ class AssignmentResource extends Resource
                         Forms\Components\TextInput::make('invoice_amount')->inputMode('decimal'),
                     ]),
                 Forms\Components\Section::make('Payments')
-                ->schema([
-                    Forms\Components\Repeater::make('payments')
-                    ->addActionLabel('New Client Payment')
-                    ->columns(2)
-                    ->relationship()
                     ->schema([
-                        Forms\Components\DatePicker::make('date'),
-                        Forms\Components\TextInput::make('amount')->inputMode('decimal'),
+                        Forms\Components\Repeater::make('payments')
+                            ->addActionLabel('New Client Payment')
+                            ->columns(2)
+                            ->relationship()
+                            ->schema([
+                                Forms\Components\DatePicker::make('date'),
+                                Forms\Components\TextInput::make('amount')->inputMode('decimal'),
+                            ])
                     ])
-                ])
             ]);
     }
 
@@ -101,6 +101,8 @@ class AssignmentResource extends Resource
                     Tables\Columns\TextColumn::make('city'),
                     Tables\Columns\TextColumn::make('payment_info.invoice_date')->label('Invoice Date')->dateTime('d M Y'),
                     Tables\Columns\TextColumn::make('payment_info.invoice_amount')->label('Invoice Amount')->money('USD'),
+                    Tables\Columns\TextColumn::make('remaining_payment')->label('Remaining Amount')->money('USD')
+                        ->getStateUsing(fn(Assignment $record) => $record->remPayments()),
                     Tables\Columns\TextColumn::make('state'),
                     Tables\Columns\TextColumn::make('zip'),
                     Tables\Columns\IconColumn::make('is_completed')
@@ -113,13 +115,13 @@ class AssignmentResource extends Resource
                         ->infolist([
                             Grid::make(1)
                                 ->schema([
-                                   RepeatableEntry::make('payments')->columns(2)->label('Client Payments')
-                                    ->schema([
-                                        TextEntry::make('date'),
-                                        TextEntry::make('amount')->money('USD')
-                                    ]),
+                                    RepeatableEntry::make('payments')->columns(2)->label('Client Payments')
+                                        ->schema([
+                                            TextEntry::make('date'),
+                                            TextEntry::make('amount')->money('USD')
+                                        ]),
                                     Grid::make()->schema([
-                                        TextEntry::make('total')->getStateUsing(fn(Assignment $record) => $record->sumPayments())->money('USD'),
+                                        TextEntry::make('total')->label('Total Paid')->getStateUsing(fn(Assignment $record) => $record->sumPayments())->money('USD'),
 
                                     ])
                                 ])
@@ -129,8 +131,7 @@ class AssignmentResource extends Resource
                         ->action(function ($record) {
                             $assignment = $record;
                             $file_name = 'storage/invoices/invoice_' . $record->id . ".pdf";
-                            if(!Storage::directoryExists(public_path('storage/invoices')))
-                            {
+                            if (!Storage::directoryExists(public_path('storage/invoices'))) {
                                 Storage::disk('public')->makeDirectory('invoices');
                             }
                             if (file_exists(public_path($file_name))) {
