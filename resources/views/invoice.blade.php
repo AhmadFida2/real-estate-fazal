@@ -96,12 +96,12 @@
         <div class="mt-2">
             <table class="w-full border border-gray-800 text-left table table-auto">
                 <thead>
-                <tr class="bg-gray-300 text-sm">
+                <tr class="bg-gray-300 text-sm border-gray-800">
                     <th class="px-4 py-2 text-xs">Date</th>
                     <th class="px-4 py-2 text-xs text-right">Amount</th>
                 </tr>
                 </thead>
-                <tbody class="text-xs">
+                <tbody class="text-xs border-gray-800">
                 @foreach($assignment->payments()->get() as $payment)
                     <tr>
                         <td class="border px-2 py-2 text-xs">{{\Carbon\Carbon::parse($payment->date)->format('d M Y')}}</td>
