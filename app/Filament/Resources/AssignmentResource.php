@@ -113,10 +113,13 @@ class AssignmentResource extends Resource
                         ->infolist([
                             Grid::make(1)
                                 ->schema([
-                                   RepeatableEntry::make('payments')->columns(2)
+                                   RepeatableEntry::make('payments')->columns(2)->label('Client Payments')
                                     ->schema([
                                         TextEntry::make('date'),
                                         TextEntry::make('amount')->money('USD')
+                                    ]),
+                                    Grid::make()->schema([
+                                        TextEntry::make('total')->state('Total')
                                     ])
                                 ])
                         ])
