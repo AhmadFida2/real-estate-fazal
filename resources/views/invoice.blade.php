@@ -60,12 +60,12 @@
         <table class="w-full border border-gray-800 text-left table table-auto">
             <thead>
             <tr class="bg-gray-300 text-sm">
-                <th class="px-4 py-2 text-xs">Loan #</th>
-                <th class="px-4 py-2 text-xs">Investor #</th>
-                <th class="px-4 py-2 text-xs">Property Address</th>
-                <th class="px-4 py-2 text-xs">City</th>
-                <th class="px-4 py-2 text-xs">State</th>
-                <th class="px-4 py-2 text-xs">Amount</th>
+                <th class="border border-gray-800 px-4 py-2 text-xs">Loan #</th>
+                <th class="border border-gray-800 px-4 py-2 text-xs">Investor #</th>
+                <th class="border border-gray-800 px-4 py-2 text-xs">Property Address</th>
+                <th class="border border-gray-800 px-4 py-2 text-xs">City</th>
+                <th class="border border-gray-800 px-4 py-2 text-xs">State</th>
+                <th class="border border-gray-800 px-4 py-2 text-xs">Amount</th>
             </tr>
             </thead>
             <tbody class="text-xs">
@@ -97,15 +97,15 @@
             <table class="w-full border border-gray-800 text-left table table-auto">
                 <thead>
                 <tr class="bg-gray-300 text-sm border-gray-800">
-                    <th class="px-4 py-2 text-xs border-gray-800 border">Date</th>
-                    <th class="px-4 py-2 text-xs text-right border-gray-800 border">Amount</th>
+                    <th class="px-4 py-2 text-xs border-gray-800 border text-center">Date</th>
+                    <th class="px-4 py-2 text-xs text-right border-gray-800 border text-center">Amount</th>
                 </tr>
                 </thead>
                 <tbody class="text-xs border-gray-800">
                 @foreach($assignment->payments()->get() as $payment)
                     <tr class="">
-                        <td class="border px-2 border-gray-800 py-2 text-xs">{{\Carbon\Carbon::parse($payment->date)->format('d M Y')}}</td>
-                        <td class="border px-2 border-gray-800 py-2 text-xs text-right">$ {{number_format($payment->amount,2)}}</td>
+                        <td class="border px-2 border-gray-800 py-2 text-xs text-center">{{\Carbon\Carbon::parse($payment->date)->format('d M Y')}}</td>
+                        <td class="border px-2 border-gray-800 py-2 text-xs text-center">$ {{number_format($payment->amount,2)}}</td>
                     </tr>
                 @endforeach
                 </tbody>
