@@ -87,6 +87,27 @@
             </tbody>
         </table>
     </div>
+    <div class="text-lg font-bold text-center w-full">
+        Payments Info
+    </div>
+    <div class="mt-16">
+        <table class="w-full border border-gray-300 text-left table table-auto">
+            <thead>
+            <tr class="bg-gray-300 text-sm">
+                <th class="px-4 py-2 text-xs">Date</th>
+                <th class="px-4 py-2 text-xs">Amount</th>
+            </tr>
+            </thead>
+            <tbody class="text-xs">
+            @foreach($assignment->payments()->get() as $payment)
+            <tr>
+                <td class="border px-2 py-2 text-xs">{{\Carbon\Carbon::parse($payment->date)->format('d M Y')}}</td>
+                <td class="border px-2 py-2 text-xs text-right">$ {{$payment->amount}}</td>
+            </tr>
+            @endforeach
+            </tbody>
+        </table>
+    </div>
 </div>
 </body>
 </html>
