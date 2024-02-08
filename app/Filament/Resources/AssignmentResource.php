@@ -99,8 +99,8 @@ class AssignmentResource extends Resource
                     Tables\Columns\TextColumn::make('investor_number')
                         ->searchable(),
                     Tables\Columns\TextColumn::make('city'),
-                    TextEntry::make('payment_info.invoice_date')->label('Invoice Date')->dateTime('d M Y'),
-                    TextEntry::make('payment_info.invoice_amount')->label('Invoice Amount')->money('USD'),
+                    Tables\Columns\TextColumn::make('payment_info.invoice_date')->label('Invoice Date')->dateTime('d M Y'),
+                    Tables\Columns\TextColumn::make('payment_info.invoice_amount')->label('Invoice Amount')->money('USD'),
                     Tables\Columns\TextColumn::make('state'),
                     Tables\Columns\TextColumn::make('zip'),
                     Tables\Columns\IconColumn::make('is_completed')
