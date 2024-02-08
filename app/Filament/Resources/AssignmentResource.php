@@ -7,6 +7,7 @@ use App\Models\Assignment;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Infolists\Components\Grid;
+use Filament\Infolists\Components\RepeatableEntry;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
@@ -98,6 +99,8 @@ class AssignmentResource extends Resource
                     Tables\Columns\TextColumn::make('investor_number')
                         ->searchable(),
                     Tables\Columns\TextColumn::make('city'),
+                    TextEntry::make('payment_info.invoice_date')->label('Invoice Date')->dateTime('d M Y'),
+                    TextEntry::make('payment_info.invoice_amount')->label('Invoice Amount')->money('USD'),
                     Tables\Columns\TextColumn::make('state'),
                     Tables\Columns\TextColumn::make('zip'),
                     Tables\Columns\IconColumn::make('is_completed')
@@ -110,10 +113,11 @@ class AssignmentResource extends Resource
                         ->infolist([
                             Grid::make(4)
                                 ->schema([
-                                    TextEntry::make('payment_info.payment_amount')->label('Payment Amount')->money('USD'),
-                                    TextEntry::make('payment_info.payment_date')->label('Payment Date')->dateTime('d M Y'),
-                                    TextEntry::make('payment_info.invoice_date')->label('Invoice Date')->dateTime('d M Y'),
-                                    TextEntry::make('payment_info.invoice_amount')->label('Invoice Amount')->money('USD'),
+                                   RepeatableEntry::make('payments')
+                                    ->schema([
+                                        TextEntry::make('date'),
+                                        TextEntry::make('amount')->money('USD')
+                                    ])
                                 ])
                         ])
                         ->modalHeading('Payment Details')->closeModalByClickingAway()->modalAlignment(Alignment::Center)->modalFooterActions(fn() => []),
