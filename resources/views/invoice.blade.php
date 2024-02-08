@@ -57,9 +57,9 @@
         </div>
     </div>
     <div class="mt-16">
-        <table class="w-full border border-gray-300 text-left text-sm">
+        <table class="w-full border border-gray-300 text-left">
             <thead>
-            <tr class="bg-gray-300">
+            <tr class="bg-gray-300 text-sm">
                 <th class="px-4 py-2">Loan #</th>
                 <th class="px-4 py-2">Investor #</th>
                 <th class="px-4 py-2">Property Address</th>
@@ -68,7 +68,7 @@
                 <th class="px-4 py-2">Amount</th>
             </tr>
             </thead>
-            <tbody>
+            <tbody class="text-sm">
             <!-- Add your dynamic data here -->
             <tr>
                 <td class="border px-4 py-2">{{$assignment->loan_number??""}}</td>
