@@ -39,7 +39,7 @@
         <div class="">
             <div class="font-bold mb-2 font-bold mb-0.5 border border-gray-300 p-1 bg-gray-200 text-sm">Bill To:</div>
             <div class="text-sm">
-                <b>{{$assignment->client??"A"}}</b><br>
+                <b class="text-sm">{{$assignment->client??"A"}}</b><br>
                 {{$assignment->property_name??"A"}}<br>
                 {{$assignment->city??"A"}}, {{$assignment->state??"A"}}, {{$assignment->zip??"A"}}<br>
                 USA
