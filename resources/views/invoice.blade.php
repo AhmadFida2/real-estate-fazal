@@ -103,7 +103,7 @@
                 </thead>
                 <tbody class="text-xs border-gray-800">
                 @foreach($assignment->payments()->get() as $payment)
-                    <tr>
+                    <tr class="border-gray-800">
                         <td class="border px-2 py-2 text-xs">{{\Carbon\Carbon::parse($payment->date)->format('d M Y')}}</td>
                         <td class="border px-2 py-2 text-xs text-right">$ {{number_format($payment->amount,2)}}</td>
                     </tr>
