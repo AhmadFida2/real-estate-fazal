@@ -40,4 +40,9 @@ class Assignment extends Model
         return $this->hasMany(Payment::class);
     }
 
+    public function sumPayments()
+    {
+        return $this->payments()->sum('amount');
+    }
+
 }
