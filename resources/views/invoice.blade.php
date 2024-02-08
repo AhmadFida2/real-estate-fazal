@@ -71,18 +71,18 @@
             <tbody class="text-xs">
             <!-- Add your dynamic data here -->
             <tr>
-                <td class="border px-2 py-2 text-xs">{{$assignment->loan_number??""}}</td>
-                <td class="border px-2 py-2 text-xs">{{$assignment->investor_number??""}}</td>
-                <td class="border px-2 py-2 text-xs">{{$assignment->property_address??""}}</td>
-                <td class="border px-2 py-2 text-xs">{{$assignment->city??""}}</td>
-                <td class="border px-2 py-2 text-xs">{{$assignment->state??""}}</td>
-                <td class="border px-2 py-2 text-xs text-right">
+                <td class="border border-gray-800 px-2 py-2 text-xs">{{$assignment->loan_number??""}}</td>
+                <td class="border border-gray-800 px-2 py-2 text-xs">{{$assignment->investor_number??""}}</td>
+                <td class="border border-gray-800 px-2 py-2 text-xs">{{$assignment->property_address??""}}</td>
+                <td class="border border-gray-800 px-2 py-2 text-xs">{{$assignment->city??""}}</td>
+                <td class="border border-gray-800 px-2 py-2 text-xs">{{$assignment->state??""}}</td>
+                <td class="border border-gray-800 px-2 py-2 text-xs text-right">
                     $ {{$assignment->payment_info['invoice_amount']??"     -"}}</td>
             </tr>
             <tr>
-                <td class="border px-2 py-2 italic text-xs" colspan="3">Thank you for your business!</td>
-                <td class="border px-2 py-2 font-bold text-xs" colspan="2">Total</td>
-                <td class="border px-2 py-2 text-right text-xs">
+                <td class="border border-gray-800 px-2 py-2 italic text-xs" colspan="3">Thank you for your business!</td>
+                <td class="border border-gray-800 px-2 py-2 font-bold text-xs" colspan="2">Total</td>
+                <td class="border border-gray-800 px-2 py-2 text-right text-xs">
                     $ {{$assignment->payment_info['invoice_amount']??"     -"}}</td>
             </tr>
             <!-- Repeat for each item -->
@@ -97,15 +97,15 @@
             <table class="w-full border border-gray-800 text-left table table-auto">
                 <thead>
                 <tr class="bg-gray-300 text-sm border-gray-800">
-                    <th class="px-4 py-2 text-xs">Date</th>
-                    <th class="px-4 py-2 text-xs text-right">Amount</th>
+                    <th class="px-4 py-2 text-xs border-gray-800 border">Date</th>
+                    <th class="px-4 py-2 text-xs text-right border-gray-800 border">Amount</th>
                 </tr>
                 </thead>
                 <tbody class="text-xs border-gray-800">
                 @foreach($assignment->payments()->get() as $payment)
-                    <tr class="border-gray-800">
-                        <td class="border px-2 py-2 text-xs">{{\Carbon\Carbon::parse($payment->date)->format('d M Y')}}</td>
-                        <td class="border px-2 py-2 text-xs text-right">$ {{number_format($payment->amount,2)}}</td>
+                    <tr class="">
+                        <td class="border px-2 border-gray-800 py-2 text-xs">{{\Carbon\Carbon::parse($payment->date)->format('d M Y')}}</td>
+                        <td class="border px-2 border-gray-800 py-2 text-xs text-right">$ {{number_format($payment->amount,2)}}</td>
                     </tr>
                 @endforeach
                 </tbody>
