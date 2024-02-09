@@ -18,7 +18,7 @@ class AssignmentTable extends BaseWidget
     public function table(Table $table): Table
     {
         return $table
-            ->query(Assignment::query()->latest()->take(5))
+            ->query(Assignment::query()->orderBy('due_date')->take(5))
             ->columns([
                 Tables\Columns\TextColumn::make('client'),
                 Tables\Columns\TextColumn::make('inspection_type')
@@ -28,7 +28,7 @@ class AssignmentTable extends BaseWidget
                 }),
                 Tables\Columns\TextColumn::make('start_date'),
                 Tables\Columns\TextColumn::make('due_date')
-                ->formatStateUsing(fn($state) => Carbon::parse($state)->diffForHumans()),
+                ->since(),
                 Tables\Columns\TextColumn::make('property_name'),
                 Tables\Columns\TextColumn::make('loan_number'),
                 Tables\Columns\TextColumn::make('city'),
