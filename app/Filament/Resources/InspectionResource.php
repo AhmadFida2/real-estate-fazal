@@ -65,7 +65,6 @@ class InspectionResource extends Resource
                 Tables\Columns\TextColumn::make('name')
                     ->label('Propety Name')
                     ->searchable(),
-
                 Tables\Columns\TextColumn::make('city')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('zip')
@@ -75,6 +74,9 @@ class InspectionResource extends Resource
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('rating_scale')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('user.name')->label('Inspector Name')
+                    ->visible(auth()->user()->is_admin)
                     ->searchable(),
                 Tables\Columns\TextColumn::make('inspection_date')
                     ->dateTime()
