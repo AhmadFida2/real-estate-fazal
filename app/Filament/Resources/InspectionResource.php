@@ -102,39 +102,8 @@ class InspectionResource extends Resource
                             ->body('You will be notified once its done.')
                             ->info()
                             ->send();
-
-                        $data = new \App\Http\Resources\InspectionResource($record);
-                        $data = $data->toJson();
-                        $d_file = Str::random(10) . '.txt';
-                        Storage::disk('public')->put($d_file, $data);
-                        $path = Storage::disk('local')->path('test.py') . " " . $d_file;
-                        exec("python3 $path", $output);
-                        $user = auth()->user();
-                        $fname = $output[0];
-                        Storage::disk('public')->delete($d_file);
-                        if ($fname == 'error') {
-                            Notification::make()
-                                ->title('File Generate Failed.')
-                                ->danger()
-                                ->send();
-                        } else {
-                            Notification::make()
-                                ->title('File Generated')
-                                ->success()
-                                ->body(Markdown::inline('The requested Excel file is ready for download. **Once downloaded, file will be deleted from server.**'))
-                                ->actions([
-                                    Action::make('download')
-                                        ->button()
-                                        ->url('/excel-download/' . $fname)
-                                        ->extraAttributes(['x-on:click' => 'close'])
-                                ])
-                                ->sendToDatabase($user);
-                            event(new DatabaseNotificationsSent($user));
-
-                        }
-
-                    })
-                ,
+                        $livewire->dispatch('genExcel',$record);
+                        }),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
