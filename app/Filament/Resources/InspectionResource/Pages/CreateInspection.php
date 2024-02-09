@@ -56,6 +56,11 @@ class CreateInspection extends CreateRecord
         return $data;
     }
 
+    protected function afterCreate() :void
+    {
+        Cache::add('daily_inspections', 0, now()->endOfDay());
+        Cache::increment('daily_inspections');
+    }
     protected function afterFill(): void
     {
         $data = [];

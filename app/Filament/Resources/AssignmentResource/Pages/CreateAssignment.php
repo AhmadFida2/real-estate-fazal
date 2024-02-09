@@ -8,6 +8,7 @@ use Filament\Actions;
 use Filament\Notifications\Actions\Action;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\CreateRecord;
+use Illuminate\Support\Facades\Cache;
 
 class CreateAssignment extends CreateRecord
 {
@@ -24,6 +25,8 @@ class CreateAssignment extends CreateRecord
                 Action::make('view')
                 ->url(AssignmentResource::getUrl())
             ])->sendToDatabase($user);
+        Cache::add('daily_assignments', 0, now()->endOfDay());
+        Cache::increment('daily_assignments');
     }
 
 }

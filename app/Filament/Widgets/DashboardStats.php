@@ -7,6 +7,7 @@ use App\Models\Inspection;
 use App\Models\User;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
+use Illuminate\Support\Facades\Cache;
 
 class DashboardStats extends BaseWidget
 {
@@ -27,6 +28,15 @@ class DashboardStats extends BaseWidget
                     ->description('Total Inspections in Database')
                     ->descriptionIcon('heroicon-m-arrow-trending-up')
                     ->color('primary'),
+                Stat::make('Inspections Today', Cache::get('daily_inspections',0))
+                    ->description('Inspections Created Today')
+                    ->descriptionIcon('heroicon-m-document-check')
+                    ->color('warning'),
+                Stat::make('Assignments Today', Cache::get('daily_assignments',0))
+                    ->description('Assignments Given Today')
+                    ->descriptionIcon('heroicon-m-clock')
+                    ->color('secondary'),
+
             ];
         }
         else
