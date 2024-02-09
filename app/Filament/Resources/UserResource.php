@@ -36,7 +36,7 @@ class UserResource extends Resource
                             Forms\Components\TextInput::make('password')
                                 ->required()
                                 ->dehydrateStateUsing(fn($state) => Hash::make($state)),
-                        ])->grow(),
+                        ]),
                     Forms\Components\Section::make('Privileges')
                         ->columns(1)
                         ->schema([
@@ -44,7 +44,7 @@ class UserResource extends Resource
                                 ->required(),
                             Forms\Components\Toggle::make('is_active')->label('Active')
                                 ->required(),
-                        ])
+                        ])->grow(false)
                 ]),
 
 
