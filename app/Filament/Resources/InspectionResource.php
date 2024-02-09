@@ -1263,8 +1263,7 @@ short-term (<1 month) rentals generally marketed through an online platform such
                         TextInput::make('address_2'),
                         TextInput::make('city'),
                         TextInput::make('state')
-                            ->label('State')
-                            ->numeric(),
+                            ->label('State'),
                         TextInput::make('zip'),
 //                        TextInput::make('country'),
                     ]),
