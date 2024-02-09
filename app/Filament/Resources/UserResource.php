@@ -42,9 +42,14 @@ class UserResource extends Resource
                         ->columns(1)
                         ->schema([
                             Forms\Components\Toggle::make('is_admin')->label('Admin')
-                                ->required(),
+                                ->required()
+                                ->onIcon('heroicon-m-bolt')
+                                ->offIcon('heroicon-m-user'),
                             Forms\Components\Toggle::make('is_active')->label('Active')
-                                ->required(),
+                                ->onIcon('heroicon-m-check')
+                                ->offIcon('heroicon-m-x-mark')
+                                ->required()
+                                ->default(true),
                         ])->grow(false)
                 ])->columnSpanFull()->from('md'),
 
