@@ -26,7 +26,6 @@ class UserResource extends Resource
             ->schema([
                 Forms\Components\Split::make([
                     Forms\Components\Section::make('Basic Info')
-                        ->columns(3)
                         ->schema([
                             Forms\Components\TextInput::make('name')
                                 ->required()
@@ -39,7 +38,7 @@ class UserResource extends Resource
                                 ->dehydrateStateUsing(fn($state) => Hash::make($state)),
                         ]),
                     Forms\Components\Section::make('Privileges')
-                        ->columns(3)
+                        ->columns(1)
                         ->schema([
                             Forms\Components\Toggle::make('is_admin')->label('Admin')
                                 ->required(),
