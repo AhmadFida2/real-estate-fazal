@@ -35,7 +35,7 @@ class AssignmentTable extends BaseWidget
                 Tables\Columns\TextColumn::make('state'),
                 Tables\Columns\TextColumn::make('zip'),
             ])->recordClasses(fn($record)=> match (Carbon::parse($record->due_date)->isPast()){
-                true => 'border-s-2 border-orange-600 dark:border-orange-300',
+                true => 'bg-red-300',
                 false => null
             });
 
