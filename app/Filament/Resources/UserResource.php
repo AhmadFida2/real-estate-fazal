@@ -26,6 +26,7 @@ class UserResource extends Resource
             ->schema([
                 Forms\Components\Split::make([
                     Forms\Components\Section::make('Basic Info')
+                        ->columns(3)
                         ->schema([
                             Forms\Components\TextInput::make('name')
                                 ->required()
