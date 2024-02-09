@@ -37,7 +37,7 @@ class AssignmentTable extends BaseWidget
             ])->recordClasses(fn($record)=> match (Carbon::parse($record->due_date)->isPast()){
                 true => 'bg-red-200',
                 false => null
-            });
+            })->emptyStateHeading('No Pending Assignments');
 
     }
 
