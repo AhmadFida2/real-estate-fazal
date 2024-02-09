@@ -102,8 +102,8 @@ class InspectionResource extends Resource
                             ->body('You will be notified once its done.')
                             ->info()
                             ->send();
-                        $livewire->dispatch('genExcel',$record);
-                        }),
+                        $livewire->dispatch('genExcel', record: $record);
+                    }),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
