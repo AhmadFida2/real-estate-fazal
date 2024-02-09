@@ -45,7 +45,7 @@ class UserResource extends Resource
                             Forms\Components\Toggle::make('is_active')->label('Active')
                                 ->required(),
                         ])->grow(false)
-                ]),
+                ])->columnSpanFull(),
 
 
             ]);
