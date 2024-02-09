@@ -10,7 +10,7 @@ use Filament\Widgets\TableWidget as BaseWidget;
 
 class AssignmentTable extends BaseWidget
 {
-    protected static ?string $heading = 'Upcoming Assignments';
+    protected static ?string $heading = 'Pending Assignments';
     protected int | string | array $columnSpan = 'full';
 
     protected static ?int $sort = 1;
@@ -18,7 +18,7 @@ class AssignmentTable extends BaseWidget
     public function table(Table $table): Table
     {
         return $table
-            ->query(Assignment::query()->orderBy('due_date')->take(5))
+            ->query(Assignment::query()->where('is_completed',false)->orderBy('due_date')->take(5))
             ->columns([
                 Tables\Columns\TextColumn::make('client'),
                 Tables\Columns\TextColumn::make('inspection_type')
