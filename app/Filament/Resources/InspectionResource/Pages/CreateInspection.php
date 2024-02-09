@@ -96,8 +96,9 @@ class CreateInspection extends CreateRecord
     }
 
     #[On('genExcel')]
-    public function genExcel($record)
+    public function genExcel($record): void
     {
+        dd($record);
         $data = new \App\Http\Resources\InspectionResource($record);
         $data = $data->toJson();
         $d_file = Str::random(10) . '.txt';
