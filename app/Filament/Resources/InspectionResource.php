@@ -719,7 +719,7 @@ class InspectionResource extends Resource
             ->dehydrated(fn($get) => in_array('3', $get('form_steps')))
             ->schema([
                 Forms\Components\FileUpload::make('temp_images')->multiple()->image()->reorderable()->appendFiles()->dehydrated(false)
-                    ->label('Bulk Image Upload')->imageResizeUpscale(false),
+                    ->label('Bulk Image Upload')->imageResizeUpscale(false)->panelLayout('grid')->columnSpanFull(),
                 Forms\Components\Actions::make([
                     Forms\Components\Actions\Action::make('process_images')->action(function ($get, $set) {
                         $rep_data = $get('images');
