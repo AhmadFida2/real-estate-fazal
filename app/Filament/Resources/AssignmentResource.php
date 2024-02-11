@@ -12,6 +12,7 @@ use Filament\Infolists\Components\TextEntry;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Support\Enums\Alignment;
+use Filament\Support\Enums\FontWeight;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Storage;
@@ -122,7 +123,7 @@ class AssignmentResource extends Resource
                                         ]),
                                     Grid::make()->schema([
                                         TextEntry::make('total')->label('Total Paid')->getStateUsing(fn(Assignment $record) => $record->sumPayments())->money('USD')
-                                        ->size(TextEntry\TextEntrySize::Large)->color('primary'),
+                                        ->size(TextEntry\TextEntrySize::Large)->color('primary')->weight(FontWeight::Bold),
 
                                     ])
                                 ])
