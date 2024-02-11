@@ -25,7 +25,7 @@ class ListInspections extends ListRecords
         ];
     }
 
-    #[On('test-event')]
+    #[On('gen-excel')]
     public function test($id): void
     {
         $data = new \App\Http\Resources\InspectionResource(Inspection::find($id));

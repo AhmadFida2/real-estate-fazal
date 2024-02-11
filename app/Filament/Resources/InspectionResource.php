@@ -102,7 +102,7 @@ class InspectionResource extends Resource
                             ->body('You will be notified once its done.')
                             ->info()
                             ->send();
-                        $livewire->dispatch('test-event', id: $record->id);
+                        $livewire->dispatch('gen-excel', id: $record->id);
 
                     })
 
