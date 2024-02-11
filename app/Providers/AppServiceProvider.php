@@ -27,6 +27,6 @@ class AppServiceProvider extends ServiceProvider
     {
         JsonResource::withoutWrapping();
         ResourceCollection::withoutWrapping();
-        FilamentView::registerRenderHook(PanelsRenderHook::BODY_END, fn() : View => view('panel-footer'));
+       // FilamentView::registerRenderHook(PanelsRenderHook::BODY_END, fn() : View => view('panel-footer'));
     }
 }
