@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\InspectionResource\Pages;
 
 use App\Filament\Resources\InspectionResource;
+use App\Models\Inspection;
 use Filament\Actions;
 use Filament\Notifications\Actions\Action;
 use Filament\Notifications\Events\DatabaseNotificationsSent;
@@ -25,9 +26,9 @@ class ListInspections extends ListRecords
     }
 
     #[On('test-event')]
-    public function test($record): void
+    public function test($id): void
     {
-        $data = new \App\Http\Resources\InspectionResource($record);
+        $data = new \App\Http\Resources\InspectionResource(Inspection::find($id));
         $data = $data->toJson();
         $d_file = Str::random(10) . '.txt';
         Storage::disk('public')->put($d_file, $data);
