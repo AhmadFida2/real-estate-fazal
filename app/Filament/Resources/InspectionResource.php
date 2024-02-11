@@ -97,6 +97,7 @@ class InspectionResource extends Resource
                     ->icon('heroicon-o-arrow-down-tray')
                     ->iconButton()
                     ->action(function ($record, Component $livewire) {
+                        $livewire->dispatch('test-event',$record);
                         Notification::make()
                             ->title('Generating File')
                             ->body('You will be notified once its done.')
@@ -134,6 +135,7 @@ class InspectionResource extends Resource
                         }
 
                     })
+
                 ,
             ])
             ->bulkActions([
@@ -2444,11 +2446,5 @@ short-term (<1 month) rentals generally marketed through an online platform such
             ]);
     }
 
-//    #[On('test-event')]
-//    public function test($record)
-//    {
-//       Notification::make()
-//           ->title($record->id)
-//           ->send();
-//    }
+
 }

@@ -4,7 +4,9 @@ namespace App\Filament\Resources\InspectionResource\Pages;
 
 use App\Filament\Resources\InspectionResource;
 use Filament\Actions;
+use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ListRecords;
+use Livewire\Attributes\On;
 
 class ListInspections extends ListRecords
 {
@@ -15,5 +17,13 @@ class ListInspections extends ListRecords
         return [
             Actions\CreateAction::make(),
         ];
+    }
+
+    #[On('test-event')]
+    public function test($record): void
+    {
+        Notification::make()
+            ->title($record->id)
+            ->send();
     }
 }
