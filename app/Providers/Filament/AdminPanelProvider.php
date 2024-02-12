@@ -10,6 +10,7 @@ use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
+use Filament\Support\Enums\MaxWidth;
 use Filament\Widgets;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
@@ -33,7 +34,7 @@ class AdminPanelProvider extends PanelProvider
             ->topNavigation()
             ->databaseNotifications()
             ->databaseNotificationsPolling(null)
-            ->maxContentWidth('full')
+            ->maxContentWidth(MaxWidth::SixExtraLarge)
             ->sidebarCollapsibleOnDesktop()
             ->sidebarFullyCollapsibleOnDesktop()
             ->colors([
