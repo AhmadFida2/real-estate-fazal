@@ -28,11 +28,6 @@ class ListInspections extends ListRecords
     #[On('gen-excel')]
     public function test($id): void
     {
-        Notification::make()
-            ->title('Generating File')
-            ->body('You will be notified once its done.')
-            ->info()
-            ->send();
         $data = new \App\Http\Resources\InspectionResource(Inspection::find($id));
         $data = $data->toJson();
         $d_file = Str::random(10) . '.txt';
