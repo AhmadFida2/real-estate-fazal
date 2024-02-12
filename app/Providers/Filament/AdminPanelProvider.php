@@ -29,6 +29,7 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->login()
             ->profile(UserProfile::class)
+            ->passwordReset()
             ->topNavigation()
             ->databaseNotifications()
             ->databaseNotificationsPolling(null)
