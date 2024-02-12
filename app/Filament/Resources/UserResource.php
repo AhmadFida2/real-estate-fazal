@@ -8,6 +8,7 @@ use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
+use Filament\Support\Markdown;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Hash;
@@ -72,7 +73,6 @@ class UserResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make()->iconButton(),
-                Tables\Actions\DeleteAction::make()->iconButton(),
                 Tables\Actions\Action::make('reset_password')->iconButton()
                     ->icon('heroicon-o-key')
                     ->color('warning')
@@ -83,7 +83,9 @@ class UserResource extends Resource
                         Notification::make()->title('Password Reset')
                             ->body('New Password: ' . $pass)->persistent()->info()->send();
                     })->requiresConfirmation()->modalHeading('Reset Password')
-                    ->modalDescription(fn($record) => 'Are you sure to Reset the Password of ' . $record->name)
+                    ->modalDescription(fn($record) => Markdown::inline('Are you sure to reset the Password of **' . $record->name . '**')),
+                Tables\Actions\DeleteAction::make()->iconButton(),
+
             ])
             ->bulkActions([
             ]);
