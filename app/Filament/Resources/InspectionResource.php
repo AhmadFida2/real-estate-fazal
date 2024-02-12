@@ -103,7 +103,7 @@ class InspectionResource extends Resource
                             ->info()
                             ->send();
                         // $livewire->dispatch('gen-excel', id: $record->id);
-                    })->dispatch('gen-excel', fn($record) => $record->id)
+                    })->dispatch('gen-excel', fn($record) => ['id' => $record->id])
 
                 ,
             ])
