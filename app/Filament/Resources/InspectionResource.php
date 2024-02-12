@@ -96,16 +96,7 @@ class InspectionResource extends Resource
                 Tables\Actions\Action::make('download')
                     ->icon('heroicon-o-arrow-down-tray')
                     ->iconButton()
-                    ->action(function () {
-                        Notification::make()
-                            ->title('Generating File')
-                            ->body('You will be notified once its done.')
-                            ->info()
-                            ->send();
-                        // $livewire->dispatch('gen-excel', id: $record->id);
-                    })->dispatch('gen-excel', fn($record) => ['id' => $record->id])
-
-                ,
+                    ->dispatch('gen-excel', fn($record) => ['id' => $record->id])
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
