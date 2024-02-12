@@ -81,7 +81,8 @@ class UserResource extends Resource
                         $record->save();
                         Notification::make()->title('Password Reset')
                             ->body('New Password: ' . $pass)->persistent()->info()->send();
-                    })
+                    })->requiresConfirmation()->modalHeading('Reset Password')
+                    ->modalDescription(fn($record) => 'Are you sure to Reset the Password of ' . $record->name)
             ])
             ->bulkActions([
             ]);
