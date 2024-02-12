@@ -36,7 +36,8 @@ class UserResource extends Resource
                             Forms\Components\TextInput::make('email')
                                 ->email()
                                 ->required(),
-                            Forms\Components\TextInput::make('password')->password()->revealable()
+                            Forms\Components\TextInput::make('password')
+                                ->password()->revealable()->autocomplete(false)
                         ]),
                     Forms\Components\Section::make('Privileges')
                         ->columns(1)
