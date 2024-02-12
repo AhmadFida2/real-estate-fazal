@@ -724,9 +724,7 @@ class InspectionResource extends Resource
                         $set('temp_key', $key);
                         $set('images', $rep_data);
                     })
-                ])->alignCenter()->verticallyAlignCenter()->extraAttributes([
-                    'form' => 'submit'
-                ]),
+                ])->alignCenter()->verticallyAlignCenter(),
                 Repeater::make('images')
                     ->grid(4)
                     ->addable(false)
@@ -734,7 +732,7 @@ class InspectionResource extends Resource
                     ->columnSpanFull()
                     ->columns(1)
                     ->schema([
-                        Forms\Components\FileUpload::make('photo_url')->label('Photo')->deletable(false)->disk('s3'),
+                        Forms\Components\FileUpload::make('photo_url')->label('Photo')->deletable(false)->disk('s3')->fetchFileInformation(false),
                         Select::make('photo_type')->label('Photo Type')
                             ->options(['Exterior' => 'Exterior', 'Interior' => 'Interior', 'Roof' => 'Roof', 'Neighborhood' => 'Neighborhood', 'Routine Maintenance' => 'Routine Maintenance', 'Deferred Maintenance' => 'Deferred Maintenance', 'Life Safety' => 'Life Safety']),
                         Textarea::make('photo_description')->label('Photo Description'),
