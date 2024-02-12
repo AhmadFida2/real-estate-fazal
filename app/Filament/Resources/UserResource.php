@@ -36,8 +36,7 @@ class UserResource extends Resource
                             Forms\Components\TextInput::make('email')
                                 ->email()
                                 ->required(),
-                            Forms\Components\TextInput::make('password')
-                                ->dehydrateStateUsing(fn($state) => Hash::make($state)),
+                            Forms\Components\TextInput::make('password')->password()->revealable()
                         ]),
                     Forms\Components\Section::make('Privileges')
                         ->columns(1)
