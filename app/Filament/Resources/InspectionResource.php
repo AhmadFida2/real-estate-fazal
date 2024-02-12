@@ -725,7 +725,6 @@ class InspectionResource extends Resource
                         $set('images', $rep_data);
                     })
                 ])->alignCenter()->verticallyAlignCenter()->extraAttributes([
-                    'wire:loading.attr' => "disabled",
                     'form' => 'submit'
                 ]),
                 Repeater::make('images')
