@@ -34,7 +34,6 @@ class AdminPanelProvider extends PanelProvider
             ->topNavigation()
             ->databaseNotifications()
             ->databaseNotificationsPolling(null)
-            ->maxContentWidth(MaxWidth::SixExtraLarge)
             ->sidebarCollapsibleOnDesktop()
             ->sidebarFullyCollapsibleOnDesktop()
             ->colors([
