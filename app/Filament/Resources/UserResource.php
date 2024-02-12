@@ -81,7 +81,7 @@ class UserResource extends Resource
                         $record->password = Hash::make($pass);
                         $record->save();
                         Notification::make()->title('Password Reset')
-                            ->body('New Password: ' . $pass)->persistent()->info()->send();
+                            ->body(Markdown::inline('New Password: **' . $pass . '**'))->persistent()->info()->send();
                     })->requiresConfirmation()->modalHeading('Reset Password')
                     ->modalDescription(fn($record) => Markdown::inline('Are you sure to reset the Password of **' . $record->name . '**')),
                 Tables\Actions\DeleteAction::make()->iconButton(),
