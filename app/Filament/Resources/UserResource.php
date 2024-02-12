@@ -75,6 +75,7 @@ class UserResource extends Resource
                 Tables\Actions\DeleteAction::make()->iconButton(),
                 Tables\Actions\Action::make('reset_password')->iconButton()
                     ->icon('heroicon-o-key')
+                    ->color('warning')
                     ->action(function (User $record) {
                         $pass = \Illuminate\Support\Str::random(10);
                         $record->password = Hash::make($pass);
