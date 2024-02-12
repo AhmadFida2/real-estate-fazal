@@ -5,8 +5,10 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\UserResource\Pages;
 use App\Filament\Resources\UserResource\RelationManagers;
 use App\Models\User;
+use Dotenv\Util\Str;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -35,7 +37,6 @@ class UserResource extends Resource
                                 ->email()
                                 ->required(),
                             Forms\Components\TextInput::make('password')
-                                ->required()
                                 ->dehydrateStateUsing(fn($state) => Hash::make($state)),
                         ]),
                     Forms\Components\Section::make('Privileges')
@@ -74,7 +75,17 @@ class UserResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()->iconButton(),
+                Tables\Actions\DeleteAction::make()->iconButton(),
+                Tables\Actions\Action::make('reset_password')->iconButton()
+                    ->icon('heroicon-o-key')
+                    ->action(function (User $record) {
+                        $pass = \Illuminate\Support\Str::random(10);
+                        $record->password = Hash::make($pass);
+                        $record->save();
+                        Notification::make()->title('Password Reset')
+                            ->body('New Password: ' . $pass)->persistent()->info()->send();
+                    })
             ])
             ->bulkActions([
             ]);
