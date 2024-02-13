@@ -73,7 +73,7 @@ class UserResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make()->iconButton(),
-                Tables\Actions\Action::make('reset_password')->iconButton()
+                Tables\Actions\Action::make('reset_password')->iconButton()->visible(fn($record) => $record->id > 1)
                     ->icon('heroicon-o-key')
                     ->color('warning')
                     ->action(function (User $record) {
@@ -84,7 +84,7 @@ class UserResource extends Resource
                             ->body(Markdown::inline('New Password: **' . $pass . '**'))->persistent()->info()->send();
                     })->requiresConfirmation()->modalHeading('Reset Password')
                     ->modalDescription(fn($record) => Markdown::inline('Are you sure you want to reset the Password of **' . $record->name . '**')),
-                Tables\Actions\DeleteAction::make()->iconButton(),
+                Tables\Actions\DeleteAction::make()->iconButton()->visible(fn($record) => $record->id > 1),
 
             ])
             ->bulkActions([

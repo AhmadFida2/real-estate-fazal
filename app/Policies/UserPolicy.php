@@ -36,7 +36,7 @@ class UserPolicy
      */
     public function update(User $user, User $model): bool
     {
-        return $user->is_admin;
+        return $user->is_admin && $model->id != 1;
     }
 
     /**
@@ -44,7 +44,7 @@ class UserPolicy
      */
     public function delete(User $user, User $model): bool
     {
-        return $user->is_admin;
+        return $user->is_admin && $model->id != 1;
     }
 
     /**
