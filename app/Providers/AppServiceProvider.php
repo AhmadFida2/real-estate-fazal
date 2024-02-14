@@ -2,13 +2,10 @@
 
 namespace App\Providers;
 
-use Filament\Support\Facades\FilamentView;
-use Filament\View\PanelsRenderHook;
-use Illuminate\Contracts\View\View;
+
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Support\ServiceProvider;
-use Spatie\Browsershot\Browsershot;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -27,6 +24,5 @@ class AppServiceProvider extends ServiceProvider
     {
         JsonResource::withoutWrapping();
         ResourceCollection::withoutWrapping();
-       // FilamentView::registerRenderHook(PanelsRenderHook::BODY_END, fn() : View => view('panel-footer'));
     }
 }
