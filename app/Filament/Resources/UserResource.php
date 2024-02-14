@@ -12,7 +12,6 @@ use Filament\Support\Markdown;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Hash;
-use Livewire\Component;
 
 class UserResource extends Resource
 {
@@ -77,7 +76,7 @@ class UserResource extends Resource
                 Tables\Actions\Action::make('reset_password')->iconButton()->visible(fn($record) => $record->id > 1)
                     ->icon('heroicon-o-key')
                     ->color('warning')
-                    ->action(function (User $record, Component $livewire) {
+                    ->action(function (User $record) {
                         $pass = \Illuminate\Support\Str::random(10);
                         $record->password = Hash::make($pass);
                         $record->save();
