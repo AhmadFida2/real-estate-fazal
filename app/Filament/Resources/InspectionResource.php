@@ -214,7 +214,8 @@ class InspectionResource extends Resource
                 TextInput::make('overall_rating')
                     ->required()
                     ->label('Overall Rating')
-                    ->numeric(),
+                    ->numeric()
+                    ->minValue(0),
                 Select::make('rating_scale')
                     ->required()
                     ->label('Rating Scale')
@@ -266,10 +267,12 @@ class InspectionResource extends Resource
                         TextInput::make('original_loan_amount')
                             ->label('Original Loan Amount')
                             ->numeric()
+                            ->minValue(0)
                             ->inputMode('decimal'),
                         TextInput::make('loan_balance')
                             ->label('Loan Balance')
                             ->numeric()
+                            ->minValue(0)
                             ->inputMode('decimal'),
                         Forms\Components\DatePicker::make('loan_balance_date')
                             ->label('Loan Balance Date')
@@ -391,21 +394,29 @@ class InspectionResource extends Resource
                     ->statePath('profile_occupancy_info')
                     ->schema([
                         TextInput::make('number_of_buildings')
-                            ->label('Number of Buildings')->numeric(),
+                            ->label('Number of Buildings')->numeric()
+                            ->minValue(0),
                         TextInput::make('number_of_floors')
-                            ->label('Number of Floors')->numeric(),
+                            ->label('Number of Floors')->numeric()
+                            ->minValue(0),
                         TextInput::make('number_of_elevators')
-                            ->label('Number of Elevators')->numeric(),
+                            ->label('Number of Elevators')->numeric()
+                            ->minValue(0),
                         TextInput::make('number_of_parking_spaces')
-                            ->label('Number of Parking Spaces')->numeric(),
+                            ->label('Number of Parking Spaces')->numeric()
+                            ->minValue(0),
                         TextInput::make('year_built')
-                            ->label('Year Built')->numeric(),
+                            ->label('Year Built')->numeric()
+                            ->minValue(0),
                         TextInput::make('year_renovated')
-                            ->label('Year Renovated')->numeric(),
+                            ->label('Year Renovated')->numeric()
+                            ->minValue(0),
                         TextInput::make('annual_occupancy')
-                            ->label('Annual Occupancy')->numeric(),
+                            ->label('Annual Occupancy')->numeric()
+                            ->minValue(0),
                         TextInput::make('annual_turnover')
-                            ->label('Annual Turnover')->numeric(),
+                            ->label('Annual Turnover')->numeric()
+                            ->minValue(0),
                         Select::make('rent_roll_obtained')
                             ->label('Rent Roll Obtained')
                             ->options(['Yes' => 'Yes', 'No' => 'No']),
@@ -417,19 +428,26 @@ class InspectionResource extends Resource
                         Select::make('unit_of_measurement_used')
                             ->label('Units of Measurement Used')
                             ->options(['Units' => 'Units', 'Rooms' => 'Rooms', 'Beds' => 'Beds', 'Sq. Feet' => 'Sq. Feet']),
-                        TextInput::make('num_of_rooms')->label('Number of Units/Rooms/Beds')->numeric(),
+                        TextInput::make('num_of_rooms')->label('Number of Units/Rooms/Beds')->numeric()
+                            ->minValue(0),
                         TextInput::make('occupied_space')
-                            ->label('Occupied Space')->numeric(),
+                            ->label('Occupied Space')->numeric()
+                            ->minValue(0),
                         TextInput::make('vacant_space')
-                            ->label('Vacant Space')->numeric(),
+                            ->label('Vacant Space')->numeric()
+                            ->minValue(0),
                         TextInput::make('occupied_units_inspected')
-                            ->label('Occupied Units Inspected')->numeric(),
+                            ->label('Occupied Units Inspected')->numeric()
+                            ->minValue(0),
                         TextInput::make('vacant_units_inspected')
-                            ->label('Vacant Units Inspected')->numeric(),
+                            ->label('Vacant Units Inspected')->numeric()
+                            ->minValue(0),
                         TextInput::make('total_sq_feet_gross')
-                            ->label('Total Sq. Feet (Gross)')->numeric(),
+                            ->label('Total Sq. Feet (Gross)')->numeric()
+                            ->minValue(0),
                         TextInput::make('total_sq_feet_net')
-                            ->label('Total Sq. Feet (Net)')->numeric(),
+                            ->label('Total Sq. Feet (Net)')->numeric()
+                            ->minValue(0),
                         Select::make('dark_space')
                             ->label('Is there any Dark Space?')
                             ->options(['Yes' => 'Yes', 'No' => 'No', 'Not Applicable' => 'Not Applicable', 'Unknown' => 'Unknown']),
@@ -438,7 +456,8 @@ class InspectionResource extends Resource
                             ->options(['Yes' => 'Yes', 'No' => 'No'])->live(),
                         TextInput::make('num_of_down_units')
                             ->label('Number of Down Units/Rooms/Beds')
-                            ->default(0)->numeric()->visible(fn($get) => $get('down_space') == 'Yes')->reactive(),
+                            ->default(0)->numeric()
+                            ->minValue(0)->visible(fn($get) => $get('down_space') == 'Yes')->reactive(),
                         Textarea::make('dark_down_space_description')
                             ->label('Describe Dark/Down Space If Any')
                         ,
@@ -483,7 +502,8 @@ class InspectionResource extends Resource
                                 TextInput::make('repair_description')
                                     ->label('Repair Description'),
                                 TextInput::make('identified_cost')
-                                    ->label('Identified Cost')->numeric()->inputMode('decimal'),
+                                    ->label('Identified Cost')->numeric()
+                                    ->minValue(0)->inputMode('decimal'),
                                 Select::make('status')
                                     ->options(['Completed' => 'Completed', 'In-Progress' => 'In-Progress', 'Planned' => 'Planned']),
                             ]),
@@ -783,9 +803,11 @@ class InspectionResource extends Resource
                                     ->schema([
                                         TextInput::make('tenant_name')->label('Tenant Name'),
                                         TextInput::make('expiration')->label('Expiration'),
-                                        TextInput::make('sq_ft')->prefix('$')->label('Sq. Ft.')->default(0)->numeric()->live(onBlur: true)->afterStateUpdated(fn($set, $get, $state) => $set('rent_per_sqft', number_format($get('annual_rent') / $state))),
+                                        TextInput::make('sq_ft')->prefix('$')->label('Sq. Ft.')->default(0)->numeric()
+                                            ->minValue(0)->live(onBlur: true)->afterStateUpdated(fn($set, $get, $state) => $set('rent_per_sqft', number_format($get('annual_rent') / $state))),
                                         TextInput::make('nra_percentage')->label('% NRA'),
-                                        TextInput::make('annual_rent')->prefix('$')->label('Annual Rent')->default(0)->live(onBlur: true)->numeric()->inputMode('decimal')->afterStateUpdated(fn($set, $get, $state) => $set('rent_per_sqft', number_format($state / $get('sq_ft'), 2))),
+                                        TextInput::make('annual_rent')->prefix('$')->label('Annual Rent')->default(0)->live(onBlur: true)->numeric()
+                                            ->minValue(0)->inputMode('decimal')->afterStateUpdated(fn($set, $get, $state) => $set('rent_per_sqft', number_format($state / $get('sq_ft'), 2))),
                                         TextInput::make('rent_per_sqft')->prefix('$')->label('Rent / Sq. Ft.')->readOnly()
                                     ])
                             ])
@@ -871,9 +893,11 @@ class InspectionResource extends Resource
                                     Forms\Components\DatePicker::make('Date of last rental increase')
                                         ->label('Date of last rental increase'),
                                     TextInput::make('Number of Administration Employees')
-                                        ->label('Number of Administration Employees')->numeric(),
+                                        ->label('Number of Administration Employees')->numeric()
+                                        ->minValue(0),
                                     TextInput::make('Number of Maintenance Employees')
-                                        ->label('Number of Maintenance Employees')->numeric(),
+                                        ->label('Number of Maintenance Employees')->numeric()
+                                        ->minValue(0),
                                     Select::make('Heat at the Property')
                                         ->label('Heat at the Property')
                                         ->options([
@@ -1034,10 +1058,12 @@ short-term (<1 month) rentals generally marketed through an online platform such
                                 ->options(['Yes' => 'Yes', 'No' => 'No', 'Unknown' => 'Unknown']),
                             TextInput::make('num_commercial_units')
                                 ->label('If yes, how many?')
-                                ->numeric(),
+                                ->numeric()
+                                ->minValue(0),
                             TextInput::make('commercial_units_inspected')
                                 ->label('Number Commercial units Inspected:')
-                                ->numeric(),
+                                ->numeric()
+                                ->minValue(0),
                         ]),
                     Section::make('Multifamily Unit Breakdown')
                         ->statePath('multifamily_unit_breakdown')
@@ -1046,25 +1072,35 @@ short-term (<1 month) rentals generally marketed through an online platform such
                                 ->columns(10)
                                 ->schema([
                                     TextInput::make('bedrooms')
-                                        ->numeric(),
+                                        ->numeric()
+                                        ->minValue(0),
                                     TextInput::make('baths')
-                                        ->numeric(),
+                                        ->numeric()
+                                        ->minValue(0),
                                     TextInput::make('num_of_units')
-                                        ->numeric(),
+                                        ->numeric()
+                                        ->minValue(0),
                                     TextInput::make('avg_sqft_unit')
-                                        ->numeric(),
+                                        ->numeric()
+                                        ->minValue(0),
                                     TextInput::make('avg_rent')
-                                        ->numeric()->inputMode('decimal'),
+                                        ->numeric()
+                                        ->minValue(0)->inputMode('decimal'),
                                     TextInput::make('occupied')
-                                        ->numeric(),
+                                        ->numeric()
+                                        ->minValue(0),
                                     TextInput::make('non-revenue')
-                                        ->numeric(),
+                                        ->numeric()
+                                        ->minValue(0),
                                     TextInput::make('vacant')
-                                        ->numeric(),
+                                        ->numeric()
+                                        ->minValue(0),
                                     TextInput::make('down')
-                                        ->numeric(),
+                                        ->numeric()
+                                        ->minValue(0),
                                     TextInput::make('inspected')
-                                        ->numeric(),
+                                        ->numeric()
+                                        ->minValue(0),
                                 ])
                         ]),
                     Section::make('Detailed Report of Units Inspected')
@@ -1075,13 +1111,17 @@ short-term (<1 month) rentals generally marketed through an online platform such
                                 ->schema([
                                     TextInput::make('unit_no'),
                                     TextInput::make('bedrooms')
-                                        ->numeric(),
+                                        ->numeric()
+                                        ->minValue(0),
                                     TextInput::make('baths')
-                                        ->numeric(),
+                                        ->numeric()
+                                        ->minValue(0),
                                     TextInput::make('square_feet')
-                                        ->numeric(),
+                                        ->numeric()
+                                        ->minValue(0),
                                     TextInput::make('asking_rent')
-                                        ->numeric()->inputMode('decimal'),
+                                        ->numeric()
+                                        ->minValue(0)->inputMode('decimal'),
                                     TextInput::make('current_use'),
                                     TextInput::make('overall_condition')
                                 ]),
@@ -1282,9 +1322,11 @@ short-term (<1 month) rentals generally marketed through an online platform such
                     ->columns()
                     ->schema([
                         TextInput::make('expected_percentage_complete')->label('Expected percentage completed')
-                            ->numeric()->suffix('%')->maxValue(100),
+                            ->numeric()
+                            ->minValue(0)->maxValue(100)->suffix('%')->maxValue(100),
                         TextInput::make('overall_observed_percentage_complete')->label('Overall observed percentage completed')
-                            ->numeric()->suffix('%')->maxValue(100),
+                            ->numeric()
+                            ->minValue(0)->maxValue(100)->suffix('%')->maxValue(100),
                     ]),
                 Section::make('Repairs Verification')
                     ->schema([
@@ -1335,7 +1377,8 @@ short-term (<1 month) rentals generally marketed through an online platform such
                                     ->label('Trend')
                                     ->options(['Imporving' => 'Imporving', 'Stable' => 'Stable', 'Declining' => 'Declining', 'Unknown' => 'Unknown']),
                                 TextInput::make('repair_cost')->label('Repair Cost')
-                                    ->numeric()->inputMode('decimal'),
+                                    ->numeric()
+                                    ->minValue(0)->inputMode('decimal'),
                                 Select::make('life_safety')->label('Life Safety')
                                     ->options(['Yes' => 'Yes', 'No' => 'No']),
                                 Textarea::make('inspector_comments')
@@ -1355,7 +1398,8 @@ short-term (<1 month) rentals generally marketed through an online platform such
                                     ->label('Trend')
                                     ->options(['Imporving' => 'Imporving', 'Stable' => 'Stable', 'Declining' => 'Declining', 'Unknown' => 'Unknown']),
                                 TextInput::make('repair_cost')->label('Repair Cost')
-                                    ->numeric()->inputMode('decimal'),
+                                    ->numeric()
+                                    ->minValue(0)->inputMode('decimal'),
                                 Select::make('life_safety')->label('Life Safety')
                                     ->options(['Yes' => 'Yes', 'No' => 'No']),
                                 Textarea::make('inspector_comments')
@@ -1375,7 +1419,8 @@ short-term (<1 month) rentals generally marketed through an online platform such
                                     ->label('Trend')
                                     ->options(['Imporving' => 'Imporving', 'Stable' => 'Stable', 'Declining' => 'Declining', 'Unknown' => 'Unknown']),
                                 TextInput::make('repair_cost')->label('Repair Cost')
-                                    ->numeric()->inputMode('decimal'),
+                                    ->numeric()
+                                    ->minValue(0)->inputMode('decimal'),
                                 Select::make('life_safety')->label('Life Safety')
                                     ->options(['Yes' => 'Yes', 'No' => 'No']),
                                 Textarea::make('inspector_comments')
@@ -1637,7 +1682,8 @@ short-term (<1 month) rentals generally marketed through an online platform such
                                     ->statePath('nurses_stations')
                                     ->columns(4)
                                     ->schema([
-                                        TextInput::make('quantity')->numeric(),
+                                        TextInput::make('quantity')->numeric()
+                                            ->minValue(0),
                                         Textarea::make('locations')->label('Locations')->columnSpan(3)
                                     ]),
                             ]),
@@ -1722,36 +1768,48 @@ short-term (<1 month) rentals generally marketed through an online platform such
                                     ->statePath('rns')
                                     ->columns(5)
                                     ->schema([
-                                        TextInput::make('day')->label('Day')->numeric(),
-                                        TextInput::make('evening')->label('Evening')->numeric(),
-                                        TextInput::make('night')->label('Night')->numeric(),
+                                        TextInput::make('day')->label('Day')->numeric()
+                                            ->minValue(0),
+                                        TextInput::make('evening')->label('Evening')->numeric()
+                                            ->minValue(0),
+                                        TextInput::make('night')->label('Night')->numeric()
+                                            ->minValue(0),
                                         Textarea::make('comments')->label('Comments')->columnSpan(2)
                                     ]),
                                 Section::make('LPN\'s')
                                     ->statePath('lpns')
                                     ->columns(5)
                                     ->schema([
-                                        TextInput::make('day')->label('Day')->numeric(),
-                                        TextInput::make('evening')->label('Evening')->numeric(),
-                                        TextInput::make('night')->label('Night')->numeric(),
+                                        TextInput::make('day')->label('Day')->numeric()
+                                            ->minValue(0),
+                                        TextInput::make('evening')->label('Evening')->numeric()
+                                            ->minValue(0),
+                                        TextInput::make('night')->label('Night')->numeric()
+                                            ->minValue(0),
                                         Textarea::make('comments')->label('Comments')->columnSpan(2)
                                     ]),
                                 Section::make('Others')
                                     ->statePath('others')
                                     ->columns(5)
                                     ->schema([
-                                        TextInput::make('day')->label('Day')->numeric(),
-                                        TextInput::make('evening')->label('Evening')->numeric(),
-                                        TextInput::make('night')->label('Night')->numeric(),
+                                        TextInput::make('day')->label('Day')->numeric()
+                                            ->minValue(0),
+                                        TextInput::make('evening')->label('Evening')->numeric()
+                                            ->minValue(0),
+                                        TextInput::make('night')->label('Night')->numeric()
+                                            ->minValue(0),
                                         Textarea::make('comments')->label('Comments')->columnSpan(2)
                                     ]),
                                 Section::make('Administrative Personnel')
                                     ->statePath('administrative_personnel')
                                     ->columns(5)
                                     ->schema([
-                                        TextInput::make('day')->label('Day')->numeric(),
-                                        TextInput::make('evening')->label('Evening')->numeric(),
-                                        TextInput::make('night')->label('Night')->numeric(),
+                                        TextInput::make('day')->label('Day')->numeric()
+                                            ->minValue(0),
+                                        TextInput::make('evening')->label('Evening')->numeric()
+                                            ->minValue(0),
+                                        TextInput::make('night')->label('Night')->numeric()
+                                            ->minValue(0),
                                         Textarea::make('comments')->label('Comments')->columnSpan(2)
                                     ]),
 
@@ -1892,14 +1950,18 @@ short-term (<1 month) rentals generally marketed through an online platform such
                         Section::make('Estimated Annual Employee Turnover')
                             ->statePath('estimated_annual_employee_turnover')
                             ->schema([
-                                TextInput::make('direct_care_givers')->label('Direct care givers')->numeric()->inputMode('decimal')->inlineLabel(),
-                                TextInput::make('administrative_personnel')->label('Administrative personnel')->numeric()->inputMode('decimal')->inlineLabel(),
+                                TextInput::make('direct_care_givers')->label('Direct care givers')->numeric()
+                                    ->minValue(0)->inputMode('decimal')->inlineLabel(),
+                                TextInput::make('administrative_personnel')->label('Administrative personnel')->numeric()
+                                    ->minValue(0)->inputMode('decimal')->inlineLabel(),
                             ]),
                         Section::make('Staffing experience of key personnel')
                             ->statePath('staffing_experience_of_key_personnel')
                             ->schema([
-                                TextInput::make('administrative_executive_director')->label('Administrative/Executive Director')->numeric()->inputMode('decimal')->inlineLabel(),
-                                TextInput::make('head_care_giver_resident_assistant')->label('Head Care Giver/Resident Assistant')->numeric()->inputMode('decimal')->inlineLabel(),
+                                TextInput::make('administrative_executive_director')->label('Administrative/Executive Director')->numeric()
+                                    ->minValue(0)->inputMode('decimal')->inlineLabel(),
+                                TextInput::make('head_care_giver_resident_assistant')->label('Head Care Giver/Resident Assistant')->numeric()
+                                    ->minValue(0)->inputMode('decimal')->inlineLabel(),
 
                             ]),
                         Section::make('Inspector\'s Comments on Management Performance')
@@ -2301,12 +2363,18 @@ short-term (<1 month) rentals generally marketed through an online platform such
                                         'Nursing Home, Skilled' => 'Nursing Home, Skilled',
                                         'Specialty Health Care' => 'Specialty Health Care'
                                     ]),
-                                TextInput::make('total_beds')->label('Total Beds')->numeric(),
-                                TextInput::make('occupied_beds')->label('Total Beds Occupied')->numeric(),
-                                TextInput::make('total_units')->label('Total Units')->numeric(),
-                                TextInput::make('occupied_units')->label('Total Units Occupied')->numeric(),
-                                TextInput::make('average_sq_feet_unit')->label('Sq. Feet / Unit')->numeric()->inputMode('decimal'),
-                                TextInput::make('monthly_rent')->label('Monthly Rent')->numeric()->inputMode('decimal'),
+                                TextInput::make('total_beds')->label('Total Beds')->numeric()
+                                    ->minValue(0),
+                                TextInput::make('occupied_beds')->label('Total Beds Occupied')->numeric()
+                                    ->minValue(0),
+                                TextInput::make('total_units')->label('Total Units')->numeric()
+                                    ->minValue(0),
+                                TextInput::make('occupied_units')->label('Total Units Occupied')->numeric()
+                                    ->minValue(0),
+                                TextInput::make('average_sq_feet_unit')->label('Sq. Feet / Unit')->numeric()
+                                    ->minValue(0)->inputMode('decimal'),
+                                TextInput::make('monthly_rent')->label('Monthly Rent')->numeric()
+                                    ->minValue(0)->inputMode('decimal'),
                             ]),
                         Forms\Components\Grid::make()
                             ->schema([
