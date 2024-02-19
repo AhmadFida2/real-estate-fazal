@@ -894,7 +894,7 @@ class InspectionResource extends Resource
                                         ->label('Date of last rental increase'),
                                     TextInput::make('Number of Administration Employees')
                                         ->label('Number of Administration Employees')->numeric()
-                                        ->minValue(0)->extraInputAttributes(['min' => '0']),
+                                        ->minValue(0),
                                     TextInput::make('Number of Maintenance Employees')
                                         ->label('Number of Maintenance Employees')->numeric()
                                         ->minValue(0),
