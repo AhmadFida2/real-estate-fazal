@@ -137,7 +137,7 @@ class AssignmentResource extends Resource
                             }
                             $path = Storage::disk('local')->path('invoice.py') . " " . $record->id;
                             exec("python3 $path", $output);
-                            if ($output[0] == 1)
+                            if ($output)
                             {
                                 return response()->download(public_path($file_name))->deleteFileAfterSend();
                             }
