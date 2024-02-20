@@ -31,7 +31,7 @@
             margin-bottom: 20px;
         }
         .invoice-info .info {
-            width: 30%;
+            width: 50%;
         }
         .invoice-info .info h2 {
             margin-bottom: 10px;
@@ -93,7 +93,7 @@
 <body>
 <div class="container">
     <div class="header">
-        <img src="{{public_path('company_logo.png')}}" alt="Company Logo">
+        <img src="{{'/company_logo.png'}}" alt="Company Logo">
         <div class="info">
             <h2>Invoice</h2>
             <p>Invoice Number: <b>INV-000{{$assignment->id}}</b></p>
