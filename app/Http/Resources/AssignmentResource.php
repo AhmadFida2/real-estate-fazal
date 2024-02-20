@@ -30,6 +30,7 @@ class AssignmentResource extends JsonResource
                 3 => 'Freddie Mac'
             },
             'loan_number' => $this->loan_number,
+            'investor_number' => $this->investor_number,
             'city' => $this->city,
             'state' => $this->state,
             'zip' => $this->zip,
