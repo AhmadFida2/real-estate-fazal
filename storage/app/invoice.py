@@ -72,7 +72,7 @@ def generate_invoice(assignment):
          assignment["state"], f'${assignment["invoice_info"]["invoice_amount"]}'),
     )
 
-    with pdf.table(text_align="CENTER") as table:
+    with pdf.table(text_align="CENTER",line_height=5) as table:
         for data_row in TABLE_DATA:
             row = table.row()
             for datum in data_row:
