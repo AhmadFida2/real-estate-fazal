@@ -109,3 +109,5 @@ pdf = generate_invoice(data)
 
 # Output PDF to a file
 pdf.output('invoice_' + id + '.pdf')
+
+print(1)

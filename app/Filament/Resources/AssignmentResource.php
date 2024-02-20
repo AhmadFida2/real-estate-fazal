@@ -123,7 +123,7 @@ class AssignmentResource extends Resource
                                         ]),
                                     Grid::make()->schema([
                                         TextEntry::make('total')->label('Total Paid')->getStateUsing(fn(Assignment $record) => $record->sumPayments())->money('USD')
-                                        ->size(TextEntry\TextEntrySize::Large)->color('primary')->weight(FontWeight::Bold),
+                                            ->size(TextEntry\TextEntrySize::Large)->color('primary')->weight(FontWeight::Bold),
 
                                     ])
                                 ])
@@ -131,18 +131,23 @@ class AssignmentResource extends Resource
                         ->modalHeading('Payment Details')->closeModalByClickingAway()->modalAlignment(Alignment::Center)->modalFooterActions(fn() => []),
                     Tables\Actions\Action::make('download')->iconButton()->icon('heroicon-o-arrow-down-tray')
                         ->action(function ($record) {
-                            $file_name = 'storage/invoices/invoice_' . $record->id . ".pdf";
-                            if (!Storage::directoryExists(public_path('storage/invoices'))) {
-                                Storage::disk('public')->makeDirectory('invoices');
-                            }
+                            $file_name = 'invoice_' . $record->id . ".pdf";
                             if (file_exists(public_path($file_name))) {
                                 return response()->download(public_path($file_name));
                             }
-                            $path = Storage::disk('local')->path('invoice.py');
-                            exec("python3 $path");
-                            return 1;
-//                            Pdf::view('invoice', ['assignment' => $record])->save(public_path($file_name));
-                           // return response()->download(public_path($file_name))->deleteFileAfterSend();
+                            $path = Storage::disk('local')->path('invoice.py') . " " . $record->id;
+                            exec("python3 $path", $output);
+                            if ($output[0] == 1)
+                            {
+                                return response()->download(public_path($file_name))->deleteFileAfterSend();
+                            }
+                            else
+                            {
+                                Notification::make()
+                                    ->title('Invoice Generation Failed!')
+                                    ->danger()
+                                    ->send();
+                            }
                         }),
                     Tables\Actions\EditAction::make()->iconButton(),
                     Tables\Actions\DeleteAction::make()->iconButton(),
