@@ -93,7 +93,7 @@
 <body>
 <div class="container">
     <div class="header">
-        <img src="{{'/company_logo.png'}}" alt="Company Logo">
+        <img src="{{'storage/company_logo.png'}}" alt="Company Logo">
         <div class="info">
             <h2>Invoice</h2>
             <p>Invoice Number: <b>INV-000{{$assignment->id}}</b></p>
