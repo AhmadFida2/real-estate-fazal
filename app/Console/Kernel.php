@@ -14,7 +14,7 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('queue:work')->everyMinute()->withoutOverlapping();
         $schedule->command('clear:temp-urls')->everyThirtyMinutes();
-        $schedule->command('app:clear-public')->hourly();
+       // $schedule->command('app:clear-public')->hourly();
         $schedule->call(function () {
             cache()->forget('daily_inspections');
         })->daily()->at('00:00');
