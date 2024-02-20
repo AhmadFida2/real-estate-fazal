@@ -56,12 +56,11 @@ Route::get('excel-download/{file}', function ($file) {
 
 })->name('excel-download');
 
-//Route::get('invoice/{id}', function ($id) {
-//    $assignment = \App\Models\Assignment::find($id);
-//    $file_name = 'invoice_' . $id . ".pdf";
-//    Pdf::view('invoice', compact('assignment'))->save(public_path($file_name));
-//    return response()->download(public_path($file_name));
-//})->middleware('auth');
+Route::get('invoice/{id}', function ($id) {
+    $assignment = \App\Models\Assignment::find($id);
+    $file_name = 'invoice_' . $id . ".pdf";
+  return view('inv-simple',compact('assignment'));
+});
 
 
 
