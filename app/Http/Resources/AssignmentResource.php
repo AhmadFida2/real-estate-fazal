@@ -36,7 +36,7 @@ class AssignmentResource extends JsonResource
             'state' => $this->state,
             'zip' => $this->zip,
             'invoice_info' => $this->payment_info,
-            'payments' => $this->payments()->get()
+            'payments' => $this->payments()->only('date','amount')
         ];
     }
 }
