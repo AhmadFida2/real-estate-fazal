@@ -23,6 +23,7 @@ class AssignmentResource extends JsonResource
             'start_date' => $this->start_date,
             'due_date' => $this->due_date,
             'property_name' => $this->property_name,
+            'property_address' => $this->property_address,
             'inspection_type' => match ($this->inspection_type) {
                 0 => 'Basic',
                 1 => 'Fannie Mae',
