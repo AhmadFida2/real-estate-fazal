@@ -725,7 +725,8 @@ class InspectionResource extends Resource
                                 // Resize the image while maintaining the aspect ratio
                                 $img->scaleDown(800);
                                 $img = $img->toJpeg();
-                                Storage::disk('s3')->put($f_name, $img, 'public');
+//                                Storage::disk('s3')->put($f_name, $img, 'public');
+                                Storage::disk('local')->put($f_name, $img, 'public');
                                 $image->delete();
                             }
                             $rep_data[] = [
@@ -752,7 +753,7 @@ class InspectionResource extends Resource
                     ->columnSpanFull()
                     ->columns(1)
                     ->schema([
-                        Forms\Components\FileUpload::make('photo_url')->label('Photo')->deletable(false)->disk('s3'),
+                        Forms\Components\FileUpload::make('photo_url')->label('Photo')->deletable(false)->disk('local'),
                         Select::make('photo_type')->label('Photo Type')
                             ->options(['Exterior' => 'Exterior', 'Interior' => 'Interior', 'Roof' => 'Roof', 'Neighborhood' => 'Neighborhood', 'Routine Maintenance' => 'Routine Maintenance', 'Deferred Maintenance' => 'Deferred Maintenance', 'Life Safety' => 'Life Safety']),
                         Textarea::make('photo_description')->label('Photo Description'),

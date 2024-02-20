@@ -53,7 +53,8 @@ class InspectionResource extends JsonResource
     protected function formatImages($images)
     {
         return collect($images)->map(function ($image) {
-            $image['photo_url'] = Storage::disk('s3')->url($image['photo_url']);
+            //$image['photo_url'] = Storage::disk('s3')->url($image['photo_url']);
+            $image['photo_url'] = Storage::disk('local')->url($image['photo_url']);
             return $image;
         })->all();
     }
