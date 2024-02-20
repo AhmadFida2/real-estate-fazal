@@ -1,5 +1,11 @@
+import json
+import sys
+import requests
 from fpdf import FPDF
 from datetime import datetime
+
+id = sys.argv[1]
+
 
 class PDF(FPDF):
     def header(self):
@@ -12,6 +18,7 @@ class PDF(FPDF):
         self.set_font('Arial', 'I', 8)
         self.cell(0, 10, f'Page {self.page_no()}', 0, 0, 'C')
 
+
 def generate_invoice(assignment):
     pdf = PDF()
     pdf.add_page()
@@ -20,11 +27,11 @@ def generate_invoice(assignment):
     pdf.image('company_logo.png', x=10, y=10, w=40)
 
     # Invoice Info
-    pdf.ln(5)
-    pdf.set_font('Arial', '', 10)
-    pdf.cell(0, 5, f'Invoice Number: INV-000{assignment.id}', 0, 0, 'L')
-    pdf.cell(0, 5, f'Date: {datetime.now().strftime("%d %b %Y")}', 0, 1, 'R')
     pdf.ln(10)
+    pdf.set_font('Arial', '', 10)
+    pdf.cell(0, 5, f'Invoice Number: INV-000{id}', 0, 0, 'L')
+    pdf.cell(0, 5, f'Date: {datetime.now().strftime("%d %b %Y")}', 0, 1, 'R')
+    pdf.ln(5)
 
     # Company Address
     pdf.cell(0, 5, 'AMS Real Estate Services, Inc.', 0, 1, 'L')
@@ -38,12 +45,13 @@ def generate_invoice(assignment):
     pdf.ln(5)
 
     # Bill To
+    pdf.ln(5)
     pdf.set_font('Arial', 'B', 10)
     pdf.cell(0, 5, 'Bill To:', 0, 1, 'L')
     pdf.set_font('Arial', '', 10)
-    pdf.cell(0, 5, assignment.client, 0, 1, 'L')
-    pdf.cell(0, 5, assignment.property_name, 0, 1, 'L')
-    pdf.cell(0, 5, f'{assignment.city}, {assignment.state}, {assignment.zip}', 0, 1, 'L')
+    pdf.cell(0, 5, assignment["client"], 0, 1, 'L')
+    pdf.cell(0, 5, assignment["property_name"], 0, 1, 'L')
+    pdf.cell(0, 5, f'{assignment["city"]}, {assignment["state"]}, {assignment["zip"]}', 0, 1, 'L')
     pdf.cell(0, 5, 'USA', 0, 1, 'L')
     pdf.ln(5)
 
@@ -56,31 +64,25 @@ def generate_invoice(assignment):
     pdf.cell(0, 5, 'Account #: 8045689166', 0, 1, 'L')
     pdf.cell(0, 5, 'Routing # for Wires: 121000248', 0, 1, 'L')
     pdf.cell(0, 5, 'Routing # for ACH: 111900659', 0, 1, 'L')
-    pdf.ln(5)
+    pdf.ln(20)
 
-    # Table
-    pdf.set_font('Arial', 'B', 10)
-    pdf.cell(30, 5, 'Loan #', 1, 0, 'C')
-    pdf.cell(30, 5, 'Investor #', 1, 0, 'C')
-    pdf.cell(50, 5, 'Property Address', 1, 0, 'C')
-    pdf.cell(30, 5, 'City', 1, 0, 'C')
-    pdf.cell(20, 5, 'State', 1, 0, 'C')
-    pdf.cell(30, 5, 'Amount', 1, 1, 'C')
+    TABLE_DATA = (
+        ("Loan #", "Investor #", "Property Address", "City", "State", "Amount"),
+        (assignment["loan_number"], assignment["investor_number"], assignment["property_address"], assignment["city"],
+         assignment["state"], f'${assignment["invoice_info"]["invoice_amount"]}'),
+    )
 
-    pdf.set_font('Arial', '', 10)
-    pdf.cell(30, 5, assignment.loan_number, 1, 0, 'C')
-    pdf.cell(30, 5, assignment.investor_number, 1, 0, 'C')
-    pdf.cell(50, 5, assignment.property_address, 1, 0, 'C')
-    pdf.cell(30, 5, assignment.city, 1, 0, 'C')
-    pdf.cell(20, 5, assignment.state, 1, 0, 'C')
-    pdf.cell(30, 5, f"${assignment.payment_info['invoice_amount']}", 1, 1, 'C')
-
-    # Total
-    pdf.cell(140, 5, 'Total', 1, 0, 'R')
-    pdf.cell(50, 5, f"${assignment.payment_info['invoice_amount']}", 1, 1, 'C')
+    with pdf.table(text_align="CENTER") as table:
+        for data_row in TABLE_DATA:
+            row = table.row()
+            for datum in data_row:
+                row.cell(datum)
+        row = table.row()
+        row.cell('Total', colspan=5)
+        row.cell(f"${assignment['invoice_info']['invoice_amount']}")
 
     # Payments Info
-    if assignment.payments():
+    if assignment["payments"]:
         pdf.ln(5)
         pdf.set_font('Arial', 'B', 14)
         pdf.cell(0, 15, 'Payments Info', 0, 1, 'C')
@@ -90,7 +92,7 @@ def generate_invoice(assignment):
         pdf.cell(80, 5, 'Amount', 1, 1, 'C')
 
         pdf.set_font('Arial', '', 10)
-        for payment in assignment.payments():
+        for payment in assignment["payments"]:
             pdf.set_x(30.0)
             pdf.cell(80, 5, datetime.strptime(payment['date'], '%Y-%m-%d').strftime('%d %b %Y'), 1, 0, 'C')
             pdf.cell(80, 5, f"${payment['amount']}", 1, 1, 'C')
@@ -98,43 +100,12 @@ def generate_invoice(assignment):
     return pdf
 
 
-class Assignment:
-    def __init__(self, id, client, property_name, city, state, zip, loan_number, investor_number, property_address,
-                 payment_info):
-        self.id = id
-        self.client = client
-        self.property_name = property_name
-        self.city = city
-        self.state = state
-        self.zip = zip
-        self.loan_number = loan_number
-        self.investor_number = investor_number
-        self.property_address = property_address
-        self.payment_info = payment_info
-
-    def payments(self):
-        return [{'date': '2023-01-01', 'amount': 1000}, {'date': '2023-02-01', 'amount': 1500}]
-
-
-# Sample assignment data
-assignment_data = {
-    'id': '123',
-    'client': 'John Doe',
-    'property_name': 'Doe Mansion',
-    'city': 'New York',
-    'state': 'NY',
-    'zip': '10001',
-    'loan_number': 'LN123',
-    'investor_number': 'INV456',
-    'property_address': '123 Main St',
-    'payment_info': {'invoice_amount': 2500}
-}
-
-# Create assignment object
-assignment = Assignment(**assignment_data)
+data = requests.get('https://arfihost.online/api/assignment/'+ id)
+data = json.loads(data.text)
+print(data)
 
 # Generate invoice PDF
-pdf = generate_invoice(assignment)
+pdf = generate_invoice(data)
 
 # Output PDF to a file
-pdf.output('sample_invoice.pdf')
+pdf.output('invoice_' + id + '.pdf')
