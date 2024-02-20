@@ -67,7 +67,7 @@ def generate_invoice(assignment):
     pdf.ln(20)
 
     TABLE_DATA = (
-        ("Loan #", "Investor #", "Property Address", "City", "State", "Amount"),
+        ("Loan #", "Investor #", "Property Address", "City", "State", "Invoice Amount"),
         (assignment["loan_number"], assignment["investor_number"], assignment["property_address"], assignment["city"],
          assignment["state"], f'${assignment["invoice_info"]["invoice_amount"]}'),
     )
