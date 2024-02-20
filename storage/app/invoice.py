@@ -137,4 +137,4 @@ assignment = Assignment(**assignment_data)
 pdf = generate_invoice(assignment)
 
 # Output PDF to a file
-pdf.output('sample_invoice.pdf')
+pdf.output('invoices/sample_invoice.pdf')
