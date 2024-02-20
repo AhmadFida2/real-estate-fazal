@@ -54,7 +54,7 @@ class InspectionResource extends JsonResource
     {
         return collect($images)->map(function ($image) {
             //$image['photo_url'] = Storage::disk('s3')->url($image['photo_url']);
-            $image['photo_url'] = Storage::disk('local')->url($image['photo_url']);
+            $image['photo_url'] = Storage::disk('public')->url($image['photo_url']);
             return $image;
         })->all();
     }

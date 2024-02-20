@@ -726,7 +726,7 @@ class InspectionResource extends Resource
                                 $img->scaleDown(800);
                                 $img = $img->toJpeg();
 //                                Storage::disk('s3')->put($f_name, $img, 'public');
-                                Storage::disk('local')->put($f_name, $img, 'public');
+                                Storage::disk('public')->put($f_name, $img, 'public');
                                 $image->delete();
                             }
                             $rep_data[] = [
@@ -753,7 +753,7 @@ class InspectionResource extends Resource
                     ->columnSpanFull()
                     ->columns(1)
                     ->schema([
-                        Forms\Components\FileUpload::make('photo_url')->label('Photo')->deletable(false)->disk('local'),
+                        Forms\Components\FileUpload::make('photo_url')->label('Photo')->deletable(false)->disk('public'),
                         Select::make('photo_type')->label('Photo Type')
                             ->options(['Exterior' => 'Exterior', 'Interior' => 'Interior', 'Roof' => 'Roof', 'Neighborhood' => 'Neighborhood', 'Routine Maintenance' => 'Routine Maintenance', 'Deferred Maintenance' => 'Deferred Maintenance', 'Life Safety' => 'Life Safety']),
                         Textarea::make('photo_description')->label('Photo Description'),
