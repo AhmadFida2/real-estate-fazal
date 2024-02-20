@@ -58,7 +58,7 @@ class AssignmentResource extends Resource
                     ->columns(3)
                     ->schema([
                         Forms\Components\DatePicker::make('invoice_date'),
-                        Forms\Components\TextInput::make('invoice_amount')->inputMode('decimal'),
+                        Forms\Components\TextInput::make('invoice_amount')->inputMode('decimal')->numeric(),
                     ]),
                 Forms\Components\Section::make('Payments')
                     ->schema([
@@ -68,7 +68,7 @@ class AssignmentResource extends Resource
                             ->relationship()
                             ->schema([
                                 Forms\Components\DatePicker::make('date'),
-                                Forms\Components\TextInput::make('amount')->inputMode('decimal'),
+                                Forms\Components\TextInput::make('amount')->inputMode('decimal')->numeric(),
                             ])
                     ])
             ]);
