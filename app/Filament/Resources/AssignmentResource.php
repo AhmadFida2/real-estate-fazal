@@ -16,6 +16,7 @@ use Filament\Support\Enums\FontWeight;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\Storage;
+use Livewire\Component;
 use Spatie\LaravelPdf\Facades\Pdf;
 
 class AssignmentResource extends Resource
@@ -130,24 +131,12 @@ class AssignmentResource extends Resource
                         ])
                         ->modalHeading('Payment Details')->closeModalByClickingAway()->modalAlignment(Alignment::Center)->modalFooterActions(fn() => []),
                     Tables\Actions\Action::make('download')->iconButton()->icon('heroicon-o-arrow-down-tray')
-                        ->action(function ($record) {
-                            $file_name = 'invoice_' . $record->id . ".pdf";
-                            if (file_exists(public_path($file_name))) {
-                                return response()->download(public_path($file_name));
-                            }
-                            $path = Storage::disk('local')->path('invoice.py') . " " . $record->id;
-                            exec("python3 $path", $output);
-                            if ($output)
-                            {
-                                return response()->download(public_path($file_name))->deleteFileAfterSend();
-                            }
-                            else
-                            {
-                                Notification::make()
-                                    ->title('Invoice Generation Failed!')
-                                    ->danger()
-                                    ->send();
-                            }
+                        ->action(function ($record, Component $livewire) {
+                            Notification::make()
+                                ->title('Generating Invoice')
+                                ->info()
+                                ->send();
+                            $livewire->dispatch('gen-invoice', id: $record->id);
                         }),
                     Tables\Actions\EditAction::make()->iconButton(),
                     Tables\Actions\DeleteAction::make()->iconButton(),
