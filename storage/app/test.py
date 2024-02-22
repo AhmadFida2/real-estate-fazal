@@ -44,13 +44,11 @@ def write_to_excel(data, sheet_name, file_path):
 
 def download_image(url, save_dir):
   try:
-    response = requests.get(url)
-    response.raise_for_status()
-    img_name = os.path.join(save_dir, os.path.basename(url))
-    with open(img_name, 'wb') as img_file:
-      img_file.write(response.content)
-    return img_name
-  except requests.RequestException as e:
+    img_name = os.path.join('storage/', os.path.basename(url))
+    save_name = os.path.join(save_dir, os.path.basename(url))
+    shutil.copy(img_name,save_name)
+    return save_name
+  except Exception as e:
     return None
 
 
