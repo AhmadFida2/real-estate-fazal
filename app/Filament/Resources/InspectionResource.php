@@ -12,6 +12,11 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
+use Filament\Infolists\Components\Fieldset;
+use Filament\Infolists\Components\RepeatableEntry;
+use Filament\Infolists\Components\Tabs;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Infolists\Infolist;
 use Filament\Notifications\Actions\Action;
 use Filament\Notifications\Events\DatabaseNotificationsSent;
 use Filament\Notifications\Notification;
@@ -54,6 +59,19 @@ class InspectionResource extends Resource
                         static::reportRepairStep(),
                         static::reportSeniorStep(),
                         static::reportHospitalStep(),
+                    ])
+            ]);
+    }
+
+    public static function infolist(Infolist $infolist): Infolist
+    {
+        return $infolist
+            ->columns(1)
+            ->schema([
+                Tabs::make()
+                    ->tabs([
+                        static::infoSelectStep(),
+                        static::infoBasicStep(),
                     ])
             ]);
     }
@@ -2481,6 +2499,244 @@ short-term (<1 month) rentals generally marketed through an online platform such
                     ])
 
 
+            ]);
+    }
+
+    public static function infoSelectStep()
+    {
+        return Tabs\Tab::make('Report Tabs')
+            ->columns(3)
+            ->schema([
+                TextEntry::make('inspection_status')
+                    ->formatStateUsing(fn($state) => $state ? "Complete" : "Pending")->badge()
+                    ->color(fn($state) => $state ? "success" : "danger")
+            ]);
+    }
+
+    public static function infoBasicStep()
+    {
+        return Tabs\Tab::make('Basic Info')
+            ->columns(3)
+            ->schema([
+                TextEntry::make('name'),
+                TextEntry::make('address'),
+                TextEntry::make('address_2'),
+                TextEntry::make('city'),
+                TextEntry::make('state')
+                    ->label('State'),
+                TextEntry::make('zip'),
+                TextEntry::make('overall_rating')
+                    ->label('Overall Rating')
+                    ->numeric(),
+                TextEntry::make('rating_scale')
+                    ->label('Rating Scale'),
+                TextEntry::make('inspection_date')
+                    ->label('Inspection Date')->dateTime(),
+                TextEntry::make('primary_type'),
+                TextEntry::make('secondary_type'),
+                Fieldset::make('Servicer and Loan Info')
+                    ->columns(3)
+                    ->statePath('servicer_loan_info')
+                    ->schema([
+                        TextEntry::make('servicer_name')
+                            ->label('Servicer Name'),
+                        TextEntry::make('loan_number')
+                            ->label('Loan Number'),
+                        TextEntry::make('property_id')
+                            ->label('Property ID'),
+                        TextEntry::make('servicer_inspection_id')
+                            ->label('Servicer Inspection ID'),
+                        TextEntry::make('original_loan_amount')
+                            ->label('Original Loan Amount')
+                            ->numeric(),
+                        TextEntry::make('loan_balance')
+                            ->label('Loan Balance')
+                            ->numeric(),
+                        TextEntry::make('loan_balance_date')
+                            ->label('Loan Balance Date')
+                            ->dateTime(),
+                        TextEntry::make('loan_owner')
+                            ->label('Owner of Loan'),
+                        TextEntry::make('investor_number')
+                            ->label('Investor Number'),
+                        TextEntry::make('investor_loan_number')
+                            ->label('Investor Loan Number'),
+                        TextEntry::make('asset_manager_name')
+                            ->label('Asset Manager Name'),
+                        TextEntry::make('asset_manager_phone')
+                            ->label('Asset Manager Phone'),
+                        TextEntry::make('asset_manager_email')
+                            ->label('Asset Manager Email'),
+                        TextEntry::make('report_reviewed_by')
+                            ->label('Report Reviewed By'),
+                    ]),
+                Fieldset::make('Contact Company and Inspector Info')
+                    ->columns(3)
+                    ->statePath('contact_inspector_info')
+                    ->schema([
+                        TextEntry::make('contact_company')
+                            ->label('Contact Company'),
+                        TextEntry::make('contact_name')
+                            ->label('Contact Name'),
+                        TextEntry::make('contact_phone')
+                            ->label('Contact Phone'),
+                        TextEntry::make('contact_email')
+                            ->label('Contact Email'),
+                        TextEntry::make('inspection_company')
+                            ->label('Inspection Company'),
+                        TextEntry::make('inspector_name')
+                            ->label("Inspector's Name"),
+                        TextEntry::make('inspector_company_phone')
+                            ->label("Inspection Co. Phone"),
+                        TextEntry::make('inspector_id')
+                            ->label("Inspector's ID"),
+                    ]),
+                Fieldset::make('Management Company and On-site Contact Info')
+                    ->columns(3)
+                    ->statePath('management_onsite_info')
+                    ->schema([
+                        TextEntry::make('company_name')
+                            ->label('Company Name'),
+                        TextEntry::make('onsite_contact')
+                            ->label('On-site Contact'),
+                        TextEntry::make('role_title')
+                            ->label('Role or Title'),
+                        TextEntry::make('mgmt_affiliation')
+                            ->label('Mgmt Affiliation'),
+                        TextEntry::make('phone_number')
+                            ->label('Phone Number'),
+                        TextEntry::make('mgmt_interview')
+                            ->label('Mgmt Interview'),
+                        TextEntry::make('time_at_property')
+                            ->label('Length of Time at Property'),
+                        TextEntry::make('management_changed')
+                            ->label('Mgmt company change since last inspection'),
+                    ]),
+                Fieldset::make('Service and Inspector Comments')
+                    ->statePath('comments')
+                    ->schema([
+                        TextEntry::make('servicer_comments'),
+                        TextEntry::make('inspector_comments'),
+                    ]),
+                Fieldset::make('Profile and Occupancy')
+                    ->columns(3)
+                    ->statePath('profile_occupancy_info')
+                    ->schema([
+                        TextEntry::make('number_of_buildings')
+                            ->label('Number of Buildings')->numeric(),
+                        TextEntry::make('number_of_floors')
+                            ->label('Number of Floors')->numeric(),
+                        TextEntry::make('number_of_elevators')
+                            ->label('Number of Elevators')->numeric(),
+                        TextEntry::make('number_of_parking_spaces')
+                            ->label('Number of Parking Spaces')->numeric(),
+                        TextEntry::make('year_built')
+                            ->label('Year Built')->numeric(),
+                        TextEntry::make('year_renovated')
+                            ->label('Year Renovated')->numeric(),
+                        TextEntry::make('annual_occupancy')
+                            ->label('Annual Occupancy')->numeric(),
+                        TextEntry::make('annual_turnover')
+                            ->label('Annual Turnover')->numeric(),
+                        TextEntry::make('rent_roll_obtained')
+                            ->label('Rent Roll Obtained'),
+                        TextEntry::make('rent_roll_date')
+                            ->label('Rent Roll Date')->dateTime(),
+                        TextEntry::make('is_affordable_housing')
+                            ->label('Is Affordable Housing?'),
+                        TextEntry::make('unit_of_measurement_used')
+                            ->label('Units of Measurement Used'),
+                        TextEntry::make('num_of_rooms')->label('Number of Units/Rooms/Beds')->numeric(),
+                        TextEntry::make('occupied_space')
+                            ->label('Occupied Space')->numeric(),
+                        TextEntry::make('vacant_space')
+                            ->label('Vacant Space')->numeric(),
+                        TextEntry::make('occupied_units_inspected')
+                            ->label('Occupied Units Inspected')->numeric(),
+                        TextEntry::make('vacant_units_inspected')
+                            ->label('Vacant Units Inspected')->numeric(),
+                        TextEntry::make('total_sq_feet_gross')
+                            ->label('Total Sq. Feet (Gross)')->numeric(),
+                        TextEntry::make('total_sq_feet_net')
+                            ->label('Total Sq. Feet (Net)')->numeric(),
+                        TextEntry::make('dark_space')
+                            ->label('Is there any Dark Space?'),
+                        TextEntry::make('down_space')
+                            ->label('Is there any Down Space?'),
+                        TextEntry::make('num_of_down_units')
+                            ->label('Number of Down Units/Rooms/Beds')->numeric(),
+                        TextEntry::make('dark_down_space_description')
+                            ->label('Describe Dark/Down Space If Any'),
+                        TextEntry::make('rental_concessions_offered')
+                            ->label('Offers Rental Concessions?'),
+                        TextEntry::make('describe_rental_concession')
+                            ->label('Describe Rental Concessions'),
+                        TextEntry::make('franchise_name')
+                            ->label('Franchise Name'),
+                        TextEntry::make('franchise_change_since_last_inspection')
+                            ->label('Franchise Change Since Last Inspection?'),
+                        Fieldset::make('Operation and Maintenance Plans (O & M)')
+                            ->columns(1)
+                            ->statePath('operation_maintenance_plans')
+                            ->schema([
+                                RepeatableEntry::make('Plan')
+                                    ->columns(3)
+                                    ->schema([
+                                        TextEntry::make('plan_name'),
+                                        TextEntry::make('management_aware')
+                                            ->label('Management Aware of Plan?'),
+                                        TextEntry::make('plan_available')
+                                            ->label('Plan Available?'),
+                                        TextEntry::make('describe_om_plans')->label('Specify Additional O&M Plans or describe any observed non-compliance')
+                                    ]),
+                                Fieldset::make('Capital Expenditures')
+                                    ->columns(1)
+                                    ->statePath('capital_expenditures')
+                                    ->schema([
+                                        RepeatableEntry::make('Expenditure')
+                                            ->columns(3)
+                                            ->schema([
+                                                TextEntry::make('repair_description')
+                                                    ->label('Repair Description'),
+                                                TextEntry::make('identified_cost')
+                                                    ->label('Identified Cost')->numeric(),
+                                                TextEntry::make('status'),
+                                            ]),
+                                    ]),
+                                Fieldset::make('Neighborhood / Site Comparison Data')
+                                    ->columns(3)
+                                    ->statePath('neighborhood_site_data')
+                                    ->schema([
+                                        Fieldset::make('Top 2 Major Competitors')
+                                            ->schema([
+                                                TextEntry::make('name_or_type_competitor_1')
+                                                    ->label('Name or Type'),
+                                                TextEntry::make('distance_competitor_1')
+                                                    ->label('Distance'),
+                                                TextEntry::make('name_or_type_competitor_2')
+                                                    ->label('Name or Type'),
+                                                TextEntry::make('distance_competitor_2')
+                                                    ->label('Distance'),
+                                            ]),
+                                        TextEntry::make('single_family_percent_use')
+                                            ->label('Single Family'),
+                                        TextEntry::make('multi_family_percent_use')
+                                            ->label('Multifamily'),
+                                        TextEntry::make('commercial_percent_use')
+                                            ->label('Commerical'),
+                                        TextEntry::make('industrial_percent_use')
+                                            ->label('Industrial'),
+                                        TextEntry::make('is_declining_area')
+                                            ->label('Is the area declining or distressed?'),
+                                        TextEntry::make('is_new_construction_in_area')
+                                            ->label('Is there any new construction in area?'),
+                                        TextEntry::make('area_trends_description')
+                                            ->label('Describe area, visibility, access, surrounding land use & overall trends (including location in relation to subject N,S,E,W)'),
+                                        TextEntry::make('collateral_description')
+                                            ->label('Additional Collateral Description Information'),
+                                    ])
+                            ])
+                    ])
             ]);
     }
 
