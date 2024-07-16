@@ -60,27 +60,6 @@ class Inspection extends Model
             }
         });
 
-        static::updated(function ($model) {
-
-            // Delete old photos only if they are replaced with new ones
-            $originalImages = $model->getOriginal('images');
-            $originalRepairsVerification = $model->getOriginal('repairs_verification');
-
-            $currentImages = $model->images;
-            $currentRepairsVerification = $model->repairs_verification;
-
-            if(!is_null($model->repairs_verification))
-            {
-                $model->deleteOldPhotos($originalRepairsVerification['verification_list'], $currentRepairsVerification['verification_list']);
-
-            }
-            if(!is_null($model->images))
-            {
-                $model->deleteOldPhotos($originalImages, $currentImages);
-            }
-
-        });
-
     }
 
     protected function deletePhotos($photos): void
