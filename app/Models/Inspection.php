@@ -111,40 +111,4 @@ class Inspection extends Model
 
 
     }
-
-    protected function deleteOldPhotos($originalPhotos, $currentPhotos): void
-    {
-        foreach ($originalPhotos as $originalPhoto) {
-            $originalPhotoField = array_key_exists('photo', $originalPhoto) ? 'photo' : 'photo_url';
-            $originalPhotoUrl = $originalPhoto[$originalPhotoField];
-
-            if (is_array($originalPhotoUrl)) {
-                foreach ($originalPhotoUrl as $singlePhoto) {
-                    if (!collect($currentPhotos)->pluck($originalPhotoField)->flatten()->contains($singlePhoto)) {
-                        $photoPath = "public/{$singlePhoto}";
-
-                        if (Storage::exists($photoPath)) {
-                            Storage::delete($photoPath);
-                        }
-                        if (Storage::disk('s3')->exists($singlePhoto)) {
-                            Storage::disk('s3')->delete($singlePhoto);
-                        }
-
-                    }
-                }
-            } else {
-                if (!collect($currentPhotos)->pluck($originalPhotoField)->contains($originalPhotoUrl)) {
-                    $photoPath = "public/{$originalPhotoUrl}";
-
-                    if (Storage::exists($photoPath)) {
-                        Storage::delete($photoPath);
-                    }
-                    if (Storage::disk('s3')->exists($originalPhotoUrl)) {
-                        Storage::disk('s3')->delete($originalPhotoUrl);
-                    }
-                }
-            }
-        }
-
-    }
 }
