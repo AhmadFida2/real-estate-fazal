@@ -72,18 +72,18 @@ class Inspection extends Model
                     if (Storage::exists($photoPath)) {
                         Storage::delete($photoPath);
                     }
-                    if (Storage::disk('s3')->exists($photo_ind)) {
-                        Storage::disk('s3')->delete($photo_ind);
-                    }
+                    // if (Storage::disk('s3')->exists($photo_ind)) {
+                    //     Storage::disk('s3')->delete($photo_ind);
+                    // }
                 }
             } else {
                 $photoPath = "public/{$photo[$photoField]}";
                 if (Storage::exists($photoPath)) {
                     Storage::delete($photoPath);
                 }
-                if (Storage::disk('s3')->exists($photo[$photoField])) {
-                    Storage::disk('s3')->delete($photo[$photoField]);
-                }
+                // if (Storage::disk('s3')->exists($photo[$photoField])) {
+                //     Storage::disk('s3')->delete($photo[$photoField]);
+                // }
 
             }
         }
