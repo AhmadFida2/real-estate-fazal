@@ -66,6 +66,7 @@ class Inspection extends Model
     {
         foreach ($photos as $photo) {
             $photoField = array_key_exists('photo', $photo) ? 'photo' : 'photo_url';
+            dd($photo[$photoField]);
             if (is_array($photo[$photoField])) {
                 foreach ($photo[$photoField] as $photo_ind) {
                     $photoPath = "public/{$photo_ind}";
